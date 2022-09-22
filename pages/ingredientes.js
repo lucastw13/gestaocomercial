@@ -1,46 +1,60 @@
+import { useState, React, useEffect } from 'react';
 import Menu from './menu.js';
-import { Container, Table, tbody, thead } from 'reactstrap';
+import { Container, Table, tbody, thead, NavLink, Button } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Dado from '../dado/ingrediente.js'
-import Router from 'next/router'
-import Host from '../dado/host'
+import Dado from '../dado/ingrediente.js';
 import axios from 'axios';
-async function Ingredientes() {
-    Dado.listar()
-        .then(response => {
+import Host from '../dado/host';
 
-            if (response.data != null) {
-                console.log(response.data.ingrediente)
-                var lista = []
+function Ingredientes() {
+    const [lista, setLista] = useState("");   
+    useEffect(() => {
+        setLista()
+        Dado.listar()
+            .then(response => {
+                if (response.data != null)
+                    var listaTemp = []
                 for (var item of response.data.ingrediente) {
-                    lista.push({ codigo: item._id, descricao: item.descricao, tipo: item.tipo })
+                    listaTemp.push({ codigo: item._id, descricao: item.descricao })
                 }
-                return (
-                    <Container>
-                        <Menu />
+                setLista(listaTemp)
 
-                        <Table>
-                            <thead>
-                                <tr>
-                                    <th>
-                                        Ingrediente
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
+            }, (error) => {
+            })
+    }, []);
+
+    return (
+        <Container>
+            <Menu />
+
+            <Table>
+                <thead>
+                    <tr>
+                        <th>
+                            Ingrediente
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                {lista && lista.map((item) => (
+                        <tr>
+                            <td>
+                                <NavLink href={Host.url() + "/ingrediente/" + item.codigo}>
+                                    {item.descricao}
+                                </NavLink>
+
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </Table>
+
+        </Container >
+    );
 
 
-                            </tbody>
-                        </Table>
-
-                    </Container>
-                );
-
-            }
-        }, (error) => {
-            console.log(error);
-        })
 }
+
 
 function Pagina() {
     return <Ingredientes />
