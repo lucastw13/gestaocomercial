@@ -32,8 +32,10 @@ export default class Ingrediente {
     return itemReturn;*/
   }
   static deletar(codigo) {
-    axios.delete(Host.urlApi()+"/ingrediente/"+codigo,{headers:{'Access-Control-Allow-Origin':'*'}});
-
+    return axios.get(Host.urlApi()+"/ingrediente/"+codigo+"/deletar");
+  }
+  static salvar(descricao) {
+    return axios.post(Host.urlApi()+"/ingrediente",{descricao:descricao});
   }
 
 }

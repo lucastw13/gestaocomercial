@@ -6,7 +6,7 @@ import Dado from '../dado/ingrediente.js';
 import axios from 'axios';
 import Host from '../dado/host';
 
-function Ingredientes() {
+function Ingrediente() {
     const [lista, setLista] = useState("");   
     useEffect(() => {
         setLista()
@@ -26,7 +26,9 @@ function Ingredientes() {
     return (
         <Container>
             <Menu />
-
+            <NavLink href={Host.url() + '/ingrediente/""'}>
+                Incluir
+            </NavLink>
             <Table>
                 <thead>
                     <tr>
@@ -57,7 +59,7 @@ function Ingredientes() {
 
 
 function Pagina() {
-    return <Ingredientes />
+    return <Ingrediente />
 }
 
 
