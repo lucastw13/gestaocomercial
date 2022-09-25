@@ -2,10 +2,10 @@ import { useState, React, useEffect } from 'react';
 import Menu from './menu.js';
 import { Container, Table, tbody, thead, NavLink, Button } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Dado from '../dado/ingrediente.js';
+import Dado from '../dado/insumo.js';
 import axios from 'axios';
 import Host from '../dado/host';
-function Ingrediente() {
+function Insumo() {
     const [lista, setLista] = useState("");
 
     if ((lista == "") || (lista == undefined)) {
@@ -18,7 +18,7 @@ function Ingrediente() {
             if (response.data != null) {
                 if (response.data.status == true) {
                     var listaTemp = []
-                    for (var item of response.data.ingrediente) {
+                    for (var item of response.data.insumo) {
                         listaTemp.push({ codigo: item._id, descricao: item.descricao })
                     }
                     setLista(listaTemp)
@@ -48,7 +48,7 @@ function Ingrediente() {
     return (
         <Container>
             <Menu />
-            <NavLink href={Host.url() + '/ingrediente/incluir'}>
+            <NavLink href={Host.url() + '/insumo/incluir'}>
                 Incluir
             </NavLink>
             <Table>
@@ -63,7 +63,7 @@ function Ingrediente() {
                     {lista && lista.map((item) => (
                         <tr>
                             <td>
-                                <NavLink href={Host.url() + "/ingrediente/" + item.codigo}>
+                                <NavLink href={Host.url() + "/insumo/" + item.codigo}>
                                     {item.descricao}
                                 </NavLink>
 
@@ -85,7 +85,7 @@ function Ingrediente() {
 
 
 function Pagina() {
-    return <Ingrediente />
+    return <Insumo />
 }
 
 
