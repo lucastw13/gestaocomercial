@@ -34,8 +34,15 @@ export default class Ingrediente {
   static deletar(codigo) {
     return axios.get(Host.urlApi()+"/ingrediente/"+codigo+"/deletar");
   }
-  static salvar(descricao) {
-    return axios.post(Host.urlApi()+"/ingrediente",{descricao:descricao});
+  static salvar(codigo,descricao) {
+    if(codigo=="incluir"){
+      console.log("incluir: "+descricao)
+      return axios.post(Host.urlApi()+"/ingrediente",{descricao:descricao});
+    }else{
+      return axios.put(Host.urlApi()+"/ingrediente",{_id:codigo,descricao:descricao});
+    
+    }
+   
   }
 
 }
