@@ -26,7 +26,7 @@ function Insumo() {
                     }
                 }
             }, (error) => {
-                onsole.log("error: " + error)
+                console.log("error: " + error)
             })
     }
 
@@ -47,9 +47,6 @@ function Insumo() {
                 })
         }
 
-    }
-    function incluir() {
-        router.push(Host.url() + "/insumo")
     }
     return (
         <Container>

@@ -12,20 +12,26 @@ function Insumo() {
 
     if (((item == "") || (item == undefined)) && ((router.query.codigo != "") && (router.query.codigo != undefined))) {
         if (router.query.codigo == "incluir") {
-            setItem({ codigo: router.query.codigo })
+            setItem({})
         } else {
             Dado.item(router.query.codigo, "insumo")
                 .then(response => {
                     if (response.data != null) {
-                        setItem(response.data.item)
-                        document.getElementById("descricao").value = response.data.item.descricao;
-                        document.getElementById("unidadeMedida").value = response.data.item.unidadeMedida;
-                        document.getElementById("quantidade").value = response.data.item.quantidade;
-                        document.getElementById("quantidadeMinima").value = response.data.item.quantidadeMinima;
-                        document.getElementById("ultimoValorUnidade").value = response.data.item.ultimoValorUnidade;
+                        if (response.data.status == true) {
+                            setItem(response.data.item)
+                            document.getElementById("descricao").value = response.data.item.descricao;
+                            document.getElementById("unidadeMedida").value = response.data.item.unidadeMedida;
+                            document.getElementById("quantidade").value = response.data.item.quantidade;
+                            document.getElementById("quantidadeMinima").value = response.data.item.quantidadeMinima;
+                            document.getElementById("ultimoValorUnidade").value = response.data.item.ultimoValorUnidade;
+                        }else{
+                            setItem({})
+                            console.log("error: " + response.data.descricao)
+                        
+                        }
                     }
                 }, (error) => {
-                    console.log("error: "+error)
+                    console.log("error: " + error)
                 })
         }
     }
@@ -33,8 +39,7 @@ function Insumo() {
     function mudarDescricao(event) {
         var itemTemp = item
         itemTemp.descricao = event.target.value
-        setItem(itemTemp);
-        console.log(JSON.stringify(item))
+        setItem(itemTemp); 
 
     }
     function mudarUnidadeMedida(event) {
@@ -60,8 +65,7 @@ function Insumo() {
     }
 
     function salvar() {
-        var erroObrigatorio = testarObrigatoriedade()
-        if (erroObrigatorio) {
+        if (possuiErroObrigatorio()) {
             alert("Preencha todos os Campos obrigatórios!")
         } else {
             Dado.salvar(item, "insumo").then(response => {
@@ -77,8 +81,8 @@ function Insumo() {
             })
         }
     }
-    function testarObrigatoriedade() {
-        if (item.descricao == "") {
+    function possuiErroObrigatorio() {
+        if (item.descricao=="" || item.descricao==undefined) {
             return true;
         }
         if (item.unidadeMedida == "") {
@@ -118,19 +122,19 @@ function Insumo() {
 
                 <FormGroup>
                     <Label for="quantidade">Quantidade</Label>
-                    <Input type="number" id="quantidade" disabled="true" onChange={mudarQuantidade}/>
+                    <Input type="number" id="quantidade" disabled="true" onChange={mudarQuantidade} />
                 </FormGroup>
 
                 <FormGroup>
                     <Label for="quantidadeMinima">Quantidade Mínima</Label>
-                    <Input type="number" id="quantidadeMinima" onChange={mudarQuantidadeMinima}/>
+                    <Input type="number" id="quantidadeMinima" onChange={mudarQuantidadeMinima} />
                 </FormGroup>
 
                 <FormGroup>
                     <Label for="ultimoValorUnidade">Último Valor Por Unidade</Label>
                     <Input type="number" disabled="true" id="ultimoValorUnidade" onChange={mudarUltimoValorUnidade} />
                 </FormGroup>
- 
+
 
                 <Button color="danger" onClick={salvar}>Salvar</Button>
             </Form>
