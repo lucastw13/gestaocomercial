@@ -26,7 +26,7 @@ function Receita() {
                     }
                 }
             }, (error) => {
-                onsole.log("error: " + error)
+                console.log("error: " + error)
             })
     }
 
