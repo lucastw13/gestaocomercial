@@ -1,6 +1,6 @@
 import { useState, React, useEffect } from 'react';
 import Menu from './menu.js';
-import { Container, Table } from 'reactstrap';
+import { Container, Table,Button } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Dado from '../dado/generico.js';
 import Host from '../dado/host';
@@ -8,7 +8,7 @@ import { useRouter } from 'next/router'
 function Insumo() {
     const router = useRouter();
     const [lista, setLista] = useState("");
-    const [console, setConsole] = useState("");
+    const [consoleTeste, setConsoleTeste] = useState("");
 
     if ((lista == "") || (lista == undefined)) {
         listar()
@@ -16,30 +16,31 @@ function Insumo() {
 
     function listar() {
         try {
+            console.log("entrouListar")
             Dado.listar("insumo")
                 .then(response => {
-                    setConsole("entrou response")
+                    setConsoleTeste("entrou response")
                     if (response.data != null) {
-                        setConsole("response.data != null")
+                        setConsoleTeste("response.data != null")
                         if (response.data.status == true) {
-                            setConsole("true")
-                            setConsole(JSON.stringify(response.data.lista))
+                            setConsoleTeste("true")
+                            setConsoleTeste(JSON.stringify(response.data.lista))
                             setLista(response.data.lista)
                         } else {
-                            setConsole("false")
-                            setConsole("error: " + response.data.descricao)
+                            setConsoleTeste("false")
+                            setConsoleTeste("error: " + response.data.descricao)
                             setLista([])
                             console.log("error: " + response.data.descricao)
 
                         }
                     }
                 }, (error) => {
-                    setConsole("error: " + error)
+                    setConsoleTeste("error: " + error)
                     console.log("error: " + error)
                 })
         } catch (error) {
-            if (console == "" || console == undefined) {
-                setConsole("error: " + error)
+            if (consoleTeste == "" || consoleTeste == undefined) {
+                setConsoleTeste("error: " + error)
 
 
             }
@@ -100,8 +101,8 @@ function Insumo() {
                 </tbody>
             </Table>
 
-            <br /><br /> <h1>{console}</h1>
-
+            <br /><br /> <h1>{consoleTeste}</h1>
+            <Button color="danger" onClick={()=>listar()}>Buscar</Button>
         </Container >
     );
 
