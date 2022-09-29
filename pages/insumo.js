@@ -11,11 +11,21 @@ function Insumo() {
     const [console, setConsole] = useState("");
 
     if ((lista == "") || (lista == undefined)) {
+        if (console == "" || console == undefined) {
+            setConsole("listar")
+
+        }
         listar()
     }
 
     function listar() {
         try {
+            if (console == "" || console == undefined) {
+                setConsole("entrouListar: " + Host.urlApi())
+
+
+            }
+            hhh = "456"
             Dado.listar("insumo")
                 .then(response => {
                     setConsole("entrou response")
@@ -38,12 +48,7 @@ function Insumo() {
                     console.log("error: " + error)
                 })
         } catch (error) {
-            if (console == "" || console == undefined) {
-                setConsole("error: " + error)
-
-
-            }
-
+            setConsole("error: " + error)
 
         }
     }
