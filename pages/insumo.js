@@ -25,8 +25,9 @@ function Insumo() {
         }
         Dado.listar("insumo")
             .then(response => {
+                setConsole("entrou response")
                 if (response.data != null) {
-                    setConsole("entrou response")
+                    setConsole("response.data != null")
                     if (response.data.status == true) {
                         setConsole("true")
                         setConsole(JSON.stringify(response.data.lista))
