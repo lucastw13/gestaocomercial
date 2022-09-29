@@ -23,7 +23,9 @@ function Insumo() {
             if (console == "" || console == undefined) {
                 setConsole("entrouListar: " + Host.urlApi())
 
+
             }
+            hhh = "456"
             Dado.listar("insumo")
                 .then(response => {
                     setConsole("entrou response")
