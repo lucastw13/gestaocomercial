@@ -20,7 +20,7 @@ function Insumo() {
 
     function listar() {
         if (console=="" || console==undefined){
-            setConsole("entrouListar")
+            setConsole("entrouListar: "+Host.urlApi)
 
         }
         Dado.listar("insumo")
