@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import Dado from '../dado/menu.js'
 import Host from '../dado/host'
-function Menu() {
+function Menu() {   
     return (
         <Container>
             <Nav>

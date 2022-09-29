@@ -30,40 +30,13 @@ function Receita() {
                                         setListaInsumo(response.data.lista)
                                     } else {
                                         setListaInsumo([])
-                                        console.log("error: " + response.data.descricao)
                                     }
 
                                 }, (error) => {
                                     console.log("error: " + error)
                                 })
 
-                            /*
-                            var listaTemp = []
-                            var listaInsumoTemp = response.data.item.insumo
-                            for (var insumo of listaInsumoTemp) {
-                                Dado.item(insumo._id, "insumo")
-                                    .then(response => {
-                                        if (response.data.status == true) {
-                                            var insumoTemp = response.data.item
-                                            for (var insumoAtualizarQuantidade of listaInsumoTemp) {
-                                                if (insumoAtualizarQuantidade._id == insumoTemp._id) {
-                                                    insumoTemp.quantidadeReceita = insumoAtualizarQuantidade.quantidade
-                                                }
-                                            }
-
-                                            listaTemp.push(insumoTemp)
-                                            console.log(insumoTemp)
-                                            setListaInsumo(listaTemp)
-                                        } else {
-                                            console.log("error: " + response.data.descricao)
-
-                                        }
-                                    }, (error) => {
-                                        console.log("error: " + error)
-                                    })
-
-                            }*/
-                        } else {
+                                                   } else {
                             setItem({})
                             console.log("error: " + response.data.descricao)
                         }
@@ -98,14 +71,14 @@ function Receita() {
     }
 
     function adicionarInsumo() {
-        setListaInsumo([])
+        
         var _id = document.getElementById("insumo").value
         var quantidade = document.getElementById("insumoQuantidade").value
 
         if (_id != "" && _id != undefined && quantidade != "" && quantidade != undefined) {
             var possuiInsumo = false
-            for (var insumo of item.insumo) {
-                if (insumo._id == _id) {
+            for (var itemInsumo of item.insumo) {
+                if (itemInsumo._id == _id) {
                     possuiInsumo = true
                     break
                 }
@@ -113,16 +86,20 @@ function Receita() {
             if (possuiInsumo) {
                 alert("Insumo já Incluso!")
             } else {
-                for (var insumoSelecionado of listaInsumoTodos) {
-                    if (insumoSelecionado._id == _id) {
+
+                for (var itemInsumoTodos of listaInsumoTodos) {
+                    if (itemInsumoTodos._id == _id) {
                         break;
                     }
                 }
-                console.log(insumoSelecionado)
 
-                var listaTemp = listaInsumo
-                insumoSelecionado.quantidadeReceita = quantidade
-                listaTemp.push(insumoSelecionado)
+                var listaTemp = []
+                for(itemInsumo of listaInsumo){
+                    listaTemp.push(itemInsumo)
+                }
+                itemInsumoTodos.quantidadeReceita = quantidade
+                listaTemp.push(itemInsumoTodos)
+
                 setListaInsumo(listaTemp)
                 var itemTemp = item
                 if (itemTemp.insumo == "" || itemTemp.insumo == undefined) {
@@ -130,14 +107,13 @@ function Receita() {
                 }
                 itemTemp.insumo.push({ _id: _id, quantidade: quantidade })
                 setItem(itemTemp)
-                console.log(listaInsumo)
+                document.getElementById("insumoQuantidade").value = ""
 
             }
         } else {
 
             alert("Preencha todos os Campos obrigatórios!")
         }
-
     }
 
 
