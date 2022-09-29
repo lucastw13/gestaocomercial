@@ -8,18 +8,26 @@ import { useRouter } from 'next/router'
 function Insumo() {
     const router = useRouter();
     const [lista, setLista] = useState("");
+    const [console, setConsole] = useState("");
 
     if ((lista == "") || (lista == undefined)) {
+        //setConsole("listar")
         listar()
     }
 
     function listar() {
+        //setConsole("listarEntrou")
         Dado.listar("insumo")
             .then(response => {
                 if (response.data != null) {
+                    setConsole("entrou response")
                     if (response.data.status == true) {
+                        setConsole("true")
+                        setConsole(JSON.stringify(response.data.lista))
                         setLista(response.data.lista)
                     } else {
+                        setConsole("false")
+                        setConsole("error: " + response.data.descricao)
                         setLista([])
                         console.log("error: " + response.data.descricao)
 
@@ -81,6 +89,8 @@ function Insumo() {
                     ))}
                 </tbody>
             </Table>
+
+            <br/><br/> <h1>{console}</h1>
 
         </Container >
     );
