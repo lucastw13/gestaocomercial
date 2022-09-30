@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
+    "dev": "next dev --port ${PORT}",
+    "build": "next build --port ${PORT}",
+    "start": "next start --port ${PORT}"
   },
   "keywords": [],
   "author": "",
