@@ -1,16 +1,10 @@
 export default class Host {
   static url() {
-    return process.env.url
-    return "https://gestaocomercial1.herokuapp.com";
-    return "http://lucas-pc:3000";
-    return "http://localhost:3000";
-
+    console.log(process.env.URL)
+    return process.env.URL
   }
   static urlApi() {
-    return process.env.urlApi
-    return "https://gestaocomercialapi.herokuapp.com";
-    return "http://lucas-pc:3001";
-    return "http://localhost:3001";
-
+    console.log(process.env.URL_API)
+    return process.env.URL_API
   }
 }
