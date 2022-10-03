@@ -60,7 +60,12 @@ function RegistraReceita() {
 
 
     function registrarReceita() {
-        Dado.item(item._id, "registrareceita").then(response => {
+       
+        var itemRegistro = {
+            receita:item._id,            
+        }
+  
+        Dado.salvar(item, "registrareceita").then(response => {
             if (response.data != null) {
                 if (response.data.status == true) {
                     router.push(Host.url() + "/registrareceita")

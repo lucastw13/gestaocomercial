@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Dado from '../../dado/generico.js'
 import { useRouter } from 'next/router'
 import Host from '../../dado/host';
-function Receita() {
+function Compra() {
     const [item, setItem] = useState("");
     const [listaInsumo, setListaInsumo] = useState("");
     const [listaInsumoTodos, setListaInsumoTodos] = useState("");
@@ -17,14 +17,13 @@ function Receita() {
             setItem({ insumo: [] })
             setListaInsumo([])
         } else {
-            Dado.item(router.query.codigo, "receita")
+            Dado.item(router.query.codigo, "compra")
                 .then(response => {
                     if (response.data != null) {
                         if (response.data.status == true) {
                             setItem(response.data.item)
-                            document.getElementById("descricao").value = response.data.item.descricao;
 
-                            Dado.itemLista(response.data.item._id, "receita", "insumo")
+                            Dado.itemLista(response.data.item._id, "compra", "insumo")
                                 .then(response => {
                                     if (response.data.status == true) {
                                         setListaInsumo(response.data.lista)
@@ -62,83 +61,78 @@ function Receita() {
                 console.log("error: " + error)
             })
     }
-
-    function mudarDescricao(event) {
-        var itemTemp = item
-        itemTemp.descricao = event.target.value
-        setItem(itemTemp);
-
-    }
-
     function adicionarInsumo() {
+        if (item._id != "" && item._id != undefined) {
+            alert("Compra não pode ser editada")
+        } else {
+            var _id = document.getElementById("insumo").value
+            var quantidade = document.getElementById("insumoQuantidade").value
 
-        var _id = document.getElementById("insumo").value
-        var quantidade = document.getElementById("insumoQuantidade").value
-
-        if (_id != "" && _id != undefined && quantidade != "" && quantidade != undefined) {
-            var possuiInsumo = false
-            for (var itemInsumo of item.insumo) {
-                if (itemInsumo._id == _id) {
-                    possuiInsumo = true
-                    break
-                }
-            }
-            if (possuiInsumo) {
-                alert("Insumo já Incluso!")
-            } else {
-
-                for (var itemInsumoTodos of listaInsumoTodos) {
-                    if (itemInsumoTodos._id == _id) {
-                        break;
+            if (_id != "" && _id != undefined && quantidade != "" && quantidade != undefined) {
+                var possuiInsumo = false
+                for (var itemInsumo of item.insumo) {
+                    if (itemInsumo._id == _id) {
+                        possuiInsumo = true
+                        break
                     }
                 }
+                if (possuiInsumo) {
+                    alert("Insumo já Incluso!")
+                } else {
 
-                var listaTemp = []
-                for (itemInsumo of listaInsumo) {
-                    listaTemp.push(itemInsumo)
+                    for (var itemInsumoTodos of listaInsumoTodos) {
+                        if (itemInsumoTodos._id == _id) {
+                            break;
+                        }
+                    }
+
+                    var listaTemp = []
+                    for (itemInsumo of listaInsumo) {
+                        listaTemp.push(itemInsumo)
+                    }
+                    itemInsumoTodos.quantidadeCompra = quantidade
+                    listaTemp.push(itemInsumoTodos)
+
+                    setListaInsumo(listaTemp)
+                    var itemTemp = item
+                    if (itemTemp.insumo == "" || itemTemp.insumo == undefined) {
+                        itemTemp.insumo = []
+                    }
+                    itemTemp.insumo.push({ _id: _id, quantidade: quantidade })
+                    setItem(itemTemp)
+                    document.getElementById("insumoQuantidade").value = ""
+
                 }
-                itemInsumoTodos.quantidadeReceita = quantidade
-                listaTemp.push(itemInsumoTodos)
+            } else {
 
-                setListaInsumo(listaTemp)
-                var itemTemp = item
-                if (itemTemp.insumo == "" || itemTemp.insumo == undefined) {
-                    itemTemp.insumo = []
-                }
-                itemTemp.insumo.push({ _id: _id, quantidade: quantidade })
-                setItem(itemTemp)
-                document.getElementById("insumoQuantidade").value = ""
-
+                alert("Preencha todos os Campos obrigatórios!")
             }
-        } else {
-
-            alert("Preencha todos os Campos obrigatórios!")
         }
     }
 
 
     function salvar() {
-        if (possuiErroObrigatorio()) {
-            alert("Preencha todos os Campos obrigatórios!")
+        if (item._id != "" && item._id != undefined) {
+            alert("Compra não pode ser editada")
         } else {
-            Dado.salvar(item, "receita").then(response => {
-                if (response.data != null) {
-                    if (response.data.status == true) {
-                        router.push(Host.url() + "/receita")
-                    } else {
-                        console.log("error: " + response.data.descricao)
+            if (possuiErroObrigatorio()) {
+                alert("Preencha todos os Campos obrigatórios!")
+            } else {
+                Dado.salvar(item, "compra").then(response => {
+                    if (response.data != null) {
+                        if (response.data.status == true) {
+                            router.push(Host.url() + "/compra")
+                        } else {
+                            console.log("error: " + response.data.descricao)
+                        }
                     }
-                }
-            }, (error) => {
-                console.log("error: " + error)
-            })
+                }, (error) => {
+                    console.log("error: " + error)
+                })
+            }
         }
     }
     function possuiErroObrigatorio() {
-        if (item.descricao == "" || item.descricao == undefined) {
-
-            return true;
-        }
         if (item.insumo.length == 0) {
             return true
         }
@@ -171,11 +165,10 @@ function Receita() {
     return (
         <Container>
             <Menu />
-            <Form >
-                <FormGroup>
-                    <Label for="descricao">Descrição</Label>
-                    <Input type="text" id="descricao" onChange={mudarDescricao} />
-                </FormGroup>
+            <Form>
+
+                <h4>{item.data}-{item.hora}-{item.usuario}</h4>
+
 
                 <FormGroup check inline>
                     <Label for="insumo">Insumo</Label>
@@ -188,13 +181,14 @@ function Receita() {
 
                 <FormGroup check inline>
                     <Label for="insumoQuantidade">Quantidade</Label>
-                    <div width="50%"><Input type="number" id="insumoQuantidade" width="30px" /></div>
+                    <Input type="number" id="insumoQuantidade" width="30px" />
 
                 </FormGroup>
 
                 <FormGroup check inline>
                     <img src='/+.png' width="20px" onClick={adicionarInsumo} />
                 </FormGroup>
+
 
 
                 <Table>
@@ -222,7 +216,7 @@ function Receita() {
 
                                 </td>
                                 <td>
-                                    {item.quantidadeReceita}
+                                    {item.quantidadeCompra}
                                 </td>
                                 <td>
                                     {item.unidadeMedida}
@@ -243,6 +237,6 @@ function Receita() {
 
 function Pagina() {
 
-    return <Receita />
+    return <Compra />
 }
 export default Pagina;
