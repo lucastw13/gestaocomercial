@@ -139,28 +139,30 @@ function Compra() {
         return false;
     }
     function deletar(itemParametro) {
-        var deletar = confirm("Deseja excluir o insumo: " + itemParametro.descricao + " ?");
-        if (deletar) {
-            var listaInsumoTemp = []
-            for (var itemInsumo of listaInsumo) {
-                if (itemInsumo._id != itemParametro._id) {
-                    listaInsumoTemp.push(itemInsumo)
+        if (itemParametro._id != "" && itemParametro._id != undefined) {
+            alert("Compra não pode ser editada")
+            var deletar = confirm("Deseja excluir o insumo: " + itemParametro.descricao + " ?");
+            if (deletar) {
+                var listaInsumoTemp = []
+                for (var itemInsumo of listaInsumo) {
+                    if (itemInsumo._id != itemParametro._id) {
+                        listaInsumoTemp.push(itemInsumo)
+                    }
                 }
-            }
-            setListaInsumo(listaInsumoTemp)
+                setListaInsumo(listaInsumoTemp)
 
-            var itemListaInsumoTemp = []
-            for (var itemInsumo of item.insumo) {
-                if (itemInsumo._id != itemParametro._id) {
-                    itemListaInsumoTemp.push(itemInsumo)
+                var itemListaInsumoTemp = []
+                for (var itemInsumo of item.insumo) {
+                    if (itemInsumo._id != itemParametro._id) {
+                        itemListaInsumoTemp.push(itemInsumo)
+                    }
                 }
+                var itemTemp = item
+                itemTemp.insumo = itemListaInsumoTemp
+                setItem(itemTemp)
             }
-            var itemTemp = item
-            itemTemp.insumo = itemListaInsumoTemp
-            setItem(itemTemp)
         }
     }
-
 
     return (
         <Container>
