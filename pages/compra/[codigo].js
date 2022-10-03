@@ -141,6 +141,7 @@ function Compra() {
     function deletar(itemParametro) {
         if (itemParametro._id != "" && itemParametro._id != undefined) {
             alert("Compra não pode ser editada")
+        } else {
             var deletar = confirm("Deseja excluir o insumo: " + itemParametro.descricao + " ?");
             if (deletar) {
                 var listaInsumoTemp = []
@@ -162,6 +163,7 @@ function Compra() {
                 setItem(itemTemp)
             }
         }
+
     }
 
     return (
