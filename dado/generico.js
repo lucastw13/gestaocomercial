@@ -21,8 +21,6 @@ export default class Generico {
   }
   static salvar(item, entidade) {
     var dateTime = new Date()
-   
-
     if (item._id == "" || item._id == undefined) {
       item.empresa = Usuario.getEmpresa();
       item.data = dateTime.toLocaleDateString();

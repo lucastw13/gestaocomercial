@@ -65,7 +65,7 @@ function RegistraReceita() {
             receita:item._id,            
         }
   
-        Dado.salvar(item, "registrareceita").then(response => {
+        Dado.salvar(itemRegistro, "registrareceita").then(response => {
             if (response.data != null) {
                 if (response.data.status == true) {
                     router.push(Host.url() + "/registrareceita")
