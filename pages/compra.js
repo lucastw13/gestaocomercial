@@ -30,7 +30,7 @@ function Compra() {
             })
     }
 
-    function deletar(item) {
+    /*function deletar(item) {
         var deletar = confirm("Deseja excluir o compra: " + item.descricao + " ?");
         if (deletar) {
             Dado.deletar(item._id, "compra")
@@ -47,7 +47,7 @@ function Compra() {
                 })
         }
 
-    }
+    }*/
     return (
         <Container>
             <Menu />
@@ -71,10 +71,6 @@ function Compra() {
                                 <a href={Host.url() + "/compra/" + item._id}>
                                     {item.usuario}-{item.data}-{item.hora}
                                 </a>
-
-                            </td>
-                            <td>
-                                <img src='/x.png' width="20px" onClick={() => deletar(item)} />
 
                             </td>
                         </tr>

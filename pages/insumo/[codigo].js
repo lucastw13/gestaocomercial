@@ -12,7 +12,7 @@ function Insumo() {
 
     if (((item == "") || (item == undefined)) && ((router.query.codigo != "") && (router.query.codigo != undefined))) {
         if (router.query.codigo == "incluir") {
-            setItem({})
+            setItem({quantidade:0,ultimoValorUnidade:0})
         } else {
             Dado.item(router.query.codigo, "insumo")
                 .then(response => {
