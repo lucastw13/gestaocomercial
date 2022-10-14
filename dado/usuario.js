@@ -9,7 +9,7 @@ export default class Usuario {
 
   static autenticar(pNome, pSenha) {
     var senha256 = sha256(pSenha)
-    return Dado.salvar({ nome: pNome, senha: "" + senha256 }, "usuario")
+    return Dado.salvar({ nome: pNome, senha: ""+senha256 }, "usuario")
   }
   static autenticado() {
     return hasCookie('usuario');
