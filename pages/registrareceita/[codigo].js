@@ -176,7 +176,7 @@ function RegistraReceita() {
                                 {itemRegistro.hora}
                             </td>
                             <td>
-                                {itemRegistro.usuario}
+                                {itemRegistro.usuarioNome}
                             </td>
                         </tr>
                     ))}
