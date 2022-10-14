@@ -69,7 +69,7 @@ function Compra() {
                         <tr>
                             <td>
                                 <a href={Host.url() + "/compra/" + item._id}>
-                                    {item.usuario}-{item.data}-{item.hora}
+                                    {item.usuarioNome}-{item.data}-{item.hora}
                                 </a>
 
                             </td>
