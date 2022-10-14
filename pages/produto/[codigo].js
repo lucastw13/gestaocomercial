@@ -5,31 +5,34 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Dado from '../../dado/generico.js'
 import { useRouter } from 'next/router'
 import Host from '../../dado/host';
-function Receita() {
+function Produto() {
     const [item, setItem] = useState("");
-    const [listaInsumo, setListaInsumo] = useState("");
-    const [listaInsumoTodos, setListaInsumoTodos] = useState("");
+    const [listaProduto, setListaProduto] = useState("");
+    const [listaProdutoTodos, setListaProdutoTodos] = useState("");
+    const [listaReceitaTodos, setListaReceitaTodos] = useState("");
     const router = useRouter()
 
 
     if (((item == "") || (item == undefined)) && ((router.query.codigo != "") && (router.query.codigo != undefined))) {
         if (router.query.codigo == "incluir") {
-            setItem({ insumo: [] })
-            setListaInsumo([])
+            setItem({ produto: [] })
+            setListaProduto([])
         } else {
-            Dado.item(router.query.codigo, "receita")
+            Dado.item(router.query.codigo, "produto")
                 .then(response => {
                     if (response.data != null) {
                         if (response.data.status == true) {
                             setItem(response.data.item)
                             document.getElementById("descricao").value = response.data.item.descricao;
-                            document.getElementById("modoPreparo").value = response.data.item.modoPreparo;
-                            Dado.itemLista(response.data.item._id, "receita", "insumo")
+                            document.getElementById("receita").value = response.data.item.receita;
+                            document.getElementById("unidadeMedida").value = response.data.item.unidadeMedida;
+                            Dado.itemLista(response.data.item._id, "produto", "produto")
                                 .then(response => {
                                     if (response.data.status == true) {
-                                        setListaInsumo(response.data.lista)
+                                        setListaProduto(response.data.lista)
                                     } else {
-                                        setListaInsumo([])
+                                        setListaProduto([])
+                                        console.log(listaProduto)
                                     }
 
                                 }, (error) => {
@@ -47,11 +50,27 @@ function Receita() {
                     console.log("error: " + error)
                 })
         }
-        Dado.listar("insumo")
+
+        Dado.listar("produto")
             .then(response => {
                 if (response.data != null) {
                     if (response.data.status == true) {
-                        setListaInsumoTodos(response.data.lista)
+                        setListaProdutoTodos(response.data.lista)
+                    } else {
+                        setLista([])
+                        console.log("error: " + response.data.descricao)
+
+                    }
+                }
+            }, (error) => {
+                console.log("error: " + error)
+            })
+
+        Dado.listar("receita")
+            .then(response => {
+                if (response.data != null) {
+                    if (response.data.status == true) {
+                        setListaReceitaTodos(response.data.lista)
                     } else {
                         setLista([])
                         console.log("error: " + response.data.descricao)
@@ -69,51 +88,57 @@ function Receita() {
         setItem(itemTemp);
 
     }
-    function mudarModoPreparo(event) {
+    function mudarReceita(event) {
         var itemTemp = item
-        itemTemp.modoPreparo = event.target.value
+        itemTemp.receita = event.target.value
+        setItem(itemTemp);
+    }
+
+    function mudarUnidadeMedida(event) {
+        var itemTemp = item
+        itemTemp.unidadeMedida = event.target.value
         setItem(itemTemp);
 
     }
 
-    function adicionarInsumo() {
+    function adicionarProduto() {
 
-        var _id = document.getElementById("insumo").value
-        var quantidade = document.getElementById("insumoQuantidade").value
+        var _id = document.getElementById("produto").value
+        var quantidade = document.getElementById("produtoQuantidade").value
 
         if (_id != "" && _id != undefined && quantidade != "" && quantidade != undefined) {
-            var possuiInsumo = false
-            for (var itemInsumo of item.insumo) {
-                if (itemInsumo._id == _id) {
-                    possuiInsumo = true
+            var possuiProduto = false
+            for (var itemProduto of item.produto) {
+                if (itemProduto._id == _id) {
+                    possuiProduto = true
                     break
                 }
             }
-            if (possuiInsumo) {
-                alert("Insumo já Incluso!")
+            if (possuiProduto) {
+                alert("Produto já Incluso!")
             } else {
 
-                for (var itemInsumoTodos of listaInsumoTodos) {
-                    if (itemInsumoTodos._id == _id) {
+                for (var itemProdutoTodos of listaProdutoTodos) {
+                    if (itemProdutoTodos._id == _id) {
                         break;
                     }
                 }
 
                 var listaTemp = []
-                for (itemInsumo of listaInsumo) {
-                    listaTemp.push(itemInsumo)
+                for (itemProduto of listaProduto) {
+                    listaTemp.push(itemProduto)
                 }
-                itemInsumoTodos.quantidadeReceita = quantidade
-                listaTemp.push(itemInsumoTodos)
+                itemProdutoTodos.quantidadeProduto = quantidade
+                listaTemp.push(itemProdutoTodos)
 
-                setListaInsumo(listaTemp)
+                setListaProduto(listaTemp)
                 var itemTemp = item
-                if (itemTemp.insumo == "" || itemTemp.insumo == undefined) {
-                    itemTemp.insumo = []
+                if (itemTemp.produto == "" || itemTemp.produto == undefined) {
+                    itemTemp.produto = []
                 }
-                itemTemp.insumo.push({ _id: _id, quantidade: quantidade })
+                itemTemp.produto.push({ _id: _id, quantidade: quantidade })
                 setItem(itemTemp)
-                document.getElementById("insumoQuantidade").value = ""
+                document.getElementById("produtoQuantidade").value = ""
 
             }
         } else {
@@ -124,13 +149,14 @@ function Receita() {
 
 
     function salvar() {
-        if (possuiErroObrigatorio()) {
-            alert("Preencha todos os Campos obrigatórios!")
+        var retorno = possuiErroObrigatorio()
+        if (retorno.status) {
+            alert(retorno.mensagem)
         } else {
-            Dado.salvar(item, "receita").then(response => {
+            Dado.salvar(item, "produto").then(response => {
                 if (response.data != null) {
                     if (response.data.status == true) {
-                        router.push(Host.url() + "/receita")
+                        router.push(Host.url() + "/produto")
                     } else {
                         console.log("error: " + response.data.descricao)
                     }
@@ -141,34 +167,35 @@ function Receita() {
         }
     }
     function possuiErroObrigatorio() {
+        var retorno = { status: false, mensagem: "" }
         if (item.descricao == "" || item.descricao == undefined) {
-
-            return true;
+            retorno = { status: true, mensagem: "Informe a Descrição" }
         }
-        if (item.insumo.length == 0) {
-            return true
+        if ((item.receita == "" || item.receita == undefined)
+            && item.produto.length == 0) {
+            retorno = { status: true, mensagem: "Informe a receita ou pelo menos um produto" }
         }
-        return false;
+        return retorno;
     }
     function deletar(itemParametro) {
-        var deletar = confirm("Deseja excluir o insumo: " + itemParametro.descricao + " ?");
+        var deletar = confirm("Deseja excluir o produto: " + itemParametro.descricao + " ?");
         if (deletar) {
-            var listaInsumoTemp = []
-            for (var itemInsumo of listaInsumo) {
-                if (itemInsumo._id != itemParametro._id) {
-                    listaInsumoTemp.push(itemInsumo)
+            var listaProdutoTemp = []
+            for (var itemProduto of listaProduto) {
+                if (itemProduto._id != itemParametro._id) {
+                    listaProdutoTemp.push(itemProduto)
                 }
             }
-            setListaInsumo(listaInsumoTemp)
+            setListaProduto(listaProdutoTemp)
 
-            var itemListaInsumoTemp = []
-            for (var itemInsumo of item.insumo) {
-                if (itemInsumo._id != itemParametro._id) {
-                    itemListaInsumoTemp.push(itemInsumo)
+            var itemListaProdutoTemp = []
+            for (var itemProduto of item.produto) {
+                if (itemProduto._id != itemParametro._id) {
+                    itemListaProdutoTemp.push(itemProduto)
                 }
             }
             var itemTemp = item
-            itemTemp.insumo = itemListaInsumoTemp
+            itemTemp.produto = itemListaProdutoTemp
             setItem(itemTemp)
         }
     }
@@ -184,29 +211,42 @@ function Receita() {
                 </FormGroup>
 
                 <FormGroup>
-                    <Label for="modoPreparo">Modo de Preparo</Label>
-                    <Input type="textarea" id="modoPreparo" onChange={mudarModoPreparo} />
+                    <Label for="unidadeMedida">Unidade de Medida</Label>
+                    <Input type="select" id="unidadeMedida" onChange={mudarUnidadeMedida}>
+                        <option>G</option>
+                        <option>UND</option>
+                        <option>ML</option>
+                    </Input>
                 </FormGroup>
 
                 <FormGroup check inline>
-                    <Label for="insumo">Insumo</Label>
-                    <Input type="select" id="insumo">
-                        {listaInsumoTodos && listaInsumoTodos.map((item) => (
+                    <Label for="produto">Produto</Label>
+                    <Input type="select" id="produto">
+                        {listaProdutoTodos && listaProdutoTodos.map((item) => (
                             <option value={item._id}>{item.descricao}</option>
                         ))}
                     </Input>
                 </FormGroup>
 
                 <FormGroup check inline>
-                    <Label for="insumoQuantidade">Quantidade</Label>
-                    <div width="50%"><Input type="number" id="insumoQuantidade" width="30px" /></div>
+                    <Label for="produtoQuantidade">Quantidade</Label>
+                    <div width="50%"><Input type="number" id="produtoQuantidade" width="30px" /></div>
 
                 </FormGroup>
 
                 <FormGroup check inline>
-                    <img src='/+.png' width="20px" onClick={adicionarInsumo} />
+                    <img src='/+.png' width="20px" onClick={adicionarProduto} />
                 </FormGroup>
 
+                <FormGroup>
+                    <Label for="receita">Receita</Label>
+                    <Input type="select" id="receita" onChange={mudarReceita}>
+                        <option value="">Selecione</option>
+                        {listaReceitaTodos && listaReceitaTodos.map((item) => (
+                            <option value={item._id}>{item.descricao}</option>
+                        ))}
+                    </Input>
+                </FormGroup>
 
                 <Table>
                     <thead>
@@ -224,16 +264,16 @@ function Receita() {
                         </tr>
                     </thead>
                     <tbody>
-                        {listaInsumo && listaInsumo.map((item) => (
+                        {listaProduto && listaProduto.map((item) => (
                             <tr>
                                 <td>
-                                    <a href={Host.url() + "/insumo/" + item._id}>
+                                    <a href={Host.url() + "/produto/" + item._id}>
                                         {item.descricao}
                                     </a>
 
                                 </td>
                                 <td>
-                                    {item.quantidadeReceita}
+                                    {item.quantidadeProduto}
                                 </td>
                                 <td>
                                     {item.unidadeMedida}
@@ -254,6 +294,6 @@ function Receita() {
 
 function Pagina() {
 
-    return <Receita />
+    return <Produto />
 }
 export default Pagina;

@@ -12,7 +12,7 @@ function Insumo() {
 
     if (((item == "") || (item == undefined)) && ((router.query.codigo != "") && (router.query.codigo != undefined))) {
         if (router.query.codigo == "incluir") {
-            setItem({quantidade:0,ultimoValorUnidade:0})
+            setItem({quantidade:0,valor:0})
         } else {
             Dado.item(router.query.codigo, "insumo")
                 .then(response => {
@@ -23,7 +23,7 @@ function Insumo() {
                             document.getElementById("unidadeMedida").value = response.data.item.unidadeMedida;
                             document.getElementById("quantidade").value = response.data.item.quantidade;
                             document.getElementById("quantidadeMinima").value = response.data.item.quantidadeMinima;
-                            document.getElementById("ultimoValorUnidade").value = response.data.item.ultimoValorUnidade;
+                            document.getElementById("ultimoValorUnidade").value = response.data.item.valor;
                         } else {
                             setItem({})
                             console.log("error: " + response.data.descricao)
@@ -58,11 +58,6 @@ function Insumo() {
         itemTemp.quantidadeMinima = event.target.value
         setItem(itemTemp);
     }
-    function mudarUltimoValorUnidade(event) {
-        var itemTemp = item
-        itemTemp.quantidadeMinima = event.target.value
-        setItem(itemTemp);
-    }
 
     function salvar() {
         if (possuiErroObrigatorio()) {
@@ -88,15 +83,9 @@ function Insumo() {
         if (item.unidadeMedida == "") {
             return true;
         }
-        /*if (item.quantidade=="") {
-            return true;
-        }*/
         if (item.quantidadeMinima == "") {
             return true;
         }
-        /*if (item.ultimoValorUnidade=="") {
-            return true;
-        }*/
         return false;
     }
 
@@ -132,7 +121,7 @@ function Insumo() {
 
                 <FormGroup>
                     <Label for="ultimoValorUnidade">Último Valor Por Unidade</Label>
-                    <Input type="number" disabled="true" id="ultimoValorUnidade" onChange={mudarUltimoValorUnidade} />
+                    <Input type="number" disabled="true" id="ultimoValorUnidade" />
                 </FormGroup>
 
 
