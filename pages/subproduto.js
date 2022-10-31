@@ -14,7 +14,7 @@ function Produto() {
     }
 
     function listar() {
-        Dado.listarProduto("produto",false)
+        Dado.listarProduto("produto",true)
             .then(response => {
                 if (response.data != null) {
                     if (response.data.status == true) {
@@ -58,7 +58,7 @@ function Produto() {
                             Descrição
                         </th>
                         <th>
-                            <a href={Host.url() + "/produto/incluir"}>
+                            <a href={Host.url() + "/subproduto/incluir"}>
                                 <img src='/+.png' width="20px" />
                             </a>
                         </th>
@@ -68,7 +68,7 @@ function Produto() {
                     {lista && lista.map((item) => (
                         <tr>
                             <td>
-                                <a href={Host.url() + "/produto/" + item._id}>
+                                <a href={Host.url() + "/subproduto/" + item._id}>
                                     {item.descricao}
                                 </a>
 

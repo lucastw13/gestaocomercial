@@ -67,8 +67,9 @@ function Compra() {
         } else {
             var _id = document.getElementById("insumo").value
             var quantidade = document.getElementById("insumoQuantidade").value
+            var valor = document.getElementById("insumoValor").value
 
-            if (_id != "" && _id != undefined && quantidade != "" && quantidade != undefined) {
+            if (_id != "" && _id != undefined && quantidade != "" && quantidade != undefined&& valor != "" && valor != undefined)  {
                 var possuiInsumo = false
                 for (var itemInsumo of item.insumo) {
                     if (itemInsumo._id == _id) {
@@ -91,6 +92,7 @@ function Compra() {
                         listaTemp.push(itemInsumo)
                     }
                     itemInsumoTodos.quantidadeCompra = quantidade
+                    itemInsumoTodos.valorCompra = valor
                     listaTemp.push(itemInsumoTodos)
 
                     setListaInsumo(listaTemp)
@@ -98,9 +100,10 @@ function Compra() {
                     if (itemTemp.insumo == "" || itemTemp.insumo == undefined) {
                         itemTemp.insumo = []
                     }
-                    itemTemp.insumo.push({ _id: _id, quantidade: quantidade })
+                    itemTemp.insumo.push({ _id: _id, quantidade: quantidade ,valor:valor})
                     setItem(itemTemp)
                     document.getElementById("insumoQuantidade").value = ""
+                    document.getElementById("insumoValor").value = ""
 
                 }
             } else {
@@ -188,6 +191,12 @@ function Compra() {
                     <Input type="number" id="insumoQuantidade" width="30px" />
 
                 </FormGroup>
+                
+                <FormGroup check inline>
+                    <Label for="insumoValor">Valor</Label>
+                    <Input type="number" id="insumoValor" width="30px" />
+
+                </FormGroup>
 
                 <FormGroup check inline>
                     <img src='/+.png' width="20px" onClick={adicionarInsumo} />
@@ -207,6 +216,9 @@ function Compra() {
                             <th>
                                 Unid. Med.
                             </th>
+                            <th>
+                                Valor
+                            </th>
 
                         </tr>
                     </thead>
@@ -224,6 +236,9 @@ function Compra() {
                                 </td>
                                 <td>
                                     {item.unidadeMedida}
+                                </td>
+                                <td>
+                                    {item.valorCompra}
                                 </td>
                                 <td>
                                     <img src='/x.png' width="20px" onClick={() => deletar(item)} />
