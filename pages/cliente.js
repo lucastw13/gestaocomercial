@@ -29,7 +29,7 @@ function Cliente() {
     }
 
     function deletar(item) {
-        var deletar = confirm("Deseja excluir o cliente: " + item.descricao + " ?");
+        var deletar = confirm("Deseja excluir o cliente: " + item.nome + " ?");
         if (deletar) {
             Dado.deletar(item._id, "cliente")
                 .then(response => {
