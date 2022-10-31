@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Dado from '../../dado/generico.js'
 import { useRouter } from 'next/router'
 import Host from '../../dado/host';
+import styles from './[codigo].module.css'
 function SubProduto() {
     const [item, setItem] = useState("");
     const [listaProduto, setListaProduto] = useState("");
@@ -68,7 +69,7 @@ function SubProduto() {
                 })
         }
 
-        Dado.listarProduto("produto",true)
+        Dado.listarProduto("produto", false)
             .then(response => {
                 if (response.data != null) {
                     if (response.data.status == true) {
@@ -240,7 +241,7 @@ function SubProduto() {
             Dado.salvar(item, "produto").then(response => {
                 if (response.data != null) {
                     if (response.data.status == true) {
-                        router.push(Host.url() + "/produto")
+                        router.push(Host.url() + "/subproduto")
                     } else {
                         console.log("error: " + response.data.descricao)
                     }
@@ -255,9 +256,8 @@ function SubProduto() {
         if (item.descricao == "" || item.descricao == undefined) {
             retorno = { status: true, mensagem: "Informe a Descrição" }
         }
-        if ((item.receita == "" || item.receita == undefined)
-            && item.produto.length == 0) {
-            retorno = { status: true, mensagem: "Informe a receita ou pelo menos um produto" }
+        if (item.produto.length == 0) {
+            retorno = { status: true, mensagem: "Informe pelo menos um produto" }
         }
         return retorno;
     }
@@ -345,125 +345,129 @@ function SubProduto() {
                         </Input>
                     </FormGroup>
                 }
-                <FormGroup check inline>
-                    <Label for="produto">Produto</Label>
-                    <Input type="select" id="produto">
-                        {listaProdutoTodos && listaProdutoTodos.map((item) => (
-                            <option value={item._id}>{item.descricao}</option>
-                        ))}
-                    </Input>
-                </FormGroup>
 
-                <FormGroup check inline>
-                    <Label for="produtoQuantidade">Quantidade</Label>
-                    <div width="50%"><Input type="number" id="produtoQuantidade" width="30px" /></div>
+                <div className={styles.listaProduto}>
+                    <FormGroup check inline>
+                        <Label for="produto">Produto</Label>
+                        <Input type="select" id="produto">
+                            {listaProdutoTodos && listaProdutoTodos.map((item) => (
+                                <option value={item._id}>{item.descricao}</option>
+                            ))}
+                        </Input>
+                    </FormGroup>
 
-                </FormGroup>
+                    <FormGroup check inline>
+                        <Label for="produtoQuantidade">Quantidade</Label>
+                        <div width="50%"><Input type="number" id="produtoQuantidade" width="30px" /></div>
 
-                <FormGroup check inline>
-                    <img src='/+.png' width="20px" onClick={adicionarProduto} />
-                </FormGroup>
+                    </FormGroup>
+
+                    <FormGroup check inline>
+                        <img src='/+.png' width="20px" onClick={adicionarProduto} />
+                    </FormGroup>
 
 
 
-                <Table>
-                    <thead>
-                        <tr>
-                            <th>
-                                Descrição
-                            </th>
-                            <th>
-                                Quant.
-                            </th>
-                            <th>
-                                Unid. Med.
-                            </th>
-
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {listaProduto && listaProduto.map((item) => (
+                    <Table>
+                        <thead>
                             <tr>
-                                <td>
-                                    <a href={Host.url() + "/produto/" + item._id}>
-                                        {item.descricao}
-                                    </a>
+                                <th>
+                                    Descrição
+                                </th>
+                                <th>
+                                    Quant.
+                                </th>
+                                <th>
+                                    Unid. Med.
+                                </th>
 
-                                </td>
-                                <td>
-                                    {item.quantidadeProduto}
-                                </td>
-                                <td>
-                                    {item.unidadeMedida}
-                                </td>
-                                <td>
-                                    <img src='/x.png' width="20px" onClick={() => deletarProduto(item)} />
-
-                                </td>
                             </tr>
-                        ))}
-                    </tbody>
-                </Table>
+                        </thead>
+                        <tbody>
+                            {listaProduto && listaProduto.map((item) => (
+                                <tr>
+                                    <td>
+                                        <a href={Host.url() + "/produto/" + item._id}>
+                                            {item.descricao}
+                                        </a>
 
-                <FormGroup check inline>
-                    <Label for="insumo">Insumo</Label>
-                    <Input type="select" id="insumo">
-                        {listaInsumoTodos && listaInsumoTodos.map((item) => (
-                            <option value={item._id}>{item.descricao}</option>
-                        ))}
-                    </Input>
-                </FormGroup>
+                                    </td>
+                                    <td>
+                                        {item.quantidadeProduto}
+                                    </td>
+                                    <td>
+                                        {item.unidadeMedida}
+                                    </td>
+                                    <td>
+                                        <img src='/x.png' width="20px" onClick={() => deletarProduto(item)} />
 
-                <FormGroup check inline>
-                    <Label for="insumoQuantidade">Quantidade</Label>
-                    <div width="50%"><Input type="number" id="insumoQuantidade" width="30px" /></div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
+                </div>
+                <div className={styles.listaInsumo}>
+                    <FormGroup check inline>
+                        <Label for="insumo">Insumo</Label>
+                        <Input type="select" id="insumo">
+                            {listaInsumoTodos && listaInsumoTodos.map((item) => (
+                                <option value={item._id}>{item.descricao}</option>
+                            ))}
+                        </Input>
+                    </FormGroup>
 
-                </FormGroup>
+                    <FormGroup check inline>
+                        <Label for="insumoQuantidade">Quantidade</Label>
+                        <div width="50%"><Input type="number" id="insumoQuantidade" width="30px" /></div>
 
-                <FormGroup check inline>
-                    <img src='/+.png' width="20px" onClick={adicionarInsumo} />
-                </FormGroup>
+                    </FormGroup>
+
+                    <FormGroup check inline>
+                        <img src='/+.png' width="20px" onClick={adicionarInsumo} />
+                    </FormGroup>
 
 
 
-                <Table>
-                    <thead>
-                        <tr>
-                            <th>
-                                Descrição
-                            </th>
-                            <th>
-                                Quant.
-                            </th>
-                            <th>
-                                Unid. Med.
-                            </th>
-
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {listaInsumo && listaInsumo.map((item) => (
+                    <Table>
+                        <thead>
                             <tr>
-                                <td>
-                                    <a href={Host.url() + "/insumo/" + item._id}>
-                                        {item.descricao}
-                                    </a>
+                                <th>
+                                    Descrição
+                                </th>
+                                <th>
+                                    Quant.
+                                </th>
+                                <th>
+                                    Unid. Med.
+                                </th>
 
-                                </td>
-                                <td>
-                                    {item.quantidadeInsumo}
-                                </td>
-                                <td>
-                                    {item.unidadeMedida}
-                                </td>
-                                <td>
-                                    <img src='/x.png' width="20px" onClick={() => deletarInsumo(item)} />
-
-                                </td>
                             </tr>
-                        ))}
-                    </tbody>
-                </Table>
+                        </thead>
+                        <tbody>
+                            {listaInsumo && listaInsumo.map((item) => (
+                                <tr>
+                                    <td>
+                                        <a href={Host.url() + "/insumo/" + item._id}>
+                                            {item.descricao}
+                                        </a>
+
+                                    </td>
+                                    <td>
+                                        {item.quantidadeInsumo}
+                                    </td>
+                                    <td>
+                                        {item.unidadeMedida}
+                                    </td>
+                                    <td>
+                                        <img src='/x.png' width="20px" onClick={() => deletarInsumo(item)} />
+
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
+                </div>
                 <Button color="danger" onClick={salvar}>Salvar</Button>
             </Form>
         </Container>

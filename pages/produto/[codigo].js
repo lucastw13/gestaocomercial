@@ -255,9 +255,8 @@ function Produto() {
         if (item.descricao == "" || item.descricao == undefined) {
             retorno = { status: true, mensagem: "Informe a Descrição" }
         }
-        if ((item.receita == "" || item.receita == undefined)
-            && item.produto.length == 0) {
-            retorno = { status: true, mensagem: "Informe a receita ou pelo menos um produto" }
+        if (item.receita == "" || item.receita == undefined){
+            retorno = { status: true, mensagem: "Informe a receita" }
         }
         return retorno;
     }
