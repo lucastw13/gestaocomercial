@@ -7,6 +7,8 @@ export default class Menu {
     lista.push({codigo: 4, descricao: "Registrar Compra", pagina: "compra"})
     lista.push({codigo: 5, descricao: "Produtos", pagina: "produto"})
     lista.push({codigo: 6, descricao: "SubProdutos", pagina: "subproduto"})
+    lista.push({codigo: 6, descricao: "Clientes", pagina: "cliente"})
+    lista.push({codigo: 6, descricao: "Pedido", pagina: "pedido"})
     return lista;
   
   } 
