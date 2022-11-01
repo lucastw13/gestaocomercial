@@ -14,7 +14,7 @@ function Produto() {
     }
 
     function listar() {
-        Dado.listarProduto("produto",false)
+        Dado.listarProduto(false)
             .then(response => {
                 if (response.data != null) {
                     if (response.data.status == true) {

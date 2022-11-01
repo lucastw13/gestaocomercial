@@ -7,9 +7,9 @@ export default class Generico {
     var empresa = Usuario.getEmpresa();
     return axios.get(Host.urlApi() + "/" + entidade + "/codigo/entidade2/" + empresa)
   }
-  static listarProduto(entidade,eSubProduto) {
+  static listarProduto(eSubProduto) {
     var empresa = Usuario.getEmpresa();
-    return axios.get(Host.urlApi() + "/" + entidade + "/codigo/entidade2/" + empresa + "/" + eSubProduto)
+    return axios.get(Host.urlApi() + "/produto/codigo/entidade2/" + empresa + "/" + eSubProduto)
   }
   static item(codigo, entidade) {
     return axios.get(Host.urlApi() + "/" + entidade + "/" + codigo)

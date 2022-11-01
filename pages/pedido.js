@@ -6,7 +6,7 @@ import Dado from '../dado/generico.js';
 import Usuario from "../dado/usuario.js";
 import Host from '../dado/host';
 import { useRouter } from 'next/router'
-function Produto() {
+function Pedido() {
     const [lista, setLista] = useState("");
 
     if ((lista == "") || (lista == undefined)) {
@@ -14,7 +14,7 @@ function Produto() {
     }
 
     function listar() {
-        Dado.listarProduto(true)
+        Dado.listar("pedido")
             .then(response => {
                 if (response.data != null) {
                     if (response.data.status == true) {
@@ -31,9 +31,9 @@ function Produto() {
     }
 
     function deletar(item) {
-        var deletar = confirm("Deseja excluir o produto: " + item.descricao + " ?");
+        var deletar = confirm("Deseja excluir o pedido: " + item.descricao + " ?");
         if (deletar) {
-            Dado.deletar(item._id, "produto")
+            Dado.deletar(item._id, "pedido")
                 .then(response => {
                     if (response.data != null) {
                         if (response.data.status == true) {
@@ -58,7 +58,7 @@ function Produto() {
                             Descrição
                         </th>
                         <th>
-                            <a href={Host.url() + "/subproduto/incluir"}>
+                            <a href={Host.url() + "/pedido/incluir"}>
                                 <img src='/+.png' width="20px" />
                             </a>
                         </th>
@@ -68,8 +68,8 @@ function Produto() {
                     {lista && lista.map((item) => (
                         <tr>
                             <td>
-                                <a href={Host.url() + "/subproduto/" + item._id}>
-                                    {item.descricao}
+                                <a href={Host.url() + "/pedido/" + item._id}>
+                                    {item.clienteNome+" - "+item.data+" - "+item.hora}
                                 </a>
 
                             </td>
@@ -90,7 +90,7 @@ function Produto() {
 
 
 function Pagina() {
-    return <Produto />
+    return <Pedido />
 }
 
 
