@@ -89,7 +89,7 @@ function Produto() {
                     if (response.data.status == true) {
                         setListaInsumoTodos(response.data.lista)
                     } else {
-                        setLista([])
+                        setListaInsumoTodos([])
                         console.log("error: " + response.data.descricao)
 
                     }
@@ -104,7 +104,7 @@ function Produto() {
                     if (response.data.status == true) {
                         setListaReceitaTodos(response.data.lista)
                     } else {
-                        setLista([])
+                        setListaReceitaTodos([])
                         console.log("error: " + response.data.descricao)
 
                     }

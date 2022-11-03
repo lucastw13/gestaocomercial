@@ -56,7 +56,7 @@ function Pedido() {
                     if (response.data.status == true) {
                         setListaProdutoTodos(response.data.lista)
                     } else {
-                        setLista([])
+                        setListaProdutoTodos([])
                         console.log("error: " + response.data.descricao)
 
                     }
@@ -71,7 +71,7 @@ function Pedido() {
                     if (response.data.status == true) {
                         setListaClienteTodos(response.data.lista)
                     } else {
-                        setLista([])
+                        setListaClienteTodos([])
                         console.log("error: " + response.data.descricao)
 
                     }
@@ -195,7 +195,7 @@ function Pedido() {
                         ))}
                     </Input>
                 </FormGroup>
-
+                    
 
                 <FormGroup check inline>
                     <Label for="produto">Produto</Label>
