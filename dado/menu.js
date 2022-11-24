@@ -6,9 +6,10 @@ export default class Menu {
     lista.push({codigo: 3, descricao: "Registrar Receita", pagina: "registrareceita"})
     lista.push({codigo: 4, descricao: "Registrar Compra", pagina: "compra"})
     lista.push({codigo: 5, descricao: "Produtos", pagina: "produto"})
-    lista.push({codigo: 6, descricao: "SubProdutos", pagina: "subproduto"})
-    lista.push({codigo: 6, descricao: "Clientes", pagina: "cliente"})
-    lista.push({codigo: 6, descricao: "Pedidos", pagina: "pedido"})
+    lista.push({codigo: 7, descricao: "SubProdutos", pagina: "subproduto"})
+    lista.push({codigo: 8, descricao: "Clientes", pagina: "cliente"})
+    lista.push({codigo: 9, descricao: "Pedidos", pagina: "pedido"})
+    lista.push({codigo: 10, descricao: "Insumos De/Para", pagina: "insumodepara"})
     return lista;
   
   } 
