@@ -74,10 +74,10 @@ function Insumodepara() {
         if (item.cnpj == "" || item.cnpj == undefined) {
             return true;
         }
-        if (item.codigo == ""|| item.codigo == undefined) {
+        if (item.codigo == "" || item.codigo == undefined) {
             return true;
         }
-        if (item.insumo == ""|| item.insumo == undefined) {
+        if (item.insumo == "" || item.insumo == undefined) {
             return true;
         }
         return false;
@@ -104,6 +104,11 @@ function Insumodepara() {
                     <Input type="text" id="insumo" onChange={mudarInsumo} />
                 </FormGroup>
 
+                <FormGroup>
+                    <a href={Host.url() + "/insumo/" + item.insumo}>
+                        {item.insumo}
+                    </a>
+                </FormGroup>
                 <Button color="danger" onClick={salvar}>Salvar</Button>
             </Form>
         </Container>
