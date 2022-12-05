@@ -11,9 +11,14 @@ export default class Generico {
     var empresa = Usuario.getEmpresa();
     return axios.get(Host.urlApi() + "/produto/codigo/entidade2/" + empresa + "/" + eSubProduto)
   }
+  
   static item(codigo, entidade) {
     return axios.get(Host.urlApi() + "/" + entidade + "/" + codigo)
+  }
 
+  static itemDePara(cnpj,codigo) {
+    var empresa = Usuario.getEmpresa();
+    return axios.get(Host.urlApi() + "/insumodepara/codigo/entidade2/" + empresa + "/" + cnpj+"/"+codigo)
   }
 
   static itemLista(codigo, entidade, entidade2) {
@@ -37,6 +42,26 @@ export default class Generico {
       item.usuarioAlteracao = Usuario.getUsuario();
       return axios.put(Host.urlApi() + "/" + entidade, item);
 
+    }
+
+  }
+  static salvarLista(lista, entidade) {
+    
+    var dateTime = new Date()
+    var listaSalvar = []
+    for (var item of lista) {
+      if (item._id == "" || item._id == undefined) {
+        item.empresa = Usuario.getEmpresa();
+        item.data = dateTime.toLocaleDateString();
+        item.hora = dateTime.toLocaleTimeString();
+        item.usuario = Usuario.getUsuario();
+        listaSalvar.push(item)
+      } 
+    }
+    if(listaSalvar.length>0){
+      return axios.post(Host.urlApi() + "/" + entidade, listaSalvar);
+    }else{
+      return ""
     }
 
   }

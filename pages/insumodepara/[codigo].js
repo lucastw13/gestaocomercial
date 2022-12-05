@@ -12,7 +12,7 @@ function Insumodepara() {
 
     if (((item == "") || (item == undefined)) && ((router.query.codigo != "") && (router.query.codigo != undefined))) {
         if (router.query.codigo == "incluir") {
-            setItem({ quantidade: 0, valor: 0, unidadeMedida: "G" })
+            setItem({})
         } else {
             Dado.item(router.query.codigo, "insumodepara")
                 .then(response => {

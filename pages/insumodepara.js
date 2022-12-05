@@ -1,6 +1,6 @@
 import { useState, React, useEffect } from 'react';
 import Menu from './menu.js';
-import { Container, Table } from 'reactstrap';
+import { Button, Container, Table, FormGroup, Form, Label,Input  } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Dado from '../dado/generico.js';
 import Usuario from "../dado/usuario.js";
@@ -8,6 +8,8 @@ import Host from '../dado/host';
 import { useRouter } from 'next/router'
 function Insumodepara() {
     const [lista, setLista] = useState("");
+    const [chave, setChave] = useState("");
+    const router = useRouter()
 
     if ((lista == "") || (lista == undefined)) {
         listar()
@@ -48,9 +50,32 @@ function Insumodepara() {
         }
 
     }
+
+    function importar() {
+        if (chave == "" || chave == undefined) {
+            alert("Preencha todos os Campos obrigatórios!")
+        } else {
+
+            router.push(Host.url() + "/insumodeparaimportar/"+chave)
+
+        }
+    }
+    function mudarChave(event) {
+        setChave(event.target.value);
+    }
     return (
         <Container>
             <Menu />
+            <Form>
+                <FormGroup check inline>
+                    <Label for="chave">Chave</Label>
+                    <Input type="text" id="chave" onChange={mudarChave} />
+                </FormGroup>
+
+                <FormGroup check inline>
+                    <Button color="danger" onClick={importar}>Importar</Button>
+                </FormGroup>
+            </Form>
             <Table>
                 <thead>
                     <tr>
