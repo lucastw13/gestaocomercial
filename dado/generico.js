@@ -20,6 +20,10 @@ export default class Generico {
     var empresa = Usuario.getEmpresa();
     return axios.get(Host.urlApi() + "/insumodepara/codigo/entidade2/" + empresa + "/" + cnpj+"/"+codigo)
   }
+  static itemNotaFiscal(chave,entidade2) {
+    var empresa = Usuario.getEmpresa();
+    return axios.get(Host.urlApi() + "/notafiscal/"+chave+"/"+entidade2+"/"+ empresa+"/notafiscal/")
+  }
 
   static itemLista(codigo, entidade, entidade2) {
     return axios.get(Host.urlApi() + "/" + entidade + "/" + codigo + "/" + entidade2)

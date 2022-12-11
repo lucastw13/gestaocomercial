@@ -14,32 +14,12 @@ function Compraimportar() {
         if (router.query.chave == "" || router.query.chave == undefined) {
             router.push(Host.url() + "/insumodepara")
         } else {
-            Dado.item(router.query.chave, "notafiscal")
+            Dado.itemNotaFiscal(router.query.chave, "insumo")
                 .then(response => {
                     if (response.data != null) {
                         if (response.data.status == true) {
-                            var listaTemp = []
-                            for (var itemNotaFiscal of response.data.lista) {
-                                Dado.itemDePara(response.data.cnpj, itemNotaFiscal.codigo)
-                                    .then(response => {
-                                        if (response.data != null) {
-                                            if (response.data.status == true) {
-                                                console.log(response.data)
-                                                listaTemp.push(
-                                                    {
-                                                        insumo: response.data.item.insumo,
-                                                        quantidade: itemNotaFiscal.quantidade
-                                                    })
-                                                    setLista(listaTemp)
-                                            } else {
-                                                console.log("error: " + response.data.descricao)
+                            setLista(response.data.lista)
 
-                                            }
-                                        }
-                                    }, (error) => {
-                                        console.log("error: " + error)
-                                    })
-                            }
                         } else {
                             setLista([])
                             console.log("error: " + JSON.stringify(response.data.descricao))
@@ -150,7 +130,7 @@ function Compraimportar() {
         <Container>
             <Menu />
             <Form>
-               
+
                 <Table>
                     <thead>
                         <tr>
