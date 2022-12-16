@@ -174,7 +174,7 @@ function Compra() {
             <Menu />
             <Form>
 
-                <h4>{item.data}-{item.hora}-{item.usuario}</h4>
+                <h4>{item.data}-{item.hora}</h4>
 
 
                 <FormGroup check inline>

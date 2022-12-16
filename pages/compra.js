@@ -1,16 +1,28 @@
 import { useState, React, useEffect } from 'react';
 import Menu from './menu.js';
-import { Container, Table,Form,FormGroup,Label,Input,Button } from 'reactstrap';
+import { Container, Table, Form, FormGroup, Label, Input, Button } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Dado from '../dado/generico.js';
 import Host from '../dado/host';
-import { useRouter } from 'next/router'
+
+
 function Compra() {
-    const router = useRouter();
     const [lista, setLista] = useState("");
     const [chave, setChave] = useState("");
+    const [data, setData] = useState("No result");
+    const [isBrowser, setisBrowser] = useState(false);
+
+    useEffect(() => {
+        setisBrowser(typeof window != 'undefined')
+    });
+
+    if (isBrowser) {
+        var QrReader = require('react-qr-reader');
+    }
+
 
     if ((lista == "") || (lista == undefined)) {
+
         listar()
     }
 
@@ -47,7 +59,7 @@ function Compra() {
                     console.log("error: " + error)
                 })
         }
-
+    
     }*/
 
 
@@ -60,15 +72,47 @@ function Compra() {
             alert("Preencha todos os Campos obrigatórios!")
         } else {
 
-            router.push(Host.url() + "/compraimportar/"+chave)
+            router.push(Host.url() + "/compraimportar/" + chave)
 
         }
     }
+    function handleError() {
+
+        return ""
+    }
+    function handleScan() {
+
+        return ""
+    }
+    function handleResult(result, error) {
+        if (!!result) {
+            setData(result?.text);
+        }
+
+        if (!!error) {
+            console.info(error);
+        }
+        return ""
+    }
+
 
     return (
         <Container>
             <Menu />
             <Form>
+                <FormGroup>
+                    {isBrowser && (
+
+                        <QrReader
+                            delay={300}
+                            onResult={handleResult}
+                            onScan={handleScan}
+                            onError={handleError}
+                        />
+
+                    )
+                    }
+                </FormGroup>
                 <FormGroup check inline>
                     <Label for="chave">Chave</Label>
                     <Input type="text" id="chave" onChange={mudarChave} />

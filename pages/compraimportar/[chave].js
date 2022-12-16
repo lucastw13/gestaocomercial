@@ -32,100 +32,29 @@ function Compraimportar() {
         }
     }
 
-
-    /*function salvar() {
-        if (listaDePara.length == 0) {
-            alert("Informe pelo menos um De/Para")
-        } else {
-            Dado.salvarLista(listaSalvar, "insumodepara").then(response => {
-                if (response.data != null) {
-                    if (response.data.status == true) {
-                        router.push(Host.url() + "/insumodepara")
-                    } else {
-                        console.log("error: " + response.data.descricao)
-                    }
-                }
-            }, (error) => {
-                console.log("error: " + error)
+    function salvar() {
+        var item = {
+            insumo: []
+        }
+        for (var itemTemp of lista) {
+            item.insumo.push({
+                _id: itemTemp.insumo,
+                quantidade: itemTemp.quantidade,
+                valor: itemTemp.valor
             })
         }
+        Dado.salvar(item, "compra").then(response => {
+            if (response.data != null) {
+                if (response.data.status == true) {
+                    router.push(Host.url() + "/compra")
+                } else {
+                    console.log("error: " + response.data.descricao)
+                }
+            }
+        }, (error) => {
+            console.log("error: " + error)
+        })
     }
-
-    function adicionarDePara() {
-
-        var de = document.getElementById("de").value
-        var para = document.getElementById("para").value
-
-        if (de != "" && de != undefined && para != "" && para != undefined) {
-            var possuiDePara = false
-            for (var itemDePara of listaDePara) {
-                if (itemDePara.codigo == de) {
-                    possuiDePara = true
-                    break
-                }
-            }
-            if (possuiDePara) {
-                alert("De/Para já Incluso!")
-            } else {
-
-                var listaTemp = []
-                for (itemDePara of listaDePara) {
-                    listaTemp.push(itemDePara)
-                }
-
-                for (var itemDePara of listaNotaFiscal) {
-                    if (itemDePara.codigo == de) {
-                        break;
-                    }
-                }
-
-                for (var itemInsumo of listaInsumoTodos) {
-                    if (itemInsumo._id == para) {
-                        break;
-                    }
-                }
-                itemDePara.insumo = itemInsumo._id
-                itemDePara.insumoDescricao = itemInsumo.descricao
-
-                listaTemp.push(itemDePara)
-                setListaDePara(listaTemp)
-
-                var listaSalvarTemp = []
-                for (var itemSalvar of listaSalvar) {
-                    listaSalvarTemp.push(itemSalvar)
-                }
-                listaSalvarTemp.push({ cnpj: cnpj, codigo: itemDePara.codigo, insumo: itemDePara.insumo })
-                console.log(listaSalvarTemp)
-                setListaSalvar(listaSalvarTemp)
-
-                document.getElementById("de").value = ""
-                document.getElementById("para").value = ""
-            }
-        } else {
-            alert("Preencha todos os Campos obrigatórios!")
-        }
-    }
-
-    function deletar(itemParametro) {
-        var deletar = confirm("Deseja excluir o depara: " + itemParametro.descricao + " / " + itemParametro.insumoDescricao + " ?");
-        if (deletar) {
-            var listaDeParaTemp = []
-            for (var itemDePara of listaDePara) {
-                if (itemDePara.codigo != itemParametro.codigo) {
-                    listaDeParaTemp.push(itemDePara)
-                }
-            }
-            setListaDePara(listaDeParaTemp)
-
-            var listaSalvarTemp = []
-            for (var itemSalvar of listaDePara) {
-                if (itemSalvar.codigo != itemParametro.codigo) {
-                    listaSalvarTemp.push(itemSalvar)
-                }
-            }
-            setListaSalvar(listaSalvarTemp)
-        }
-    }*/
     return (
         <Container>
             <Menu />
@@ -141,6 +70,7 @@ function Compraimportar() {
                                 Quantidade
                             </th>
                             <th>
+                                Valor
                             </th>
 
                         </tr>
@@ -149,11 +79,16 @@ function Compraimportar() {
                         {lista && lista.map((item) => (
                             <tr>
                                 <td>
-                                    {item.insumo}
-
+                                    <a href={Host.url() + "/insumo/" + item.insumo}>
+                                        {item.insumoDescricao}
+                                    </a>
                                 </td>
                                 <td>
                                     {item.quantidade}
+
+                                </td>
+                                <td>
+                                    {item.valor}
 
                                 </td>
 
@@ -161,6 +96,8 @@ function Compraimportar() {
                         ))}
                     </tbody>
                 </Table>
+
+                <Button color="danger" onClick={salvar}>Salvar</Button>
             </Form>
         </Container>
     );
