@@ -9,6 +9,7 @@ function Compra() {
     const [item, setItem] = useState("");
     const [listaInsumo, setListaInsumo] = useState("");
     const [listaInsumoTodos, setListaInsumoTodos] = useState("");
+    const [total, setTotal] = useState(0);
     const router = useRouter()
 
 
@@ -27,6 +28,11 @@ function Compra() {
                                 .then(response => {
                                     if (response.data.status == true) {
                                         setListaInsumo(response.data.lista)
+                                        var totalTemp = 0
+                                        for (var itemInsumo of response.data.lista) {
+                                            totalTemp = totalTemp + itemInsumo.valorCompra
+                                        }
+                                        setTotal(totalTemp)
                                     } else {
                                         setListaInsumo([])
                                     }
@@ -68,8 +74,7 @@ function Compra() {
             var _id = document.getElementById("insumo").value
             var quantidade = document.getElementById("insumoQuantidade").value
             var valor = document.getElementById("insumoValor").value
-
-            if (_id != "" && _id != undefined && quantidade != "" && quantidade != undefined&& valor != "" && valor != undefined)  {
+            if (_id != "" && _id != undefined && quantidade != "" && quantidade != undefined && valor != "" && valor != undefined) {
                 var possuiInsumo = false
                 for (var itemInsumo of item.insumo) {
                     if (itemInsumo._id == _id) {
@@ -100,8 +105,9 @@ function Compra() {
                     if (itemTemp.insumo == "" || itemTemp.insumo == undefined) {
                         itemTemp.insumo = []
                     }
-                    itemTemp.insumo.push({ _id: _id, quantidade: quantidade ,valor:valor})
+                    itemTemp.insumo.push({ _id: _id, quantidade: quantidade, valor: valor })
                     setItem(itemTemp)
+                    setTotal(Number(total) + Number(valor))
                     document.getElementById("insumoQuantidade").value = ""
                     document.getElementById("insumoValor").value = ""
 
@@ -142,7 +148,7 @@ function Compra() {
         return false;
     }
     function deletar(itemParametro) {
-        if (itemParametro._id != "" && itemParametro._id != undefined) {
+        if (item._id != "" && item._id != undefined) {
             alert("Compra não pode ser editada")
         } else {
             var deletar = confirm("Deseja excluir o insumo: " + itemParametro.descricao + " ?");
@@ -164,6 +170,8 @@ function Compra() {
                 var itemTemp = item
                 itemTemp.insumo = itemListaInsumoTemp
                 setItem(itemTemp)
+                setTotal(total-itemParametro.valorCompra)
+                console.log(total-itemParametro.valorCompra)
             }
         }
 
@@ -191,7 +199,7 @@ function Compra() {
                     <Input type="number" id="insumoQuantidade" width="30px" />
 
                 </FormGroup>
-                
+
                 <FormGroup check inline>
                     <Label for="insumoValor">Valor</Label>
                     <Input type="number" id="insumoValor" width="30px" />
@@ -201,8 +209,6 @@ function Compra() {
                 <FormGroup check inline>
                     <img src='/+.png' width="20px" onClick={adicionarInsumo} />
                 </FormGroup>
-
-
 
                 <Table>
                     <thead>
@@ -217,7 +223,7 @@ function Compra() {
                                 Unid. Med.
                             </th>
                             <th>
-                                Valor
+                                Valor {total}
                             </th>
 
                         </tr>

@@ -10,6 +10,7 @@ export default class Menu {
     lista.push({codigo: 8, descricao: "Clientes", pagina: "cliente"})
     lista.push({codigo: 9, descricao: "Pedidos", pagina: "pedido"})
     lista.push({codigo: 10, descricao: "Insumos De/Para", pagina: "insumodepara"})
+    lista.push({codigo: 11, descricao: "Parametros", pagina: "parametro"})
     return lista;
   
   } 

@@ -3,10 +3,9 @@ import Menu from './menu.js';
 import { Container, Table } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Dado from '../dado/generico.js';
-import Usuario from "../dado/usuario.js";
 import Host from '../dado/host';
 import { useRouter } from 'next/router'
-function Pedido() {
+function Parametro() {
     const [lista, setLista] = useState("");
     const router = useRouter()
     if ((lista == "") || (lista == undefined)) {
@@ -14,7 +13,7 @@ function Pedido() {
     }
 
     function listar() {
-        Dado.listar("pedido")
+        Dado.listar("parametro")
             .then(response => {
                 if (response.data != null) {
                     if (response.data.status == true) {
@@ -30,7 +29,24 @@ function Pedido() {
             })
     }
 
-   
+    function deletar(item) {
+        var deletar = confirm("Deseja excluir o Parametro: " + item.descricao + " ?");
+        if (deletar) {
+            Dado.deletar(item._id, "parametro")
+                .then(response => {
+                    if (response.data != null) {
+                        if (response.data.status == true) {
+                            listar()
+                        } else {
+                            console.log("error: " + response.data.descricao)
+                        }
+                    }
+                }, (error) => {
+                    console.log("error: " + error)
+                })
+        }
+
+    }
     return (
         <Container>
             <Menu />
@@ -38,19 +54,13 @@ function Pedido() {
                 <thead>
                     <tr>
                         <th>
-                            Número
+                            Chave
                         </th>
                         <th>
-                            Cliente
+                            Valor
                         </th>
                         <th>
-                            Data
-                        </th>
-                        <th>
-                            Hora
-                        </th>
-                        <th>
-                            <a href={Host.url() + "/pedido/incluir"}>
+                            <a href={Host.url() + "/parametro/incluir"}>
                                 <img src='/+.png' width="20px" />
                             </a>
                         </th>
@@ -58,20 +68,18 @@ function Pedido() {
                 </thead>
                 <tbody>
                     {lista && lista.map((item) => (
-                        <tr onClick={() => router.push(Host.url() + "/pedido/" + item._id)}>
+                        <tr onClick={() => router.push(Host.url() + "/parametro/" + item._id)}>
                             <td>
-                                {item.numero}
+                                {item.chave}
                             </td>
                             <td>
-                                {item.clienteNome}
+                                {item.valor}
                             </td>
                             <td>
-                                {item.data}
+                                <img src='/x.png' width="20px" onClick={() => deletar(item)} />
+
                             </td>
-                            <td>
-                                {item.hora}
-                            </td>
-                          </tr>
+                        </tr>
                     ))}
                 </tbody>
             </Table>
@@ -84,7 +92,7 @@ function Pedido() {
 
 
 function Pagina() {
-    return <Pedido />
+    return <Parametro />
 }
 
 
