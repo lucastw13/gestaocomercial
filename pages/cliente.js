@@ -67,7 +67,7 @@ function Cliente() {
                         <tr>
                             <td>
                                 <a href={Host.url() + "/cliente/" + item._id}>
-                                    {item.nome}
+                                    {item.nome}-
                                 </a>
 
                             </td>
