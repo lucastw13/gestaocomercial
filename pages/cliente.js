@@ -3,10 +3,8 @@ import Menu from './menu.js';
 import { Container, Table } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Dado from '../dado/generico.js';
-import Usuario from "../dado/usuario.js";
 import Host from '../dado/host';
-import { useRouter } from 'next/router'
-function Insumo() {
+function Cliente() {
     const [lista, setLista] = useState("");
 
     if ((lista == "") || (lista == undefined)) {
@@ -14,7 +12,7 @@ function Insumo() {
     }
 
     function listar() {
-        Dado.listar("insumo")
+        Dado.listar("cliente")
             .then(response => {
                 if (response.data != null) {
                     if (response.data.status == true) {
@@ -31,9 +29,9 @@ function Insumo() {
     }
 
     function deletar(item) {
-        var deletar = confirm("Deseja excluir o insumo: " + item.descricao + " ?");
+        var deletar = confirm("Deseja excluir o cliente: " + item.nome + " ?");
         if (deletar) {
-            Dado.deletar(item._id, "insumo")
+            Dado.deletar(item._id, "cliente")
                 .then(response => {
                     if (response.data != null) {
                         if (response.data.status == true) {
@@ -55,10 +53,10 @@ function Insumo() {
                 <thead>
                     <tr>
                         <th>
-                            Descrição
+                            Nome
                         </th>
                         <th>
-                            <a href={Host.url() + "/insumo/incluir"}>
+                            <a href={Host.url() + "/cliente/incluir"}>
                                 <img src='/+.png' width="20px" />
                             </a>
                         </th>
@@ -68,8 +66,8 @@ function Insumo() {
                     {lista && lista.map((item) => (
                         <tr>
                             <td>
-                                <a href={Host.url() + "/insumo/" + item._id}>
-                                    {item.descricao}
+                                <a href={Host.url() + "/cliente/" + item._id}>
+                                    {item.nome}
                                 </a>
 
                             </td>
@@ -90,7 +88,7 @@ function Insumo() {
 
 
 function Pagina() {
-    return <Insumo />
+    return <Cliente />
 }
 
 

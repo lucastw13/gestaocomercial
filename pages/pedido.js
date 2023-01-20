@@ -6,15 +6,15 @@ import Dado from '../dado/generico.js';
 import Usuario from "../dado/usuario.js";
 import Host from '../dado/host';
 import { useRouter } from 'next/router'
-function Insumo() {
+function Pedido() {
     const [lista, setLista] = useState("");
-
+    const router = useRouter()
     if ((lista == "") || (lista == undefined)) {
         listar()
     }
 
     function listar() {
-        Dado.listar("insumo")
+        Dado.listar("pedido")
             .then(response => {
                 if (response.data != null) {
                     if (response.data.status == true) {
@@ -30,24 +30,7 @@ function Insumo() {
             })
     }
 
-    function deletar(item) {
-        var deletar = confirm("Deseja excluir o insumo: " + item.descricao + " ?");
-        if (deletar) {
-            Dado.deletar(item._id, "insumo")
-                .then(response => {
-                    if (response.data != null) {
-                        if (response.data.status == true) {
-                            listar()
-                        } else {
-                            console.log("error: " + response.data.descricao)
-                        }
-                    }
-                }, (error) => {
-                    console.log("error: " + error)
-                })
-        }
-
-    }
+   
     return (
         <Container>
             <Menu />
@@ -55,10 +38,19 @@ function Insumo() {
                 <thead>
                     <tr>
                         <th>
-                            Descrição
+                            Número
                         </th>
                         <th>
-                            <a href={Host.url() + "/insumo/incluir"}>
+                            Cliente
+                        </th>
+                        <th>
+                            Data
+                        </th>
+                        <th>
+                            Hora
+                        </th>
+                        <th>
+                            <a href={Host.url() + "/pedido/incluir"}>
                                 <img src='/+.png' width="20px" />
                             </a>
                         </th>
@@ -66,18 +58,20 @@ function Insumo() {
                 </thead>
                 <tbody>
                     {lista && lista.map((item) => (
-                        <tr>
+                        <tr onClick={() => router.push(Host.url() + "/pedido/" + item._id)}>
                             <td>
-                                <a href={Host.url() + "/insumo/" + item._id}>
-                                    {item.descricao}
-                                </a>
-
+                                {item.numero}
                             </td>
                             <td>
-                                <img src='/x.png' width="20px" onClick={() => deletar(item)} />
-
+                                {item.clienteNome}
                             </td>
-                        </tr>
+                            <td>
+                                {item.data}
+                            </td>
+                            <td>
+                                {item.hora}
+                            </td>
+                          </tr>
                     ))}
                 </tbody>
             </Table>
@@ -90,7 +84,7 @@ function Insumo() {
 
 
 function Pagina() {
-    return <Insumo />
+    return <Pedido />
 }
 
 

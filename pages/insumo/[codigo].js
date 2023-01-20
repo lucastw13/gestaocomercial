@@ -12,7 +12,7 @@ function Insumo() {
 
     if (((item == "") || (item == undefined)) && ((router.query.codigo != "") && (router.query.codigo != undefined))) {
         if (router.query.codigo == "incluir") {
-            setItem({})
+            setItem({quantidade:0,valor:0,unidadeMedida:"G"})
         } else {
             Dado.item(router.query.codigo, "insumo")
                 .then(response => {
@@ -23,11 +23,11 @@ function Insumo() {
                             document.getElementById("unidadeMedida").value = response.data.item.unidadeMedida;
                             document.getElementById("quantidade").value = response.data.item.quantidade;
                             document.getElementById("quantidadeMinima").value = response.data.item.quantidadeMinima;
-                            document.getElementById("ultimoValorUnidade").value = response.data.item.ultimoValorUnidade;
-                        }else{
+                            document.getElementById("ultimoValorUnidade").value = response.data.item.valor;
+                        } else {
                             setItem({})
                             console.log("error: " + response.data.descricao)
-                        
+
                         }
                     }
                 }, (error) => {
@@ -39,7 +39,7 @@ function Insumo() {
     function mudarDescricao(event) {
         var itemTemp = item
         itemTemp.descricao = event.target.value
-        setItem(itemTemp); 
+        setItem(itemTemp);
 
     }
     function mudarUnidadeMedida(event) {
@@ -54,11 +54,6 @@ function Insumo() {
         setItem(itemTemp);
     }
     function mudarQuantidadeMinima(event) {
-        var itemTemp = item
-        itemTemp.quantidadeMinima = event.target.value
-        setItem(itemTemp);
-    }
-    function mudarUltimoValorUnidade(event) {
         var itemTemp = item
         itemTemp.quantidadeMinima = event.target.value
         setItem(itemTemp);
@@ -82,21 +77,15 @@ function Insumo() {
         }
     }
     function possuiErroObrigatorio() {
-        if (item.descricao=="" || item.descricao==undefined) {
+        if (item.descricao == "" || item.descricao == undefined) {
             return true;
         }
         if (item.unidadeMedida == "") {
             return true;
         }
-        /*if (item.quantidade=="") {
-            return true;
-        }*/
         if (item.quantidadeMinima == "") {
             return true;
         }
-        /*if (item.ultimoValorUnidade=="") {
-            return true;
-        }*/
         return false;
     }
 
@@ -132,7 +121,7 @@ function Insumo() {
 
                 <FormGroup>
                     <Label for="ultimoValorUnidade">Último Valor Por Unidade</Label>
-                    <Input type="number" disabled="true" id="ultimoValorUnidade" onChange={mudarUltimoValorUnidade} />
+                    <Input type="number" disabled="true" id="ultimoValorUnidade" />
                 </FormGroup>
 
 

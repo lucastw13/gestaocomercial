@@ -23,46 +23,19 @@ function Receita() {
                         if (response.data.status == true) {
                             setItem(response.data.item)
                             document.getElementById("descricao").value = response.data.item.descricao;
-
+                            document.getElementById("modoPreparo").value = response.data.item.modoPreparo;
                             Dado.itemLista(response.data.item._id, "receita", "insumo")
                                 .then(response => {
                                     if (response.data.status == true) {
                                         setListaInsumo(response.data.lista)
                                     } else {
                                         setListaInsumo([])
-                                        console.log("error: " + response.data.descricao)
                                     }
 
                                 }, (error) => {
                                     console.log("error: " + error)
                                 })
 
-                            /*
-                            var listaTemp = []
-                            var listaInsumoTemp = response.data.item.insumo
-                            for (var insumo of listaInsumoTemp) {
-                                Dado.item(insumo._id, "insumo")
-                                    .then(response => {
-                                        if (response.data.status == true) {
-                                            var insumoTemp = response.data.item
-                                            for (var insumoAtualizarQuantidade of listaInsumoTemp) {
-                                                if (insumoAtualizarQuantidade._id == insumoTemp._id) {
-                                                    insumoTemp.quantidadeReceita = insumoAtualizarQuantidade.quantidade
-                                                }
-                                            }
-
-                                            listaTemp.push(insumoTemp)
-                                            console.log(insumoTemp)
-                                            setListaInsumo(listaTemp)
-                                        } else {
-                                            console.log("error: " + response.data.descricao)
-
-                                        }
-                                    }, (error) => {
-                                        console.log("error: " + error)
-                                    })
-
-                            }*/
                         } else {
                             setItem({})
                             console.log("error: " + response.data.descricao)
@@ -96,16 +69,22 @@ function Receita() {
         setItem(itemTemp);
 
     }
+    function mudarModoPreparo(event) {
+        var itemTemp = item
+        itemTemp.modoPreparo = event.target.value
+        setItem(itemTemp);
+
+    }
 
     function adicionarInsumo() {
-        setListaInsumo([])
+
         var _id = document.getElementById("insumo").value
         var quantidade = document.getElementById("insumoQuantidade").value
 
         if (_id != "" && _id != undefined && quantidade != "" && quantidade != undefined) {
             var possuiInsumo = false
-            for (var insumo of item.insumo) {
-                if (insumo._id == _id) {
+            for (var itemInsumo of item.insumo) {
+                if (itemInsumo._id == _id) {
                     possuiInsumo = true
                     break
                 }
@@ -113,16 +92,20 @@ function Receita() {
             if (possuiInsumo) {
                 alert("Insumo já Incluso!")
             } else {
-                for (var insumoSelecionado of listaInsumoTodos) {
-                    if (insumoSelecionado._id == _id) {
+
+                for (var itemInsumoTodos of listaInsumoTodos) {
+                    if (itemInsumoTodos._id == _id) {
                         break;
                     }
                 }
-                console.log(insumoSelecionado)
 
-                var listaTemp = listaInsumo
-                insumoSelecionado.quantidadeReceita = quantidade
-                listaTemp.push(insumoSelecionado)
+                var listaTemp = []
+                for (itemInsumo of listaInsumo) {
+                    listaTemp.push(itemInsumo)
+                }
+                itemInsumoTodos.quantidadeReceita = quantidade
+                listaTemp.push(itemInsumoTodos)
+
                 setListaInsumo(listaTemp)
                 var itemTemp = item
                 if (itemTemp.insumo == "" || itemTemp.insumo == undefined) {
@@ -130,14 +113,13 @@ function Receita() {
                 }
                 itemTemp.insumo.push({ _id: _id, quantidade: quantidade })
                 setItem(itemTemp)
-                console.log(listaInsumo)
+                document.getElementById("insumoQuantidade").value = ""
 
             }
         } else {
 
             alert("Preencha todos os Campos obrigatórios!")
         }
-
     }
 
 
@@ -201,27 +183,29 @@ function Receita() {
                     <Input type="text" id="descricao" onChange={mudarDescricao} />
                 </FormGroup>
 
-                <Form inline>
-                    <FormGroup>
-                        <Label for="insumo">Insumo</Label>
-                        <Input type="select" id="insumo">
-                            {listaInsumoTodos && listaInsumoTodos.map((item) => (
-                                <option value={item._id}>{item.descricao}</option>
-                            ))}
-                        </Input>
-                    </FormGroup>
+                <FormGroup>
+                    <Label for="modoPreparo">Modo de Preparo</Label>
+                    <Input type="textarea" id="modoPreparo" onChange={mudarModoPreparo} />
+                </FormGroup>
 
-                    <FormGroup>
-                        <Label for="insumoQuantidade">Quantidade</Label>
-                        <div width="50%"><Input type="number" id="insumoQuantidade" width="30px" /></div>
+                <FormGroup check inline>
+                    <Label for="insumo">Insumo</Label>
+                    <Input type="select" id="insumo">
+                        {listaInsumoTodos && listaInsumoTodos.map((item) => (
+                            <option value={item._id}>{item.descricao}</option>
+                        ))}
+                    </Input>
+                </FormGroup>
 
-                    </FormGroup>
+                <FormGroup check inline>
+                    <Label for="insumoQuantidade">Quantidade</Label>
+                    <div width="50%"><Input type="number" id="insumoQuantidade" width="30px" /></div>
 
-                    <FormGroup>
-                        <img src='/+.png' width="20px" onClick={adicionarInsumo} />
-                    </FormGroup>
+                </FormGroup>
 
-                </Form>
+                <FormGroup check inline>
+                    <img src='/+.png' width="20px" onClick={adicionarInsumo} />
+                </FormGroup>
 
 
                 <Table>

@@ -6,7 +6,7 @@ import Dado from '../dado/generico.js';
 import Usuario from "../dado/usuario.js";
 import Host from '../dado/host';
 import { useRouter } from 'next/router'
-function Insumo() {
+function Produto() {
     const [lista, setLista] = useState("");
 
     if ((lista == "") || (lista == undefined)) {
@@ -14,7 +14,7 @@ function Insumo() {
     }
 
     function listar() {
-        Dado.listar("insumo")
+        Dado.listarProduto(false)
             .then(response => {
                 if (response.data != null) {
                     if (response.data.status == true) {
@@ -31,9 +31,9 @@ function Insumo() {
     }
 
     function deletar(item) {
-        var deletar = confirm("Deseja excluir o insumo: " + item.descricao + " ?");
+        var deletar = confirm("Deseja excluir o produto: " + item.descricao + " ?");
         if (deletar) {
-            Dado.deletar(item._id, "insumo")
+            Dado.deletar(item._id, "produto")
                 .then(response => {
                     if (response.data != null) {
                         if (response.data.status == true) {
@@ -58,7 +58,7 @@ function Insumo() {
                             Descrição
                         </th>
                         <th>
-                            <a href={Host.url() + "/insumo/incluir"}>
+                            <a href={Host.url() + "/produto/incluir"}>
                                 <img src='/+.png' width="20px" />
                             </a>
                         </th>
@@ -68,7 +68,7 @@ function Insumo() {
                     {lista && lista.map((item) => (
                         <tr>
                             <td>
-                                <a href={Host.url() + "/insumo/" + item._id}>
+                                <a href={Host.url() + "/produto/" + item._id}>
                                     {item.descricao}
                                 </a>
 
@@ -90,7 +90,7 @@ function Insumo() {
 
 
 function Pagina() {
-    return <Insumo />
+    return <Produto />
 }
 
 

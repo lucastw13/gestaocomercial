@@ -3,18 +3,17 @@ import Menu from './menu.js';
 import { Container, Table } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Dado from '../dado/generico.js';
-import Usuario from "../dado/usuario.js";
 import Host from '../dado/host';
 import { useRouter } from 'next/router'
-function Insumo() {
+function Parametro() {
     const [lista, setLista] = useState("");
-
+    const router = useRouter()
     if ((lista == "") || (lista == undefined)) {
         listar()
     }
 
     function listar() {
-        Dado.listar("insumo")
+        Dado.listar("parametro")
             .then(response => {
                 if (response.data != null) {
                     if (response.data.status == true) {
@@ -31,9 +30,9 @@ function Insumo() {
     }
 
     function deletar(item) {
-        var deletar = confirm("Deseja excluir o insumo: " + item.descricao + " ?");
+        var deletar = confirm("Deseja excluir o Parametro: " + item.descricao + " ?");
         if (deletar) {
-            Dado.deletar(item._id, "insumo")
+            Dado.deletar(item._id, "parametro")
                 .then(response => {
                     if (response.data != null) {
                         if (response.data.status == true) {
@@ -55,10 +54,13 @@ function Insumo() {
                 <thead>
                     <tr>
                         <th>
-                            Descrição
+                            Chave
                         </th>
                         <th>
-                            <a href={Host.url() + "/insumo/incluir"}>
+                            Valor
+                        </th>
+                        <th>
+                            <a href={Host.url() + "/parametro/incluir"}>
                                 <img src='/+.png' width="20px" />
                             </a>
                         </th>
@@ -66,12 +68,12 @@ function Insumo() {
                 </thead>
                 <tbody>
                     {lista && lista.map((item) => (
-                        <tr>
+                        <tr onClick={() => router.push(Host.url() + "/parametro/" + item._id)}>
                             <td>
-                                <a href={Host.url() + "/insumo/" + item._id}>
-                                    {item.descricao}
-                                </a>
-
+                                {item.chave}
+                            </td>
+                            <td>
+                                {item.valor}
                             </td>
                             <td>
                                 <img src='/x.png' width="20px" onClick={() => deletar(item)} />
@@ -90,7 +92,7 @@ function Insumo() {
 
 
 function Pagina() {
-    return <Insumo />
+    return <Parametro />
 }
 
 
