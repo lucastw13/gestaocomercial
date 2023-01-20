@@ -42,7 +42,7 @@ function Compra() {
             const blob = DataURIToBlob(reader.result)
             const formData = new FormData();
             formData.append('file', blob, 'image.jpg')
-            axios.post("http://api.qrserver.com/v1/read-qr-code/", formData)
+            axios.post("https://api.qrserver.com/v1/read-qr-code/", formData)
                 .then(response => {
                     if (response.data != null) {
                         for (var item of response.data) {
