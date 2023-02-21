@@ -3,8 +3,8 @@ import Menu from './menu.js';
 import { Button, Container, Table, FormGroup, Form, Label, Input } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Dado from '../dado/generico.js';
-import Usuario from "../dado/usuario.js";
 import Host from '../dado/host';
+import UtilDataURIToBlob from '../util/DataURIToBlob';
 import { useRouter } from 'next/router'
 import axios from 'axios'
 function Insumodepara() {
@@ -52,12 +52,12 @@ function Insumodepara() {
 
     }
 
-     function importar() {
+    function importar() {
         var file = document.getElementById("imagem").files[0];
         var reader = new FileReader();
 
         reader.onloadend = function () {
-            const blob = DataURIToBlob(reader.result)
+            const blob = UtilDataURIToBlob.DataURIToBlob(reader.result)
             const formData = new FormData();
             formData.append('file', blob, 'image.jpg')
             axios.post("http://api.qrserver.com/v1/read-qr-code/", formData)
@@ -68,7 +68,9 @@ function Insumodepara() {
                                 console.log(itemSymbol)
                                 if (itemSymbol.data != null) {
                                     var chave = itemSymbol.data.substring(itemSymbol.data.toUpperCase().indexOf("=") + 1, itemSymbol.data.toUpperCase().indexOf("|"))
-                                    router.push(Host.url() + "/insumodeparaimportar/" + chave)
+                                    if (chave != "") {
+                                        router.push(Host.url() + "/insumodeparaimportar/" + chave)
+                                    }
                                 }
                             }
                         }
@@ -85,17 +87,6 @@ function Insumodepara() {
         }
     }
 
-    function DataURIToBlob(dataURI) {
-        const splitDataURI = dataURI.split(',')
-        const byteString = splitDataURI[0].indexOf('base64') >= 0 ? atob(splitDataURI[1]) : decodeURI(splitDataURI[1])
-        const mimeString = splitDataURI[0].split(':')[1].split(';')[0]
-
-        const ia = new Uint8Array(byteString.length)
-        for (let i = 0; i < byteString.length; i++)
-            ia[i] = byteString.charCodeAt(i)
-
-        return new Blob([ia], { type: mimeString })
-    }
     return (
         <Container>
             <Menu />

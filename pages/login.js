@@ -36,6 +36,7 @@ function Insumo() {
                         var item = response.data.item
                         Usuario.setUsuario(item._id)
                         Usuario.setEmpresa(item.empresa)
+                        Usuario.setNivel(item.nivel)
                         router.push(Host.url())
                     } else {
                         console.log("error: " + response.data.descricao)
