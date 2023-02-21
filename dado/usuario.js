@@ -23,12 +23,17 @@ export default class Usuario {
   }
   static getEmpresa() {
     return getCookie('empresa')
-
+  }
+  static getNivel() {
+    return getCookie('nivel')
   }
   static setUsuario(usuario) {
     setCookie('usuario', usuario);
   }
   static setEmpresa(empresa) {
     setCookie('empresa', empresa);
+  }
+  static setNivel(nivel) {
+    setCookie('nivel', nivel);
   }
 }

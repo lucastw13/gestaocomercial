@@ -4,6 +4,7 @@ import { Container, Table, Form, FormGroup, Label, Input, Button } from 'reactst
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Dado from '../dado/generico.js';
 import Host from '../dado/host';
+import UtilDataURIToBlob from '../util/DataURIToBlob';
 import axios from 'axios';
 import { useRouter } from 'next/router.js';
 
@@ -39,7 +40,7 @@ function Compra() {
         var reader = new FileReader();
 
         reader.onloadend = function () {
-            const blob = DataURIToBlob(reader.result)
+            const blob = UtilDataURIToBlob.DataURIToBlob(reader.result)
             const formData = new FormData();
             formData.append('file', blob, 'image.jpg')
             axios.post("https://api.qrserver.com/v1/read-qr-code/", formData)
@@ -50,7 +51,9 @@ function Compra() {
                                 console.log(itemSymbol)
                                 if (itemSymbol.data != null) {
                                     var chave = itemSymbol.data.substring(itemSymbol.data.toUpperCase().indexOf("=") + 1, itemSymbol.data.toUpperCase().indexOf("|"))
-                                    router.push(Host.url() + "/compraimportar/" + chave)
+                                    if (chave != "") {
+                                        router.push(Host.url() + "/compraimportar/" + chave)
+                                    }
                                 }
                             }
                         }
@@ -65,18 +68,6 @@ function Compra() {
         } else {
 
         }
-    }
-
-    function DataURIToBlob(dataURI) {
-        const splitDataURI = dataURI.split(',')
-        const byteString = splitDataURI[0].indexOf('base64') >= 0 ? atob(splitDataURI[1]) : decodeURI(splitDataURI[1])
-        const mimeString = splitDataURI[0].split(':')[1].split(';')[0]
-
-        const ia = new Uint8Array(byteString.length)
-        for (let i = 0; i < byteString.length; i++)
-            ia[i] = byteString.charCodeAt(i)
-
-        return new Blob([ia], { type: mimeString })
     }
 
     return (

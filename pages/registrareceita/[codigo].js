@@ -1,6 +1,6 @@
 import { useState, React } from 'react';
 import Menu from '../menu';
-import { Container, Label, Input, Button, Form, FormGroup, Table } from 'reactstrap';
+import { Container, Label, Input, Button, Form, FormGroup, Table, Modal, ModalHeader, ModalBody } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Dado from '../../dado/generico.js'
 import { useRouter } from 'next/router'
@@ -11,6 +11,9 @@ function RegistraReceita() {
     const [receitaUsadaRegistro, setReceitaUsadaRegistro] = useState("");
     const router = useRouter()
 
+    const [modal, setModal] = useState(false);
+
+    const toggleUsadaRegistro = () => setModal(!modal);
 
     if (((item == "") || (item == undefined)) && ((router.query.codigo != "") && (router.query.codigo != undefined))) {
         if (router.query.codigo == "incluir") {
@@ -60,11 +63,11 @@ function RegistraReceita() {
 
 
     function registrarReceita() {
-       
+
         var itemRegistro = {
-            receita:item._id,            
+            receita: item._id,
         }
-  
+
         Dado.salvar(itemRegistro, "registrareceita").then(response => {
             if (response.data != null) {
                 if (response.data.status == true) {
@@ -80,7 +83,21 @@ function RegistraReceita() {
     }
 
     function exibirReceitaUsadaRegistro(itemRegistro) {
-        var receitaUsadaRegistroTemp = ""
+        var receitaUsadaRegistroTemp = []
+        for (var itemInsumoRegistrado of itemRegistro.insumo) {
+
+            for (var itemInsumoCompleto of listaInsumo) {
+                if (itemInsumoCompleto._id == itemInsumoRegistrado._id) {
+                    break;
+                }
+            }
+            receitaUsadaRegistroTemp.push(itemInsumoRegistrado.quantidade + itemInsumoCompleto.unidadeMedida + " de " + itemInsumoCompleto.descricao)
+
+        }
+        setReceitaUsadaRegistro(receitaUsadaRegistroTemp)
+
+
+        /*var receitaUsadaRegistroTemp = ""
         for (var itemInsumoRegistrado of itemRegistro.insumo) {
 
             for (var itemInsumoCompleto of listaInsumo) {
@@ -89,13 +106,17 @@ function RegistraReceita() {
                 }
             }
             if (receitaUsadaRegistroTemp != "") {
-                receitaUsadaRegistroTemp = receitaUsadaRegistroTemp + "<br/>"
+                receitaUsadaRegistroTemp = receitaUsadaRegistroTemp + ""
 
             }
             receitaUsadaRegistroTemp = receitaUsadaRegistroTemp + itemInsumoRegistrado.quantidade + itemInsumoCompleto.unidadeMedida + " de " + itemInsumoCompleto.descricao
 
         }
         setReceitaUsadaRegistro(receitaUsadaRegistroTemp)
+        */
+
+        toggleUsadaRegistro()
+
     }
     return (
         <Container>
@@ -182,7 +203,18 @@ function RegistraReceita() {
                     ))}
                 </tbody>
             </Table>
-            {receitaUsadaRegistro}
+            <Modal isOpen={modal} toggle={toggleUsadaRegistro}>
+                <ModalHeader toggle={toggleUsadaRegistro}>{item.descricao}</ModalHeader>
+                <ModalBody>
+                    {receitaUsadaRegistro && receitaUsadaRegistro.map((itemReceitaUsadaRegistro) => (
+                        <div>
+                            {itemReceitaUsadaRegistro}
+                            <br />
+                        </div>
+
+                    ))}
+                </ModalBody>
+            </Modal>
         </Container>
     );
 }
