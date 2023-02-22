@@ -19,7 +19,8 @@ function Insumodepara() {
                     if (response.data != null) {
                         if (response.data.status == true) {
                             setItem(response.data.item)
-                            document.getElementById("cnpj").value = response.data.item.cnpj;
+                            document.getElementById("cnpjEmpresa").value = response.data.item.empresa.cnpj;
+                            document.getElementById("nomeEmpresa").value = response.data.item.empresa.nome;
                             document.getElementById("codigo").value = response.data.item.codigo;
                             document.getElementById("insumo").value = response.data.item.insumo;
                         } else {
@@ -90,10 +91,13 @@ function Insumodepara() {
             <Menu />
             <Form>
                 <FormGroup>
-                    <Label for="cnpj">CNPJ</Label>
-                    <Input type="text" id="cnpj" onChange={mudarCNPJ} />
+                    <Label for="nomeEmpresa">Empresa</Label>
+                    <Input type="text" id="nomeEmpresa"/>
                 </FormGroup>
-
+                <FormGroup>
+                    <Label for="cnpjEmpresa">CNPJ</Label>
+                    <Input type="text" id="cnpjEmpresa"  />
+                </FormGroup>
                 <FormGroup>
                     <Label for="codigo">Código</Label>
                     <Input type="text" id="codigo" onChange={mudarCodigo} />

@@ -10,7 +10,8 @@ function Insumodeparaimportar() {
     const [listaInsumoTodos, setListaInsumoTodos] = useState("");
     const [listaDePara, setListaDePara] = useState("");
     const [listaSalvar, setListaSalvar] = useState("");
-    const [cnpj, setCnpj] = useState("");
+    const [cnpjEmpresa, setCnpjEmpresa] = useState("");
+    const [nomeEmpresa, setNomeEmpresa] = useState("");
     const router = useRouter()
 
 
@@ -23,8 +24,10 @@ function Insumodeparaimportar() {
                     if (response.data != null) {
                         if (response.data.status == true) {
                             setListaNotaFiscal(response.data.lista)
-                            setCnpj(response.data.cnpj)
-                            document.getElementById("cnpj").value = response.data.cnpj
+                            setCnpjEmpresa(response.data.empresa.cnpj)
+                            setNomeEmpresa(response.data.empresa.cnpj)
+                            document.getElementById("nomeEmpresa").value = response.data.empresa.nome
+                            document.getElementById("cnpjEmpresa").value = response.data.empresa.cnpj
                             /* document.getElementById("cnpj").value = response.data.item.cnpj;
                              document.getElementById("codigo").value = response.data.item.codigo;
                              document.getElementById("insumo").value = response.data.item.insumo;*/
@@ -116,8 +119,7 @@ function Insumodeparaimportar() {
                 for (var itemSalvar of listaSalvar) {
                     listaSalvarTemp.push(itemSalvar)
                 }
-                listaSalvarTemp.push({cnpj: cnpj, codigo: itemDePara.codigo, insumo: itemDePara.insumo })
-                console.log(listaSalvarTemp)
+                listaSalvarTemp.push({ empresa:{cnpjEmpresa: cnpj,nome:nomeEmpresa}, codigo: itemDePara.codigo, insumo: itemDePara.insumo })
                 setListaSalvar(listaSalvarTemp)
 
                 document.getElementById("de").value = ""
@@ -152,10 +154,11 @@ function Insumodeparaimportar() {
         <Container>
             <Menu />
             <Form>
-            <FormGroup check >
-                    <Label for="cnpj">CNPJ</Label>
-                    <Input disabled="true" type="text" id="cnpj"/>
-
+                <FormGroup check >
+                    <Label for="nomeEmpresa">Empresa</Label>
+                    <Input disabled="true" type="text" id="nomeEmpresa" />
+                    <Label for="cnpjEmpresa">CNPJ</Label>
+                    <Input disabled="true" type="text" id="cnpjEmpresa" />
                 </FormGroup>
                 <FormGroup check inline>
                     <Label for="de">De</Label>

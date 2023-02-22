@@ -104,7 +104,16 @@ function Insumodepara() {
                 <thead>
                     <tr>
                         <th>
-                            Descrição
+                            Empresa
+                        </th>
+                        <th>
+                            CNPJ
+                        </th>
+                        <th>
+                            DE
+                        </th>
+                        <th>
+                            PARA
                         </th>
                         <th>
                             <a href={Host.url() + "/insumodepara/incluir"}>
@@ -115,12 +124,18 @@ function Insumodepara() {
                 </thead>
                 <tbody>
                     {lista && lista.map((item) => (
-                        <tr>
+                        <tr onClick={() => Host.url() + "/insumodepara/" + item._id}>
                             <td>
-                                <a href={Host.url() + "/insumodepara/" + item._id}>
-                                    {item.cnpj} - {item.codigo} - {item.insumo}
-                                </a>
-
+                                {item.empresa.cnpj}
+                            </td>
+                            <td>
+                                {item.empresa.nomecnpj}
+                            </td>
+                            <td>
+                                {item.codigo}
+                            </td>
+                            <td>
+                                {item.insumo}
                             </td>
                             <td>
                                 <img src='/x.png' width="20px" onClick={() => deletar(item)} />
