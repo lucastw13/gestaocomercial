@@ -10,8 +10,8 @@ function Insumodeparaimportar() {
     const [listaInsumoTodos, setListaInsumoTodos] = useState("");
     const [listaDePara, setListaDePara] = useState("");
     const [listaSalvar, setListaSalvar] = useState("");
-    const [cnpjEmpresa, setCnpjEmpresa] = useState("");
-    const [nomeEmpresa, setNomeEmpresa] = useState("");
+    const [cnpjFornecedor, setCnpjFornecedor] = useState("");
+    const [nomeFornecedor, setNomeFornecedor] = useState("");
     const router = useRouter()
 
 
@@ -24,10 +24,10 @@ function Insumodeparaimportar() {
                     if (response.data != null) {
                         if (response.data.status == true) {
                             setListaNotaFiscal(response.data.lista)
-                            setCnpjEmpresa(response.data.empresa.cnpj)
-                            setNomeEmpresa(response.data.empresa.cnpj)
-                            document.getElementById("nomeEmpresa").value = response.data.empresa.nome
-                            document.getElementById("cnpjEmpresa").value = response.data.empresa.cnpj
+                            setCnpjFornecedor(response.data.fornecedor.cnpj)
+                            setNomeFornecedor(response.data.fornecedor.nome)
+                            document.getElementById("nomeFornecedor").value = response.data.fornecedor.nome
+                            document.getElementById("cnpjFornecedor").value = response.data.fornecedor.cnpj
                             /* document.getElementById("cnpj").value = response.data.item.cnpj;
                              document.getElementById("codigo").value = response.data.item.codigo;
                              document.getElementById("insumo").value = response.data.item.insumo;*/
@@ -62,7 +62,8 @@ function Insumodeparaimportar() {
         if (listaDePara.length == 0) {
             alert("Informe pelo menos um De/Para")
         } else {
-            Dado.salvarLista(listaSalvar, "insumodepara").then(response => {
+            console.log(listaSalvar)
+            Dado.salvarListaSemEmpresa(listaSalvar, "insumodepara").then(response => {
                 if (response.data != null) {
                     if (response.data.status == true) {
                         router.push(Host.url() + "/insumodepara")
@@ -119,7 +120,10 @@ function Insumodeparaimportar() {
                 for (var itemSalvar of listaSalvar) {
                     listaSalvarTemp.push(itemSalvar)
                 }
-                listaSalvarTemp.push({ empresa:{cnpjEmpresa: cnpj,nome:nomeEmpresa}, codigo: itemDePara.codigo, insumo: itemDePara.insumo })
+                var item = { fornecedor:{cnpj: cnpjFornecedor,nome:nomeFornecedor}, codigo: itemDePara.codigo, insumo: itemDePara.insumo }
+                //console.log(item)
+                listaSalvarTemp.push(item)
+                //console.log(listaSalvarTemp)
                 setListaSalvar(listaSalvarTemp)
 
                 document.getElementById("de").value = ""
@@ -155,10 +159,10 @@ function Insumodeparaimportar() {
             <Menu />
             <Form>
                 <FormGroup check >
-                    <Label for="nomeEmpresa">Empresa</Label>
-                    <Input disabled="true" type="text" id="nomeEmpresa" />
-                    <Label for="cnpjEmpresa">CNPJ</Label>
-                    <Input disabled="true" type="text" id="cnpjEmpresa" />
+                    <Label for="nomeFornecedor">Fornecedor</Label>
+                    <Input disabled="true" type="text" id="nomeFornecedor" />
+                    <Label for="cnpjFornecedor">CNPJ</Label>
+                    <Input disabled="true" type="text" id="cnpjFornecedor" />
                 </FormGroup>
                 <FormGroup check inline>
                     <Label for="de">De</Label>

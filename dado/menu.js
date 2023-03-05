@@ -1,7 +1,7 @@
 export default class Menu {
   static listar() {
     var lista = []
-    lista.push({ codigo: 1, nivel: 1, descricao: "Insumos", pagina: "insumo" })
+    lista.push({ codigo: 1, nivel: 999, descricao: "Insumos", pagina: "insumo" })
     lista.push({ codigo: 2, nivel: 1, descricao: "Receitas", pagina: "receita" })
     lista.push({ codigo: 3, nivel: 1, descricao: "Registrar Receita", pagina: "registrareceita" })
     lista.push({ codigo: 4, nivel: 1, descricao: "Registrar Compra", pagina: "compra" })

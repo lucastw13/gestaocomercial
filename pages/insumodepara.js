@@ -34,7 +34,7 @@ function Insumodepara() {
     }
 
     function deletar(item) {
-        var deletar = confirm("Deseja excluir o insumodepara: " + item.descricao + " ?");
+        var deletar = confirm("Deseja excluir o insumodepara: " + item.codigo + "/" + item.insumoDescricao);
         if (deletar) {
             Dado.deletar(item._id, "insumodepara")
                 .then(response => {
@@ -104,10 +104,7 @@ function Insumodepara() {
                 <thead>
                     <tr>
                         <th>
-                            Empresa
-                        </th>
-                        <th>
-                            CNPJ
+                            Fornecedor
                         </th>
                         <th>
                             DE
@@ -115,27 +112,19 @@ function Insumodepara() {
                         <th>
                             PARA
                         </th>
-                        <th>
-                            <a href={Host.url() + "/insumodepara/incluir"}>
-                                <img src='/+.png' width="20px" />
-                            </a>
-                        </th>
                     </tr>
                 </thead>
                 <tbody>
                     {lista && lista.map((item) => (
                         <tr onClick={() => Host.url() + "/insumodepara/" + item._id}>
                             <td>
-                                {item.empresa.cnpj}
-                            </td>
-                            <td>
-                                {item.empresa.nomecnpj}
+                                {item.fornecedor.nome}
                             </td>
                             <td>
                                 {item.codigo}
                             </td>
                             <td>
-                                {item.insumo}
+                                {item.insumoDescricao}
                             </td>
                             <td>
                                 <img src='/x.png' width="20px" onClick={() => deletar(item)} />

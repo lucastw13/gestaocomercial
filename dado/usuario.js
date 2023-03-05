@@ -7,9 +7,10 @@ import { getCookie } from 'cookies-next';
 
 export default class Usuario {
 
-  static autenticar(pNome, pSenha) {
+  static autenticar(pNome, pSenha,pEmpresa) {
     var senha256 = sha256(pSenha)
-    return Dado.salvar({ nome: pNome, senha: ""+senha256 }, "usuario")
+    var item = {senha: ""+senha256 ,empresa:pEmpresa,nome: pNome}
+    return Dado.autenticar(item, "usuario")
   }
   static autenticado() {
     return hasCookie('usuario');
@@ -17,6 +18,8 @@ export default class Usuario {
   static sair() {
     deleteCookie('usuario');
     deleteCookie('empresa');
+    deleteCookie('nivel');
+    deleteCookie('menuAtual');
   }
   static getUsuario() {
     return getCookie('usuario')

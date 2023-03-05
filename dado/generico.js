@@ -7,6 +7,10 @@ export default class Generico {
     var empresa = Usuario.getEmpresa();
     return axios.get(Host.urlApi() + "/" + entidade + "/codigo/entidade2/" + empresa)
   }
+
+  static listarEmpresa() {
+    return axios.get(Host.urlApi() + "/empresa")
+  }
   static listarProduto(eSubProduto) {
     var empresa = Usuario.getEmpresa();
     return axios.get(Host.urlApi() + "/produto/codigo/entidade2/" + empresa + "/" + eSubProduto)
@@ -45,9 +49,10 @@ export default class Generico {
       item.horaAlteracao = dateTime.toLocaleTimeString();
       item.usuarioAlteracao = Usuario.getUsuario();
       return axios.put(Host.urlApi() + "/" + entidade, item);
-
     }
-
+  }
+  static autenticar(item){
+    return axios.post(Host.urlApi() + "/usuario", item);
   }
   static salvarLista(lista, entidade) {
     
@@ -56,6 +61,25 @@ export default class Generico {
     for (var item of lista) {
       if (item._id == "" || item._id == undefined) {
         item.empresa = Usuario.getEmpresa();
+        item.data = dateTime.toLocaleDateString();
+        item.hora = dateTime.toLocaleTimeString();
+        item.usuario = Usuario.getUsuario();
+        listaSalvar.push(item)
+      } 
+    }
+    if(listaSalvar.length>0){
+      return axios.post(Host.urlApi() + "/" + entidade, listaSalvar);
+    }else{
+      return ""
+    }
+
+  }
+  static salvarListaSemEmpresa(lista, entidade) {
+    
+    var dateTime = new Date()
+    var listaSalvar = []
+    for (var item of lista) {
+      if (item._id == "" || item._id == undefined) {
         item.data = dateTime.toLocaleDateString();
         item.hora = dateTime.toLocaleTimeString();
         item.usuario = Usuario.getUsuario();

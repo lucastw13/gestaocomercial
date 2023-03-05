@@ -4,16 +4,36 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useRouter } from 'next/router'
 import Host from '../dado/host';
 import Usuario from '../dado/usuario'
+import Dado from '../dado/generico.js'
 function Insumo() {
 
     const router = useRouter()
     const [nome, setNome] = useState("");
     const [senha, setSenha] = useState("");
+    const [empresa, setEmpresa] = useState("");
+    const [listaEmpresa, setListaEmpresa] = useState("");
+    
 
     useEffect(() => {
         if (Usuario.autenticado()) {
             router.push(Host.url())
         }
+
+        Dado.listarEmpresa()
+            .then(response => {
+                if (response.data != null) {
+                    if (response.data.status == true) {
+                        setListaEmpresa(response.data.lista)
+                    } else {
+                        setListaEmpresa([])
+                        console.log("error: " + response.data.descricao)
+
+                    }
+                }
+            }, (error) => {
+                console.log("error: " + error)
+            })
+
     })
 
 
@@ -24,13 +44,17 @@ function Insumo() {
     function mudarSenha(event) {
         setSenha(event.target.value)
     }
+    function mudarEmpresa(event) {
+        setEmpresa(event.target.value)
+    }
 
 
     function entrar() {
         if (possuiErroObrigatorio()) {
             alert("Preencha todos os Campos obrigatórios!")
         } else {
-            Usuario.autenticar(nome, senha).then(response => {
+            
+            Usuario.autenticar(nome, senha, empresa).then(response => {
                 if (response.data != null) {
                     if (response.data.status == true) {
                         var item = response.data.item
@@ -39,7 +63,6 @@ function Insumo() {
                         Usuario.setNivel(item.nivel)
                         router.push(Host.url())
                     } else {
-                        console.log("error: " + response.data.descricao)
                         alert(response.data.descricao)
                     }
                 }
@@ -57,6 +80,9 @@ function Insumo() {
         if (senha == "" || senha == undefined) {
             return true;
         }
+        if (empresa == "" || empresa == undefined) {
+            return true;
+        }
 
         return false;
     }
@@ -66,15 +92,25 @@ function Insumo() {
     return (
         <Container>
             <Form>
-                <FormGroup check inline>
-                    <Label for="nome">Nome</Label>
-                    <Input type="text" id="descricao" onChange={mudarNome} />
+
+            <FormGroup>
+                    <Label for="empresa">Empresa</Label>
+                    <Input type="select" id="empresa" onChange={mudarEmpresa}>
+                        <option value="">Selecione</option>
+                        {listaEmpresa && listaEmpresa.map((item) => (
+                            <option value={item._id}>{item.nome}</option>
+                        ))}
+                    </Input>
                 </FormGroup>
-                <FormGroup check inline>
-                    <Label for="Senha">senha</Label>
+                <FormGroup>
+                    <Label for="nome">Nome</Label>
+                    <Input type="text" id="nome" onChange={mudarNome} />
+                </FormGroup>
+                <FormGroup>
+                    <Label for="Senha">Senha</Label>
                     <Input type="password" id="senha" onChange={mudarSenha} />
                 </FormGroup>
-                <FormGroup check inline>
+                <FormGroup>
                     <Button color="danger" onClick={entrar}>Entrar</Button>
                 </FormGroup>
             </Form>

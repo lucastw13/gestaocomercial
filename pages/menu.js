@@ -45,7 +45,7 @@ function Menu() {
                     router.push(Host.url())
                 }
             }
-            if (getCookie('menuAtual')!=""){
+            if ((getCookie('menuAtual')!="")&&(getCookie('menuAtual')!=undefined)){
                 setMenuAtual(getCookie('menuAtual'))
             }else{
                 setMenuAtual("Gestão Comercial")
