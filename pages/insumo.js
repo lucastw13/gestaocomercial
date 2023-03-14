@@ -8,7 +8,7 @@ import Host from '../dado/host';
 import { useRouter } from 'next/router'
 function Insumo() {
     const [lista, setLista] = useState("");
-
+    const router = useRouter();
     if ((lista == "") || (lista == undefined)) {
         listar()
     }
@@ -58,6 +58,9 @@ function Insumo() {
                             Descrição
                         </th>
                         <th>
+                            Quantidade
+                        </th>
+                        <th>
                             <a href={Host.url() + "/insumo/incluir"}>
                                 <img src='/+.png' width="20px" />
                             </a>
@@ -66,18 +69,39 @@ function Insumo() {
                 </thead>
                 <tbody>
                     {lista && lista.map((item) => (
-                        <tr>
-                            <td>
-                                <a href={Host.url() + "/insumo/" + item._id}>
-                                    {item.descricao}
-                                </a>
+                        <>
+                            {item.quantidade < item.quantidadeMinima &&
+                                <tr onClick={() => router.push(Host.url() + "/insumo/" + item._id)} bgcolor="#FFFF00">
+                                    <td>
+                                        {item.descricao}
+                                    </td>
+                                    <td>
+                                        {item.quantidade}
+                                    </td>
+                                    <td>
+                                        <img src='/x.png' width="20px" onClick={() => deletar(item)} />
 
-                            </td>
-                            <td>
-                                <img src='/x.png' width="20px" onClick={() => deletar(item)} />
+                                    </td>
 
-                            </td>
-                        </tr>
+                                </tr>
+                            }
+                            {item.quantidade >= item.quantidadeMinima &&
+                                <tr onClick={() => router.push(Host.url() + "/insumo/" + item._id)}>
+                                    <td>
+                                        {item.descricao}
+                                    </td>
+                                    <td>
+                                        {item.quantidade}
+                                    </td>
+                                    <td>
+                                        <img src='/x.png' width="20px" onClick={() => deletar(item)} />
+
+                                    </td>
+
+                                </tr>
+                            }
+                        </>
+
                     ))}
                 </tbody>
             </Table>

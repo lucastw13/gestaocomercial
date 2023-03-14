@@ -1,6 +1,6 @@
 import { useState, React, useEffect } from 'react';
 import Menu from './menu.js';
-import { Container, Table } from 'reactstrap';
+import { Container, Table, Button, Modal, ModalHeader, ModalBody, Input } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Dado from '../dado/generico.js';
 import Host from '../dado/host';
@@ -8,6 +8,23 @@ import { useRouter } from 'next/router'
 function Receita() {
     const router = useRouter();
     const [lista, setLista] = useState("");
+    const [listaModal, setListaModal] = useState("");
+    const [itemModal, setItemModal] = useState("");
+
+    const [modal, setModal] = useState(false);
+
+    const toggleModal = () => setModal(!modal);
+
+    function exibirModal(itemRegistro) {
+        var listaModalTemp = []
+        for (var itemInsumoRegistrado of itemRegistro.insumo) {
+            listaModalTemp.push(itemInsumoRegistrado.quantidade + itemInsumoRegistrado.unidadeMedida + " de " + itemInsumoRegistrado.descricao)
+
+        }
+        setListaModal(listaModalTemp)
+        setItemModal(itemRegistro)
+        toggleModal()
+    }
 
     if ((lista == "") || (lista == undefined)) {
         listar()
@@ -51,6 +68,27 @@ function Receita() {
     function incluir() {
         router.push(Host.url() + "/receita")
     }
+
+    function registrarReceita(item) {
+        var registrar = confirm("Deseja Registrar a receita " + item.descricao + " ?");
+        if (registrar) {
+            var itemRegistro = {
+                receita: item._id,
+            }
+
+            Dado.salvar(itemRegistro, "registrareceita").then(response => {
+                if (response.data != null) {
+                    if (response.data.status == true) {
+                        router.push(Host.url() + "/receita/"+item._id)
+                    } else {
+                        console.log("error: " + response.data.descricao)
+                    }
+                }
+            }, (error) => {
+                console.log("error: " + error)
+            })
+        }
+    }
     return (
         <Container>
             <Menu />
@@ -58,7 +96,6 @@ function Receita() {
                 <thead>
                     <tr>
                         <th>
-                            Descrição
                         </th>
                         <th>
                             <a href={Host.url() + "/receita/incluir"}>
@@ -69,12 +106,9 @@ function Receita() {
                 </thead>
                 <tbody>
                     {lista && lista.map((item) => (
-                        <tr>
+                        <tr onClick={() => exibirModal(item)}>
                             <td>
-                                <a href={Host.url() + "/receita/" + item._id}>
-                                    {item.descricao}
-                                </a>
-
+                                {item.descricao}
                             </td>
                             <td>
                                 <img src='/x.png' width="20px" onClick={() => deletar(item)} />
@@ -84,7 +118,34 @@ function Receita() {
                     ))}
                 </tbody>
             </Table>
+            <Modal isOpen={modal} toggle={toggleModal}>
+                <ModalHeader toggle={toggleModal}>{itemModal.descricao}</ModalHeader>
+                <ModalBody>
+                    <h6>Modo de Preparo:</h6>
+                    <Input disabled="true" type="textarea" value={itemModal.modoPreparo} />
 
+                    <br /> <br />
+                    <h6>Ingredientes:</h6>
+                    {listaModal && listaModal.map((itemModal) => (
+                        <div>
+                            {itemModal}
+                            <br />
+                        </div>
+
+
+                    ))}
+                    <br />
+
+
+                    <table>
+                        <tr>
+                            <td><Button color="danger" onClick={() => registrarReceita(itemModal)}>Fazer</Button></td>
+                            <td> <Button color="danger" onClick={() => router.push(Host.url() + "/receita/" + itemModal._id)}>Editar</Button></td>
+
+                        </tr>
+                    </table>
+                </ModalBody>
+            </Modal>
         </Container >
     );
 

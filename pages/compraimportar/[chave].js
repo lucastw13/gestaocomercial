@@ -17,11 +17,11 @@ function Compraimportar() {
             Dado.itemNotaFiscal(router.query.chave, "insumo")
                 .then(response => {
                     if (response.data != null) {
-                        if (response.data.status == true) {
+                       if (response.data.status == true) {
                             setLista(response.data.lista)
 
                         } else {
-                            setLista([])
+                            setLista([{}])
                             console.log("error: " + JSON.stringify(response.data.descricao))
 
                         }
@@ -70,6 +70,9 @@ function Compraimportar() {
                                 Quantidade
                             </th>
                             <th>
+                                U. Medida
+                            </th>
+                            <th>
                                 Valor
                             </th>
 
@@ -85,6 +88,10 @@ function Compraimportar() {
                                 </td>
                                 <td>
                                     {item.quantidade}
+
+                                </td>
+                                <td>
+                                    {item.insumoUnidadeMedida}
 
                                 </td>
                                 <td>

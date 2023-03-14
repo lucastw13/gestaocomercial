@@ -19,6 +19,10 @@ export default class Generico {
   static item(codigo, entidade) {
     return axios.get(Host.urlApi() + "/" + entidade + "/" + codigo)
   }
+  static itemInsumo(codigo) {
+    var empresa = Usuario.getEmpresa();
+    return axios.get(Host.urlApi() + "/insumo/" + codigo + "/entidade2/"+empresa)
+  }
 
   static itemDePara(cnpj,codigo) {
     var empresa = Usuario.getEmpresa();

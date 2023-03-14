@@ -1,6 +1,6 @@
 import { useState, React } from 'react';
 import Menu from '../menu';
-import { Container, Label, Input, Button, Form, FormGroup, Table } from 'reactstrap';
+import { Container, Label, Input, Button, Form, FormGroup, Table, Modal, ModalHeader, ModalBody } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Dado from '../../dado/generico.js'
 import { useRouter } from 'next/router'
@@ -9,7 +9,12 @@ function Receita() {
     const [item, setItem] = useState("");
     const [listaInsumo, setListaInsumo] = useState("");
     const [listaInsumoTodos, setListaInsumoTodos] = useState("");
+    const [receitaUsadaRegistro, setReceitaUsadaRegistro] = useState("");
     const router = useRouter()
+
+    const [modal, setModal] = useState(false);
+
+    const toggleUsadaRegistro = () => setModal(!modal);
 
 
     if (((item == "") || (item == undefined)) && ((router.query.codigo != "") && (router.query.codigo != undefined))) {
@@ -172,7 +177,22 @@ function Receita() {
             setItem(itemTemp)
         }
     }
+    function exibirReceitaUsadaRegistro(itemRegistro) {
+        var receitaUsadaRegistroTemp = []
+        for (var itemInsumoRegistrado of itemRegistro.insumo) {
 
+            for (var itemInsumoCompleto of listaInsumo) {
+                if (itemInsumoCompleto._id == itemInsumoRegistrado._id) {
+                    break;
+                }
+            }
+            receitaUsadaRegistroTemp.push(itemInsumoRegistrado.quantidade + itemInsumoCompleto.unidadeMedida + " de " + itemInsumoCompleto.descricao)
+
+        }
+        setReceitaUsadaRegistro(receitaUsadaRegistroTemp)
+        toggleUsadaRegistro()
+
+    }
 
     return (
         <Container>
@@ -248,6 +268,53 @@ function Receita() {
                 </Table>
                 <Button color="danger" onClick={salvar}>Salvar</Button>
             </Form>
+
+            <br /><br />
+            <h3>Lista de Registros</h3>
+            <Table>
+                <thead>
+                    <tr>
+                        <th>
+                            Data
+                        </th>
+                        <th>
+                            Hora
+                        </th>
+                        <th>
+                            Usuário
+                        </th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    {item.registro && item.registro.map((itemRegistro) => (
+                        <tr onClick={() => exibirReceitaUsadaRegistro(itemRegistro)}>
+                            <td>
+                                {itemRegistro.data}
+
+                            </td>
+                            <td>
+                                {itemRegistro.hora}
+                            </td>
+                            <td>
+                                {itemRegistro.usuarioNome}
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </Table>
+            <Modal isOpen={modal} toggle={toggleUsadaRegistro}>
+                <ModalHeader toggle={toggleUsadaRegistro}>{item.descricao}</ModalHeader>
+                <ModalBody>
+                    {receitaUsadaRegistro && receitaUsadaRegistro.map((itemReceitaUsadaRegistro) => (
+                        <div>
+                            {itemReceitaUsadaRegistro}
+                            <br />
+                        </div>
+
+                    ))}
+                </ModalBody>
+            </Modal>
         </Container>
     );
 }

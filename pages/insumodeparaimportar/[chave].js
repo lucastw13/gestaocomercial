@@ -24,10 +24,10 @@ function Insumodeparaimportar() {
                     if (response.data != null) {
                         if (response.data.status == true) {
                             setListaNotaFiscal(response.data.lista)
-                            setCnpjFornecedor(response.data.fornecedor.cnpj)
-                            setNomeFornecedor(response.data.fornecedor.nome)
-                            document.getElementById("nomeFornecedor").value = response.data.fornecedor.nome
-                            document.getElementById("cnpjFornecedor").value = response.data.fornecedor.cnpj
+                            setCnpjFornecedor(response.data.fornecedorCnpj)
+                            setNomeFornecedor(response.data.fornecedorNome)
+                            document.getElementById("nomeFornecedor").value = response.data.fornecedorNome
+                            document.getElementById("cnpjFornecedor").value = response.data.fornecedorCnpj
                             /* document.getElementById("cnpj").value = response.data.item.cnpj;
                              document.getElementById("codigo").value = response.data.item.codigo;
                              document.getElementById("insumo").value = response.data.item.insumo;*/
@@ -120,7 +120,7 @@ function Insumodeparaimportar() {
                 for (var itemSalvar of listaSalvar) {
                     listaSalvarTemp.push(itemSalvar)
                 }
-                var item = { fornecedor:{cnpj: cnpjFornecedor,nome:nomeFornecedor}, codigo: itemDePara.codigo, insumo: itemDePara.insumo }
+                var item = { fornecedorCnpj: cnpjFornecedor,fornecedorNome:nomeFornecedor, codigo: itemDePara.codigo, insumo: itemDePara.insumo }
                 //console.log(item)
                 listaSalvarTemp.push(item)
                 //console.log(listaSalvarTemp)

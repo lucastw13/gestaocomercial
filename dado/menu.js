@@ -3,8 +3,7 @@ export default class Menu {
     var lista = []
     lista.push({ codigo: 1, nivel: 999, descricao: "Insumos", pagina: "insumo" })
     lista.push({ codigo: 2, nivel: 1, descricao: "Receitas", pagina: "receita" })
-    lista.push({ codigo: 3, nivel: 1, descricao: "Registrar Receita", pagina: "registrareceita" })
-    lista.push({ codigo: 4, nivel: 1, descricao: "Registrar Compra", pagina: "compra" })
+    lista.push({ codigo: 4, nivel: 1, descricao: "Compra", pagina: "compra" })
     lista.push({ codigo: 5, nivel: 1, descricao: "Produtos", pagina: "produto" })
     lista.push({ codigo: 7, nivel: 1, descricao: "SubProdutos", pagina: "subproduto" })
     lista.push({ codigo: 8, nivel: 1, descricao: "Clientes", pagina: "cliente" })

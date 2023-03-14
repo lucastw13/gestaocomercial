@@ -118,7 +118,7 @@ function Insumodepara() {
                     {lista && lista.map((item) => (
                         <tr onClick={() => Host.url() + "/insumodepara/" + item._id}>
                             <td>
-                                {item.fornecedor.nome}
+                                {item.fornecedorNome}
                             </td>
                             <td>
                                 {item.codigo}
