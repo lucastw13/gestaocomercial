@@ -233,6 +233,9 @@ function Produto() {
 
 
     function salvar() {
+        var itemTemp = item
+        itemTemp.eSubProduto = false
+        setItem(itemTemp)
         var retorno = possuiErroObrigatorio()
         if (retorno.status) {
             alert(retorno.mensagem)

@@ -18,7 +18,7 @@ function SubProduto() {
 
     if (((item == "") || (item == undefined)) && ((router.query.codigo != "") && (router.query.codigo != undefined))) {
         if (router.query.codigo == "incluir") {
-            setItem({ produto: [], unidadeMedida: "G" })
+            setItem({ produto: [],insumo:[], unidadeMedida: "G" })
             setListaProduto([])
             setListaInsumo([])
         } else {
@@ -144,9 +144,9 @@ function SubProduto() {
     function adicionarProduto() {
 
         var _id = document.getElementById("produto").value
-        var quantidade = document.getElementById("produtoQuantidade").value
+        var porcentagem = document.getElementById("produtoPorcentagem").value
 
-        if (_id != "" && _id != undefined && quantidade != "" && quantidade != undefined) {
+        if (_id != "" && _id != undefined && porcentagem != "" && porcentagem != undefined) {
             var possuiProduto = false
             for (var itemProduto of item.produto) {
                 if (itemProduto._id == _id) {
@@ -168,7 +168,7 @@ function SubProduto() {
                 for (itemProduto of listaProduto) {
                     listaTemp.push(itemProduto)
                 }
-                itemProdutoTodos.quantidadeProduto = quantidade
+                itemProdutoTodos.porcentagemProduto = porcentagem
                 listaTemp.push(itemProdutoTodos)
 
                 setListaProduto(listaTemp)
@@ -176,9 +176,9 @@ function SubProduto() {
                 if (itemTemp.produto == "" || itemTemp.produto == undefined) {
                     itemTemp.produto = []
                 }
-                itemTemp.produto.push({ _id: _id, quantidade: quantidade })
+                itemTemp.produto.push({ _id: _id, porcentagem: porcentagem })
                 setItem(itemTemp)
-                document.getElementById("produtoQuantidade").value = ""
+                document.getElementById("produtoPorcentagem").value = ""
 
             }
         } else {
@@ -234,6 +234,9 @@ function SubProduto() {
 
 
     function salvar() {
+        var itemTemp = item
+        itemTemp.eSubProduto = true
+        setItem(itemTemp)
         var retorno = possuiErroObrigatorio()
         if (retorno.status) {
             alert(retorno.mensagem)
@@ -357,8 +360,8 @@ function SubProduto() {
                     </FormGroup>
 
                     <FormGroup check inline>
-                        <Label for="produtoQuantidade">Quantidade</Label>
-                        <div width="50%"><Input type="number" id="produtoQuantidade" width="30px" /></div>
+                        <Label for="produtoPorcentagem">Porcentagem</Label>
+                        <div width="50%"><Input type="number" id="produtoPorcentagem" width="30px" /></div>
 
                     </FormGroup>
 
@@ -375,7 +378,7 @@ function SubProduto() {
                                     Descrição
                                 </th>
                                 <th>
-                                    Quant.
+                                    Porcentagem
                                 </th>
                                 <th>
                                     Unid. Med.
@@ -393,7 +396,7 @@ function SubProduto() {
 
                                     </td>
                                     <td>
-                                        {item.quantidadeProduto}
+                                        {item.porcentagemProduto}
                                     </td>
                                     <td>
                                         {item.unidadeMedida}
