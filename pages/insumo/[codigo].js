@@ -8,13 +8,14 @@ import Host from '../../dado/host';
 function Insumo() {
     const [item, setItem] = useState("");
     const router = useRouter()
-
+    const [carregando,setCarregando]  = useState("")
 
     if (((item == "") || (item == undefined)) && ((router.query.codigo != "") && (router.query.codigo != undefined))) {
         if (router.query.codigo == "incluir") {
             setItem({quantidade:0,valor:0,unidadeMedida:"G"})
         } else {
             Dado.itemInsumo(router.query.codigo)
+            //setCarregando
                 .then(response => {
                     if (response.data != null) {
                         if (response.data.status == true) {

@@ -21,6 +21,7 @@ export default class Usuario {
     deleteCookie('nivel');
     deleteCookie('menuAtual');
   }
+
   static getUsuario() {
     return getCookie('usuario')
   }

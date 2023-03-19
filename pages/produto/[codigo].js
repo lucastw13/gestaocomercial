@@ -31,6 +31,7 @@ function Produto() {
                             document.getElementById("unidadeMedida").value = response.data.item.unidadeMedida;
                             document.getElementById("valorVenda").value = response.data.item.valorVenda;
                             document.getElementById("valorCalculado").value = response.data.item.valorCalculado;
+                            document.getElementById("quantidade").value = response.data.item.quantidade
                             Dado.itemLista(response.data.item._id, "produto", "produto")
                                 .then(response => {
                                     if (response.data.status == true) {
@@ -124,6 +125,12 @@ function Produto() {
     function mudarReceita(event) {
         var itemTemp = item
         itemTemp.receita = event.target.value
+        setItem(itemTemp);
+    }
+
+    function mudarQuantidade(event) {
+        var itemTemp = item
+        itemTemp.quantidade = event.target.value
         setItem(itemTemp);
     }
 
@@ -258,7 +265,7 @@ function Produto() {
         if (item.descricao == "" || item.descricao == undefined) {
             retorno = { status: true, mensagem: "Informe a Descrição" }
         }
-        if (item.receita == "" || item.receita == undefined){
+        if (item.receita == "" || item.receita == undefined) {
             retorno = { status: true, mensagem: "Informe a receita" }
         }
         return retorno;
@@ -335,6 +342,11 @@ function Produto() {
                         <option>UND</option>
                         <option>ML</option>
                     </Input>
+                </FormGroup>
+
+                <FormGroup>
+                    <Label for="quantidade">Quantidade</Label>
+                    <Input type="number" id="quantidade" onChange={mudarQuantidade} />
                 </FormGroup>
 
                 <FormGroup>

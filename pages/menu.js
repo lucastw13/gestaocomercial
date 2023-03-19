@@ -17,8 +17,12 @@ function Menu() {
     const [collapsed, setCollapsed] = useState(true);
 
     const toggleNavbar = () => setCollapsed(!collapsed)
+    const [carregando,setCarregando] = useState(true)
 
+  
+    
     useEffect(() => {
+        setCarregando(false)
         if (autenticado == "" || autenticado == undefined) {
             if (Usuario.autenticado()) {
                 setAutenticado(true)
@@ -45,11 +49,11 @@ function Menu() {
                     router.push(Host.url())
                 }
             }
-            if ((getCookie('menuAtual')!="")&&(getCookie('menuAtual')!=undefined)){
+            if ((getCookie('menuAtual') != "") && (getCookie('menuAtual') != undefined)) {
                 setMenuAtual(getCookie('menuAtual'))
-            }else{
+            } else {
                 setMenuAtual("Gestão Comercial")
-            
+
             }
         }
     })
@@ -61,7 +65,7 @@ function Menu() {
 
     }
 
-    function href(item){
+    function href(item) {
         setCookie('menuAtual', item.descricao);
         router.push(Host.url() + "/" + item.pagina)
     }
@@ -77,7 +81,7 @@ function Menu() {
                     <Nav navbar>
                         {nivel != "" && nivel != undefined && Dado.listar().filter(item => item.nivel <= nivel).map((item) => (
                             <NavItem>
-                                <NavLink onClick={()=>href(item)}>
+                                <NavLink onClick={() => href(item)}>
                                     {item.descricao}
                                 </NavLink>
                             </NavItem>
@@ -85,7 +89,14 @@ function Menu() {
                     </Nav>
                 </Collapse>
             </Navbar>
+            {carregando &&
+            
+                <div class="telaCarregamento" >
 
+                    <img src="/carregamento.svg" alt="" class="imgLoad" />
+
+                </div>
+            }
         </Container>
     );
 }

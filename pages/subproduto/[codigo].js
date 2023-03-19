@@ -1,4 +1,4 @@
-import { useState, React } from 'react';
+import { useState, useEffect, React } from 'react';
 import Menu from '../menu';
 import { Container, Label, Input, Button, Form, FormGroup, Table } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -14,108 +14,118 @@ function SubProduto() {
     const [listaInsumoTodos, setListaInsumoTodos] = useState("");
     const [listaReceitaTodos, setListaReceitaTodos] = useState("");
     const router = useRouter()
+    const [carregando, setCarregando] = useState("")
 
 
-    if (((item == "") || (item == undefined)) && ((router.query.codigo != "") && (router.query.codigo != undefined))) {
-        if (router.query.codigo == "incluir") {
-            setItem({ produto: [],insumo:[], unidadeMedida: "G" })
-            setListaProduto([])
-            setListaInsumo([])
-        } else {
-            Dado.item(router.query.codigo, "produto")
-                .then(response => {
-                    if (response.data != null) {
-                        if (response.data.status == true) {
-                            setItem(response.data.item)
-                            document.getElementById("descricao").value = response.data.item.descricao;
-                            //document.getElementById("receita").value = response.data.item.receita;
-                            document.getElementById("unidadeMedida").value = response.data.item.unidadeMedida;
-                            document.getElementById("valorVenda").value = response.data.item.valorVenda;
-                            document.getElementById("valorCalculado").value = response.data.item.valorCalculado;
-                            Dado.itemLista(response.data.item._id, "produto", "produto")
-                                .then(response => {
-                                    if (response.data.status == true) {
-                                        setListaProduto(response.data.lista)
-                                    } else {
-                                        setListaProduto([])
-                                        console.log("error: " + response.data.descricao)
-                                    }
+    useEffect(() => {
+        if (((item == "") || (item == undefined)) && ((router.query.codigo != "") && (router.query.codigo != undefined))) {
 
-                                }, (error) => {
-                                    console.log("error: " + error)
-                                })
-                            Dado.itemLista(response.data.item._id, "produto", "insumo")
-                                .then(response => {
-                                    if (response.data.status == true) {
-                                        setListaInsumo(response.data.lista)
-                                    } else {
-                                        setListaInsumo([])
-                                        console.log("error: " + response.data.descricao)
-                                    }
-
-                                }, (error) => {
-                                    console.log("error: " + error)
-                                })
-
-                        } else {
-                            setItem({})
-                            console.log("error: " + response.data.descricao)
-                        }
-
-
-                    }
-                }, (error) => {
-                    console.log("error: " + error)
-                })
+            if (router.query.codigo == "incluir") {
+                setItem({ produto: [], insumo: [], unidadeMedida: "G" })
+                setListaProduto([])
+                setListaInsumo([])
+            } else {
+                setCarregando(true)
+                listar(router.query.codigo)
+            }
         }
+    })
 
-        Dado.listarProduto(false)
+    function listar(pCodigo) {
+        Dado.item(pCodigo, "produto")
             .then(response => {
                 if (response.data != null) {
                     if (response.data.status == true) {
-                        setListaProdutoTodos(response.data.lista)
+                        setItem(response.data.item)
+                        document.getElementById("descricao").value = response.data.item.descricao;
+                        //document.getElementById("receita").value = response.data.item.receita;
+                        document.getElementById("unidadeMedida").value = response.data.item.unidadeMedida;
+                        document.getElementById("valorVenda").value = response.data.item.valorVenda;
+                        document.getElementById("valorCalculado").value = response.data.item.valorCalculado;
+                        document.getElementById("valorLucro").value = response.data.item.valorLucro;
+                        Dado.itemLista(pCodigo, "produto", "produto")
+                            .then(response => {
+                                if (response.data.status == true) {
+                                    setListaProduto(response.data.lista)
+                                } else {
+                                    setListaProduto([])
+                                    console.log("error: " + response.data.descricao)
+                                }
+
+
+                                Dado.itemLista(pCodigo, "produto", "insumo")
+                                    .then(response => {
+                                        if (response.data.status == true) {
+                                            setListaInsumo(response.data.lista)
+                                        } else {
+                                            setListaInsumo([])
+                                            console.log("error: " + response.data.descricao)
+                                        }
+
+                                        Dado.listarProduto(false)
+                                            .then(response => {
+                                                if (response.data != null) {
+                                                    if (response.data.status == true) {
+                                                        setListaProdutoTodos(response.data.lista)
+                                                    } else {
+                                                        setLista([])
+                                                        console.log("error: " + response.data.descricao)
+
+                                                    }
+                                                }
+                                                Dado.listar("insumo")
+                                                    .then(response => {
+                                                        if (response.data != null) {
+                                                            if (response.data.status == true) {
+                                                                setListaInsumoTodos(response.data.lista)
+                                                            } else {
+                                                                setLista([])
+                                                                console.log("error: " + response.data.descricao)
+
+                                                            }
+                                                        }
+                                                        Dado.listar("receita")
+                                                            .then(response => {
+                                                                if (response.data != null) {
+                                                                    if (response.data.status == true) {
+                                                                        setListaReceitaTodos(response.data.lista)
+                                                                    } else {
+                                                                        setLista([])
+                                                                        console.log("error: " + response.data.descricao)
+
+                                                                    }
+                                                                }
+                                                                setCarregando(false)
+                                                            }, (error) => {
+                                                                console.log("error: " + error)
+                                                            })
+                                                    }, (error) => {
+                                                        console.log("error: " + error)
+                                                    })
+                                            }, (error) => {
+                                                console.log("error: " + error)
+                                            })
+                                    }, (error) => {
+                                        console.log("error: " + error)
+                                    })
+
+                            }, (error) => {
+                                console.log("error: " + error)
+                            })
+
+
                     } else {
-                        setLista([])
+                        setItem({})
                         console.log("error: " + response.data.descricao)
-
                     }
-                }
-            }, (error) => {
-                console.log("error: " + error)
-            })
 
-        Dado.listar("insumo")
-            .then(response => {
-                if (response.data != null) {
-                    if (response.data.status == true) {
-                        setListaInsumoTodos(response.data.lista)
-                    } else {
-                        setLista([])
-                        console.log("error: " + response.data.descricao)
 
-                    }
-                }
-            }, (error) => {
-                console.log("error: " + error)
-            })
-
-        Dado.listar("receita")
-            .then(response => {
-                if (response.data != null) {
-                    if (response.data.status == true) {
-                        setListaReceitaTodos(response.data.lista)
-                    } else {
-                        setLista([])
-                        console.log("error: " + response.data.descricao)
-
-                    }
                 }
             }, (error) => {
                 console.log("error: " + error)
             })
 
     }
-
     function mudarDescricao(event) {
         var itemTemp = item
         itemTemp.descricao = event.target.value
@@ -144,9 +154,9 @@ function SubProduto() {
     function adicionarProduto() {
 
         var _id = document.getElementById("produto").value
-        var porcentagem = document.getElementById("produtoPorcentagem").value
+        var quantidade = document.getElementById("produtoQuantidade").value
 
-        if (_id != "" && _id != undefined && porcentagem != "" && porcentagem != undefined) {
+        if (_id != "" && _id != undefined && quantidade != "" && quantidade != undefined) {
             var possuiProduto = false
             for (var itemProduto of item.produto) {
                 if (itemProduto._id == _id) {
@@ -168,7 +178,7 @@ function SubProduto() {
                 for (itemProduto of listaProduto) {
                     listaTemp.push(itemProduto)
                 }
-                itemProdutoTodos.porcentagemProduto = porcentagem
+                itemProdutoTodos.quantidadeProduto = quantidade
                 listaTemp.push(itemProdutoTodos)
 
                 setListaProduto(listaTemp)
@@ -176,9 +186,9 @@ function SubProduto() {
                 if (itemTemp.produto == "" || itemTemp.produto == undefined) {
                     itemTemp.produto = []
                 }
-                itemTemp.produto.push({ _id: _id, porcentagem: porcentagem })
+                itemTemp.produto.push({ _id: _id, quantidade: quantidade })
                 setItem(itemTemp)
-                document.getElementById("produtoPorcentagem").value = ""
+                document.getElementById("produtoQuantidade").value = ""
 
             }
         } else {
@@ -323,6 +333,10 @@ function SubProduto() {
                     <Label for="valorCalculado">Valor Calculado</Label>
                     <Input type="number" id="valorCalculado" disabled="true" />
                 </FormGroup>
+                 <FormGroup>
+                    <Label for="valorLucro">Valor Lucro</Label>
+                    <Input type="number" id="valorLucro" disabled="true" />
+                </FormGroup>
 
                 <FormGroup>
                     <Label for="valorVenda">Valor Venda</Label>
@@ -360,8 +374,8 @@ function SubProduto() {
                     </FormGroup>
 
                     <FormGroup check inline>
-                        <Label for="produtoPorcentagem">Porcentagem</Label>
-                        <div width="50%"><Input type="number" id="produtoPorcentagem" width="30px" /></div>
+                        <Label for="produtoQuantidade">Quantidade</Label>
+                        <div width="50%"><Input type="number" id="produtoQuantidade" width="30px" /></div>
 
                     </FormGroup>
 
@@ -378,7 +392,7 @@ function SubProduto() {
                                     Descrição
                                 </th>
                                 <th>
-                                    Porcentagem
+                                    Quantidade
                                 </th>
                                 <th>
                                     Unid. Med.
@@ -396,7 +410,7 @@ function SubProduto() {
 
                                     </td>
                                     <td>
-                                        {item.porcentagemProduto}
+                                        {item.quantidadeProduto}
                                     </td>
                                     <td>
                                         {item.unidadeMedida}
@@ -473,6 +487,14 @@ function SubProduto() {
                 </div>
                 <Button color="danger" onClick={salvar}>Salvar</Button>
             </Form>
+            {carregando &&
+
+                <div class="telaCarregamento" >
+
+                    <img src="/carregamento.svg" alt="" class="imgLoad" />
+
+                </div>
+            }
         </Container>
     );
 }
