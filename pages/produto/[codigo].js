@@ -1,10 +1,11 @@
-import { useState, React } from 'react';
+import { useState, React, useEffect } from 'react';
 import Menu from '../menu';
 import { Container, Label, Input, Button, Form, FormGroup, Table } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Dado from '../../dado/generico.js'
 import { useRouter } from 'next/router'
 import Host from '../../dado/host';
+import Carregamento from '../carregamento';
 function Produto() {
     const [item, setItem] = useState("");
     const [listaProduto, setListaProduto] = useState("");
@@ -13,77 +14,21 @@ function Produto() {
     const [listaInsumoTodos, setListaInsumoTodos] = useState("");
     const [listaReceitaTodos, setListaReceitaTodos] = useState("");
     const router = useRouter()
+    const [carregando, setCarregando] = useState("")
 
-
-    if (((item == "") || (item == undefined)) && ((router.query.codigo != "") && (router.query.codigo != undefined))) {
-        if (router.query.codigo == "incluir") {
-            setItem({ produto: [], unidadeMedida: "G" })
-            setListaProduto([])
-            setListaInsumo([])
-        } else {
-            Dado.item(router.query.codigo, "produto")
-                .then(response => {
-                    if (response.data != null) {
-                        if (response.data.status == true) {
-                            setItem(response.data.item)
-                            document.getElementById("descricao").value = response.data.item.descricao;
-                            document.getElementById("receita").value = response.data.item.receita;
-                            document.getElementById("unidadeMedida").value = response.data.item.unidadeMedida;
-                            document.getElementById("valorVenda").value = response.data.item.valorVenda;
-                            document.getElementById("valorCalculado").value = response.data.item.valorCalculado;
-                            document.getElementById("quantidade").value = response.data.item.quantidade
-                            Dado.itemLista(response.data.item._id, "produto", "produto")
-                                .then(response => {
-                                    if (response.data.status == true) {
-                                        setListaProduto(response.data.lista)
-                                    } else {
-                                        setListaProduto([])
-                                        console.log("error: " + response.data.descricao)
-                                    }
-
-                                }, (error) => {
-                                    console.log("error: " + error)
-                                })
-                            Dado.itemLista(response.data.item._id, "produto", "insumo")
-                                .then(response => {
-                                    if (response.data.status == true) {
-                                        setListaInsumo(response.data.lista)
-                                    } else {
-                                        setListaInsumo([])
-                                        console.log("error: " + response.data.descricao)
-                                    }
-
-                                }, (error) => {
-                                    console.log("error: " + error)
-                                })
-
-                        } else {
-                            setItem({})
-                            console.log("error: " + response.data.descricao)
-                        }
-
-
-                    }
-                }, (error) => {
-                    console.log("error: " + error)
-                })
+    useEffect(() => {
+        if ((router.query.codigo != "") && (router.query.codigo != undefined)) {
+            if (router.query.codigo == "incluir") {
+                setItem({ produto: [], unidadeMedida: "G" })
+                setListaProduto([])
+                setListaInsumo([])
+            }
+            listar(router.query.codigo)
         }
+    }, [router.query.codigo])
 
-        Dado.listarProduto(false)
-            .then(response => {
-                if (response.data != null) {
-                    if (response.data.status == true) {
-                        setListaProdutoTodos(response.data.lista)
-                    } else {
-                        setLista([])
-                        console.log("error: " + response.data.descricao)
-
-                    }
-                }
-            }, (error) => {
-                console.log("error: " + error)
-            })
-
+    function listar(pCodigo) {
+        setCarregando(true)
         Dado.listar("insumo")
             .then(response => {
                 if (response.data != null) {
@@ -94,26 +39,99 @@ function Produto() {
                         console.log("error: " + response.data.descricao)
 
                     }
+                    Dado.listar("receita")
+                        .then(response => {
+                            if (response.data != null) {
+                                if (response.data.status == true) {
+                                    setListaReceitaTodos(response.data.lista)
+                                } else {
+                                    setListaReceitaTodos([])
+                                    console.log("error: " + response.data.descricao)
+
+                                }
+                            }
+                            if (pCodigo != "incluir") {
+                                listarEdicao(pCodigo)
+                            }
+
+                        }, (error) => {
+                            console.log("error: " + error)
+                        })
+                        .finally(() => {
+                            setCarregando(false)
+                        });
+
                 }
             }, (error) => {
                 console.log("error: " + error)
             })
 
-        Dado.listar("receita")
+
+
+    }
+
+    function listarEdicao(pCodigo) {
+        setCarregando(true)
+        Dado.item(pCodigo, "produto")
             .then(response => {
                 if (response.data != null) {
                     if (response.data.status == true) {
-                        setListaReceitaTodos(response.data.lista)
-                    } else {
-                        setListaReceitaTodos([])
-                        console.log("error: " + response.data.descricao)
+                        setItem(response.data.item)
+                        document.getElementById("descricao").value = response.data.item.descricao;
+                        document.getElementById("receita").value = response.data.item.receita;
+                        document.getElementById("unidadeMedida").value = response.data.item.unidadeMedida;
+                        document.getElementById("valorVenda").value = response.data.item.valorVenda;
+                        document.getElementById("valorCalculado").value = response.data.item.valorCalculado;
+                        document.getElementById("quantidade").value = response.data.item.quantidade
+                        Dado.itemLista(response.data.item._id, "produto", "produto")
+                            .then(response => {
+                                if (response.data.status == true) {
+                                    setListaProduto(response.data.lista)
+                                } else {
+                                    setListaProduto([])
+                                    console.log("error: " + response.data.descricao)
+                                }
 
+                            }, (error) => {
+                                console.log("error: " + error)
+                            })
+                        Dado.itemLista(response.data.item._id, "produto", "insumo")
+                            .then(response => {
+                                if (response.data.status == true) {
+                                    setListaInsumo(response.data.lista)
+                                } else {
+                                    setListaInsumo([])
+                                    console.log("error: " + response.data.descricao)
+                                }
+                                Dado.listarProduto(false)
+                                    .then(response => {
+                                        if (response.data != null) {
+                                            if (response.data.status == true) {
+                                                setListaProdutoTodos(response.data.lista)
+                                            } else {
+                                                setLista([])
+                                                console.log("error: " + response.data.descricao)
+                                            }
+                                        }
+                                    }, (error) => {
+                                        console.log("error: " + error)
+                                    })
+                                    .finally(() => {
+                                        setCarregando(false)
+                                    });
+
+                            }, (error) => {
+                                console.log("error: " + error)
+                            })
+
+                    } else {
+                        setItem({})
+                        console.log("error: " + response.data.descricao)
                     }
                 }
             }, (error) => {
                 console.log("error: " + error)
             })
-
     }
 
     function mudarDescricao(event) {
@@ -487,6 +505,9 @@ function Produto() {
                 }
                 <Button color="danger" onClick={salvar}>Salvar</Button>
             </Form>
+            {carregando &&
+                <Carregamento />
+            }
         </Container>
     );
 }

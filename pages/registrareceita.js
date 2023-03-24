@@ -5,15 +5,18 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Dado from '../dado/generico.js';
 import Host from '../dado/host';
 import { useRouter } from 'next/router'
+import Carregamento from './carregamento';
 function RegistraReceita() {
     const router = useRouter();
     const [lista, setLista] = useState("");
+    const [carregando, setCarregando] = useState("")
 
-    if ((lista == "") || (lista == undefined)) {
+    useEffect(() => {
         listar()
-    }
+    },[])
 
     function listar() {
+        setCarregando(true)
         Dado.listar("receita")
             .then(response => {
                 if (response.data != null) {
@@ -28,6 +31,9 @@ function RegistraReceita() {
             }, (error) => {
                 console.log("error: " + error)
             })
+            .finally(() => {
+                setCarregando(false)
+            });
     }
 
     
@@ -59,7 +65,10 @@ function RegistraReceita() {
                 </tbody>
             </Table>
 
-        </Container >
+            {carregando &&
+                <Carregamento/>
+            }
+        </Container>
     );
 
 

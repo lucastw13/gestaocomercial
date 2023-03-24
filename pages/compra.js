@@ -1,4 +1,4 @@
-import { useState, React } from 'react';
+import { useState, React,useEffect} from 'react';
 import Menu from './menu.js';
 import { Container, Table, Form, FormGroup, Label, Input, Button } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -6,18 +6,20 @@ import Dado from '../dado/generico.js';
 import Host from '../dado/host';
 import UtilDataURIToBlob from '../util/DataURIToBlob';
 import axios from 'axios';
+import Carregamento from './carregamento';
 import { useRouter } from 'next/router.js';
 
 function Compra() {
     const router = useRouter()
     const [lista, setLista] = useState("");
+    const [carregando, setCarregando] = useState("")
 
-    if ((lista == "") || (lista == undefined)) {
-
+    useEffect(() => {
         listar()
-    }
+    }, [])
 
     function listar() {
+        setCarregando(true)
         Dado.listar("compra")
             .then(response => {
                 if (response.data != null) {
@@ -32,6 +34,9 @@ function Compra() {
             }, (error) => {
                 console.log("error: " + error)
             })
+            .finally(() => {
+                setCarregando(false)
+            });
     }
 
 
@@ -125,7 +130,10 @@ function Compra() {
                 </tbody>
             </Table>
 
-        </Container >
+            {carregando &&
+                <Carregamento/>
+            }
+        </Container>
     );
 
 

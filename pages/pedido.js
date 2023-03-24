@@ -3,19 +3,22 @@ import Menu from './menu.js';
 import { Container, Table } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Dado from '../dado/generico.js';
-import Usuario from "../dado/usuario.js";
 import Host from '../dado/host';
 import { useRouter } from 'next/router'
+import Carregamento from './carregamento';
 function Pedido() {
     const [lista, setLista] = useState("");
     const router = useRouter()
-    if ((lista == "") || (lista == undefined)) {
+    const [carregando, setCarregando] = useState("")
+    useEffect(() => {
         listar()
-    }
+    },[])
 
     function listar() {
+        setCarregando(true)
         Dado.listar("pedido")
             .then(response => {
+                setCarregando(false)
                 if (response.data != null) {
                     if (response.data.status == true) {
                         setLista(response.data.lista)
@@ -26,8 +29,12 @@ function Pedido() {
                     }
                 }
             }, (error) => {
+                
                 console.log("error: " + error)
             })
+            .finally(() => {
+                setCarregando(false)
+             });
     }
 
    
@@ -76,7 +83,10 @@ function Pedido() {
                 </tbody>
             </Table>
 
-        </Container >
+            {carregando &&
+                <Carregamento/>
+            }
+        </Container>
     );
 
 

@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import Host from '../dado/host';
 import Usuario from '../dado/usuario'
 import Dado from '../dado/generico.js'
+import Carregamento from './carregamento';
 function Insumo() {
 
     const router = useRouter()
@@ -12,9 +13,13 @@ function Insumo() {
     const [senha, setSenha] = useState("");
     const [empresa, setEmpresa] = useState("");
     const [listaEmpresa, setListaEmpresa] = useState("");
-    
+    const [carregando, setCarregando] = useState("")
 
     useEffect(() => {
+        listar()
+    }, [])
+    function listar() {
+        setCarregando(true)
         if (Usuario.autenticado()) {
             router.push(Host.url())
         }
@@ -33,8 +38,11 @@ function Insumo() {
             }, (error) => {
                 console.log("error: " + error)
             })
+            .finally(() => {
+                setCarregando(false)
+            });
 
-    })
+    }
 
 
     function mudarNome(event) {
@@ -53,7 +61,7 @@ function Insumo() {
         if (possuiErroObrigatorio()) {
             alert("Preencha todos os Campos obrigatórios!")
         } else {
-            
+
             Usuario.autenticar(nome, senha, empresa).then(response => {
                 if (response.data != null) {
                     if (response.data.status == true) {
@@ -93,7 +101,7 @@ function Insumo() {
         <Container>
             <Form>
 
-            <FormGroup>
+                <FormGroup>
                     <Label for="empresa">Empresa</Label>
                     <Input type="select" id="empresa" onChange={mudarEmpresa}>
                         <option value="">Selecione</option>
@@ -114,6 +122,9 @@ function Insumo() {
                     <Button color="danger" onClick={entrar}>Entrar</Button>
                 </FormGroup>
             </Form>
+            {carregando &&
+                <Carregamento />
+            }
         </Container>
     );
 }

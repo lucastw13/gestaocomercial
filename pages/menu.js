@@ -7,6 +7,7 @@ import Usuario from '../dado/usuario.js';
 import { useRouter } from 'next/router'
 import { getCookie } from 'cookies-next';
 import { setCookie } from 'cookies-next';
+import Carregamento from './carregamento';
 
 function Menu() {
     const router = useRouter();
@@ -22,7 +23,7 @@ function Menu() {
   
     
     useEffect(() => {
-        setCarregando(false)
+        setCarregando(true)
         if (autenticado == "" || autenticado == undefined) {
             if (Usuario.autenticado()) {
                 setAutenticado(true)
@@ -56,6 +57,7 @@ function Menu() {
 
             }
         }
+        setCarregando(false)
     })
 
 
@@ -96,6 +98,9 @@ function Menu() {
                     <img src="/carregamento.svg" alt="" class="imgLoad" />
 
                 </div>
+            }
+                    {carregando &&
+                <Carregamento/>
             }
         </Container>
     );

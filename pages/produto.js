@@ -3,17 +3,18 @@ import Menu from './menu.js';
 import { Container, Table } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Dado from '../dado/generico.js';
-import Usuario from "../dado/usuario.js";
 import Host from '../dado/host';
-import { useRouter } from 'next/router'
+import Carregamento from './carregamento';
 function Produto() {
     const [lista, setLista] = useState("");
+    const [carregando, setCarregando] = useState("")
 
-    if ((lista == "") || (lista == undefined)) {
+    useEffect(() => {
         listar()
-    }
+    },[])
 
     function listar() {
+        setCarregando(true)
         Dado.listarProduto(false)
             .then(response => {
                 if (response.data != null) {
@@ -28,6 +29,9 @@ function Produto() {
             }, (error) => {
                 console.log("error: " + error)
             })
+            .finally(() => {
+                setCarregando(false)
+            });
     }
 
     function deletar(item) {
@@ -82,7 +86,10 @@ function Produto() {
                 </tbody>
             </Table>
 
-        </Container >
+            {carregando &&
+                <Carregamento/>
+            }
+        </Container>
     );
 
 

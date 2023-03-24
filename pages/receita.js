@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Dado from '../dado/generico.js';
 import Host from '../dado/host';
 import { useRouter } from 'next/router'
+import Carregamento from './carregamento';
 function Receita() {
     const router = useRouter();
     const [lista, setLista] = useState("");
@@ -14,6 +15,7 @@ function Receita() {
     const [modal, setModal] = useState(false);
 
     const toggleModal = () => setModal(!modal);
+    const [carregando, setCarregando] = useState("")
 
     function exibirModal(itemRegistro) {
         var listaModalTemp = []
@@ -26,11 +28,12 @@ function Receita() {
         toggleModal()
     }
 
-    if ((lista == "") || (lista == undefined)) {
+    useEffect(() => {
         listar()
-    }
+    },[])
 
     function listar() {
+        setCarregando(true)
         Dado.listar("receita")
             .then(response => {
                 if (response.data != null) {
@@ -45,6 +48,9 @@ function Receita() {
             }, (error) => {
                 console.log("error: " + error)
             })
+            .finally(() => {
+                setCarregando(false)
+            });
     }
 
     function deletar(item) {
@@ -146,7 +152,10 @@ function Receita() {
                     </table>
                 </ModalBody>
             </Modal>
-        </Container >
+            {carregando &&
+                <Carregamento/>
+            }
+        </Container>
     );
 
 

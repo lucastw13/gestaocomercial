@@ -1,55 +1,67 @@
-import { useState, React } from 'react';
+import { useState, React, useEffect } from 'react';
 import Menu from '../menu';
 import { Container, Label, Input, Button, Form, FormGroup, Table } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Dado from '../../dado/generico.js'
 import { useRouter } from 'next/router'
 import Host from '../../dado/host';
+import Carregamento from '../carregamento';
 function Pedido() {
     const [item, setItem] = useState("");
     const [listaProduto, setListaProduto] = useState("");
     const [listaProdutoTodos, setListaProdutoTodos] = useState("");
     const [listaClienteTodos, setListaClienteTodos] = useState("");
     const router = useRouter()
+    const [carregando, setCarregando] = useState("")
 
 
-    if (((item == "") || (item == undefined)) && ((router.query.codigo != "") && (router.query.codigo != undefined))) {
+    useEffect(() => {
         if (router.query.codigo == "incluir") {
             setItem({ produto: [], unidadeMedida: "G" })
             setListaProduto([])
+            listarInserir()
         } else {
-            Dado.item(router.query.codigo, "pedido")
-                .then(response => {
-                    if (response.data != null) {
-                        if (response.data.status == true) {
-                            setItem(response.data.item)
-                            console.log(response.data.item.cliente)
-                            document.getElementById("cliente").value = response.data.item.cliente;
-                            Dado.itemLista(response.data.item._id, "pedido", "produto")
-                                .then(response => {
-                                    if (response.data.status == true) {
-                                        setListaProduto(response.data.lista)
-                                    } else {
-                                        setListaProduto([])
-                                        console.log("error: " + response.data.descricao)
-                                    }
-
-                                }, (error) => {
-                                    console.log("error: " + error)
-                                })
-
-                        } else {
-                            setItem({})
-                            console.log("error: " + response.data.descricao)
-                        }
-
-
-                    }
-                }, (error) => {
-                    console.log("error: " + error)
-                })
+            if ((router.query.codigo != "") && (router.query.codigo != undefined)) {
+                listar(router.query.codigo)
+            }
         }
+    }, [router.query.codigo])
+    function listar(pCodigo) {
+        setCarregando(true)
+        Dado.item(pCodigo, "pedido")
+            .then(response => {
+                if (response.data != null) {
+                    if (response.data.status == true) {
+                        setItem(response.data.item)
+                        console.log(response.data.item.cliente)
+                        document.getElementById("cliente").value = response.data.item.nomeCliente;
+                        Dado.itemLista(response.data.item._id, "pedido", "produto")
+                            .then(response => {
+                                if (response.data.status == true) {
+                                    setListaProduto(response.data.lista)
+                                } else {
+                                    setListaProduto([])
+                                    console.log("error: " + response.data.descricao)
+                                }
+                                listarInserir()
+                            }, (error) => {
+                                console.log("error: " + error)
+                            })
 
+                    } else {
+                        setItem({})
+                        console.log("error: " + response.data.descricao)
+                    }
+
+
+                }
+            }, (error) => {
+                console.log("error: " + error)
+            })
+    }
+
+    function listarInserir() {
+        setCarregando(true)
         Dado.listar("produto", false)
             .then(response => {
                 if (response.data != null) {
@@ -61,34 +73,34 @@ function Pedido() {
 
                     }
                 }
+                Dado.listar("cliente")
+                    .then(response => {
+                        if (response.data != null) {
+                            if (response.data.status == true) {
+                                setListaClienteTodos(response.data.lista)
+                            } else {
+                                setListaClienteTodos([])
+                                console.log("error: " + response.data.descricao)
+
+                            }
+                        }
+                    }, (error) => {
+                        console.log("error: " + error)
+                    })
+                    .finally(() => {
+                        setCarregando(false)
+                    });
             }, (error) => {
                 console.log("error: " + error)
             })
-
-        Dado.listar("cliente")
-            .then(response => {
-                if (response.data != null) {
-                    if (response.data.status == true) {
-                        setListaClienteTodos(response.data.lista)
-                    } else {
-                        setListaClienteTodos([])
-                        console.log("error: " + response.data.descricao)
-
-                    }
-                }
-            }, (error) => {
-                console.log("error: " + error)
-            })
-
     }
-
     function mudarCliente(event) {
         var itemTemp = item
         itemTemp.cliente = event.target.value
         setItem(itemTemp);
 
     }
- 
+
     function adicionarProduto() {
 
         var _id = document.getElementById("produto").value
@@ -188,14 +200,22 @@ function Pedido() {
             <Form >
                 <FormGroup>
                     <Label for="cliente">Cliente</Label>
-                    <Input type="select" id="cliente" onChange={mudarCliente}>
-                        <option value="">Selecione</option>
-                        {listaClienteTodos && listaClienteTodos.map((item) => (
-                            <option value={item._id}>{item.nome}</option>
-                        ))}
-                    </Input>
+                    {item._id == "" &&
+                        < Input type="select" onChange={mudarCliente}>
+                            <option value="">Selecione</option>
+                            {listaClienteTodos && listaClienteTodos.map((item) => (
+                                <option value={item._id}>{item.nome}</option>
+                            ))}
+                        </Input>
+
+                    }
+                   {item._id != "" &&
+                        < Input type="text" id="cliente" disabled="true" />
+
+                    }
+
                 </FormGroup>
-                    
+
 
                 <FormGroup check inline>
                     <Label for="produto">Produto</Label>
@@ -256,10 +276,14 @@ function Pedido() {
                         ))}
                     </tbody>
                 </Table>
-                
+
                 <Button color="danger" onClick={salvar}>Salvar</Button>
             </Form>
-        </Container>
+            {
+                carregando &&
+                <Carregamento />
+            }
+        </Container >
     );
 }
 

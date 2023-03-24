@@ -1,5 +1,6 @@
 import { useState, useEffect, React } from 'react';
 import Menu from '../menu';
+import Carregamento from '../carregamento';
 import { Container, Label, Input, Button, Form, FormGroup, Table } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Dado from '../../dado/generico.js'
@@ -18,20 +19,19 @@ function SubProduto() {
 
 
     useEffect(() => {
-        if (((item == "") || (item == undefined)) && ((router.query.codigo != "") && (router.query.codigo != undefined))) {
-
-            if (router.query.codigo == "incluir") {
-                setItem({ produto: [], insumo: [], unidadeMedida: "G" })
-                setListaProduto([])
-                setListaInsumo([])
-            } else {
-                setCarregando(true)
+        if (router.query.codigo == "incluir") {
+            setItem({ produto: [], insumo: [], unidadeMedida: "G" })
+            setListaProduto([])
+            setListaInsumo([])
+        } else {
+            if ((router.query.codigo != "") && (router.query.codigo != undefined)) {
                 listar(router.query.codigo)
             }
         }
-    })
+    }, [router.query.codigo])
 
     function listar(pCodigo) {
+        setCarregando(true)
         Dado.item(pCodigo, "produto")
             .then(response => {
                 if (response.data != null) {
@@ -95,10 +95,12 @@ function SubProduto() {
 
                                                                     }
                                                                 }
-                                                                setCarregando(false)
                                                             }, (error) => {
                                                                 console.log("error: " + error)
                                                             })
+                                                            .finally(() => {
+                                                                setCarregando(false)
+                                                            });
                                                     }, (error) => {
                                                         console.log("error: " + error)
                                                     })
@@ -112,8 +114,6 @@ function SubProduto() {
                             }, (error) => {
                                 console.log("error: " + error)
                             })
-
-
                     } else {
                         setItem({})
                         console.log("error: " + response.data.descricao)
@@ -333,7 +333,7 @@ function SubProduto() {
                     <Label for="valorCalculado">Valor Calculado</Label>
                     <Input type="number" id="valorCalculado" disabled="true" />
                 </FormGroup>
-                 <FormGroup>
+                <FormGroup>
                     <Label for="valorLucro">Valor Lucro</Label>
                     <Input type="number" id="valorLucro" disabled="true" />
                 </FormGroup>
@@ -488,12 +488,7 @@ function SubProduto() {
                 <Button color="danger" onClick={salvar}>Salvar</Button>
             </Form>
             {carregando &&
-
-                <div class="telaCarregamento" >
-
-                    <img src="/carregamento.svg" alt="" class="imgLoad" />
-
-                </div>
+                <Carregamento />
             }
         </Container>
     );

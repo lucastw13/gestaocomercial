@@ -5,14 +5,17 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Dado from '../dado/generico.js';
 import Host from '../dado/host';
 import { useRouter } from 'next/router'
+import Carregamento from './carregamento';
 function Parametro() {
     const [lista, setLista] = useState("");
     const router = useRouter()
-    if ((lista == "") || (lista == undefined)) {
+    const [carregando, setCarregando] = useState("")
+    useEffect(() => {
         listar()
-    }
+    }, [])
 
     function listar() {
+        setCarregando(true)
         Dado.listar("parametro")
             .then(response => {
                 if (response.data != null) {
@@ -27,6 +30,9 @@ function Parametro() {
             }, (error) => {
                 console.log("error: " + error)
             })
+            .finally(() => {
+                setCarregando(false)
+            });
     }
 
     function deletar(item) {
@@ -84,7 +90,10 @@ function Parametro() {
                 </tbody>
             </Table>
 
-        </Container >
+            {carregando &&
+                <Carregamento/>
+            }
+        </Container>
     );
 
 

@@ -7,16 +7,19 @@ import Host from '../dado/host';
 import UtilDataURIToBlob from '../util/DataURIToBlob';
 import { useRouter } from 'next/router'
 import axios from 'axios'
+import Carregamento from './carregamento';
 function Insumodepara() {
     const [lista, setLista] = useState("");
     const [chave, setChave] = useState("");
     const router = useRouter()
+    const [carregando, setCarregando] = useState("")
 
-    if ((lista == "") || (lista == undefined)) {
+    useEffect(() => {
         listar()
-    }
+    }, [])
 
     function listar() {
+        setCarregando(true)
         Dado.listar("insumodepara")
             .then(response => {
                 if (response.data != null) {
@@ -31,6 +34,9 @@ function Insumodepara() {
             }, (error) => {
                 console.log("error: " + error)
             })
+            .finally(() => {
+                setCarregando(false)
+            });
     }
 
     function deletar(item) {
@@ -135,7 +141,10 @@ function Insumodepara() {
                 </tbody>
             </Table>
 
-        </Container >
+            {carregando &&
+                <Carregamento/>
+            }
+        </Container>
     );
 
 

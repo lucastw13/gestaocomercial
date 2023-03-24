@@ -1,55 +1,67 @@
-import { useState, React } from 'react';
+import { useState, React,useEffect } from 'react';
 import Menu from '../menu';
 import { Container, Label, Input, Button, Form, FormGroup, Table, Modal, ModalHeader, ModalBody } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Dado from '../../dado/generico.js'
 import { useRouter } from 'next/router'
 import Host from '../../dado/host';
+import Carregamento from '../carregamento';
 function RegistraReceita() {
     const [item, setItem] = useState("");
     const [listaInsumo, setListaInsumo] = useState("");
     const [receitaUsadaRegistro, setReceitaUsadaRegistro] = useState("");
     const router = useRouter()
+    const [carregando, setCarregando] = useState("")
 
     const [modal, setModal] = useState(false);
 
     const toggleUsadaRegistro = () => setModal(!modal);
 
-    if (((item == "") || (item == undefined)) && ((router.query.codigo != "") && (router.query.codigo != undefined))) {
+    useEffect(() => {
         if (router.query.codigo == "incluir") {
             setItem({ insumo: [] })
             setListaInsumo([])
         } else {
-            Dado.item(router.query.codigo, "receita")
-                .then(response => {
-                    if (response.data != null) {
-                        if (response.data.status == true) {
-                            setItem(response.data.item)
-                            document.getElementById("descricao").value = response.data.item.descricao;
-
-                            Dado.itemLista(response.data.item._id, "receita", "insumo")
-                                .then(response => {
-                                    if (response.data.status == true) {
-                                        setListaInsumo(response.data.lista)
-                                    } else {
-                                        setListaInsumo([])
-                                    }
-
-                                }, (error) => {
-                                    console.log("error: " + error)
-                                })
-
-                        } else {
-                            setItem({})
-                            console.log("error: " + response.data.descricao)
-                        }
-
-
-                    }
-                }, (error) => {
-                    console.log("error: " + error)
-                })
+            if ((router.query.codigo!="")&&(router.query.codigo!=undefined)){
+                listar(router.query.codigo)
+            }
         }
+    }, [router.query.codigo])
+
+    function listar(pCodigo) {
+        setCarregando(true)
+        Dado.item(pCodigo, "receita")
+            .then(response => {
+                if (response.data != null) {
+                    if (response.data.status == true) {
+                        setItem(response.data.item)
+                        document.getElementById("descricao").value = response.data.item.descricao;
+
+                        Dado.itemLista(response.data.item._id, "receita", "insumo")
+                            .then(response => {
+                                if (response.data.status == true) {
+                                    setListaInsumo(response.data.lista)
+                                } else {
+                                    setListaInsumo([])
+                                }
+
+                            }, (error) => {
+                                console.log("error: " + error)
+                            })
+                            .finally(() => {
+                                setCarregando(false)
+                            });
+
+                    } else {
+                        setItem({})
+                        console.log("error: " + response.data.descricao)
+                    }
+
+
+                }
+            }, (error) => {
+                console.log("error: " + error)
+            })
     }
 
     function mudarDescricao(event) {
@@ -99,7 +111,7 @@ function RegistraReceita() {
 
         /*var receitaUsadaRegistroTemp = ""
         for (var itemInsumoRegistrado of itemRegistro.insumo) {
-
+    
             for (var itemInsumoCompleto of listaInsumo) {
                 if (itemInsumoCompleto._id == itemInsumoRegistrado._id) {
                     break;
@@ -107,10 +119,10 @@ function RegistraReceita() {
             }
             if (receitaUsadaRegistroTemp != "") {
                 receitaUsadaRegistroTemp = receitaUsadaRegistroTemp + ""
-
+    
             }
             receitaUsadaRegistroTemp = receitaUsadaRegistroTemp + itemInsumoRegistrado.quantidade + itemInsumoCompleto.unidadeMedida + " de " + itemInsumoCompleto.descricao
-
+    
         }
         setReceitaUsadaRegistro(receitaUsadaRegistroTemp)
         */
@@ -215,6 +227,9 @@ function RegistraReceita() {
                     ))}
                 </ModalBody>
             </Modal>
+            {carregando &&
+                <Carregamento />
+            }
         </Container>
     );
 }

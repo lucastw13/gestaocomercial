@@ -1,10 +1,11 @@
-import { useState, React } from 'react';
+import { useState, React ,useEffect} from 'react';
 import Menu from '../menu';
 import { Container, Label, Input, Button, Form, FormGroup, Table } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Dado from '../../dado/generico.js'
 import { useRouter } from 'next/router'
 import Host from '../../dado/host';
+import Carregamento from '../carregamento';
 function Insumodeparaimportar() {
     const [listaNotaFiscal, setListaNotaFiscal] = useState("");
     const [listaInsumoTodos, setListaInsumoTodos] = useState("");
@@ -13,45 +14,54 @@ function Insumodeparaimportar() {
     const [cnpjFornecedor, setCnpjFornecedor] = useState("");
     const [nomeFornecedor, setNomeFornecedor] = useState("");
     const router = useRouter()
+    const [carregando, setCarregando] = useState("")
 
-
-    if (((listaNotaFiscal == "") || (listaNotaFiscal == undefined)) && ((listaInsumoTodos == "") || (listaInsumoTodos == undefined)) && ((router.query.chave != "") && (router.query.chave != undefined))) {
+    useEffect(() => {
         if (router.query.chave == "" || router.query.chave == undefined) {
             router.push(Host.url() + "/insumodepara")
         } else {
-            Dado.item(router.query.chave, "notafiscal")
-                .then(response => {
-                    if (response.data != null) {
-                        if (response.data.status == true) {
-                            setListaNotaFiscal(response.data.lista)
-                            setCnpjFornecedor(response.data.fornecedorCnpj)
-                            setNomeFornecedor(response.data.fornecedorNome)
-                            document.getElementById("nomeFornecedor").value = response.data.fornecedorNome
-                            document.getElementById("cnpjFornecedor").value = response.data.fornecedorCnpj
-                            /* document.getElementById("cnpj").value = response.data.item.cnpj;
-                             document.getElementById("codigo").value = response.data.item.codigo;
-                             document.getElementById("insumo").value = response.data.item.insumo;*/
-                        } else {
-                            setListaNotaFiscal([])
-                            console.log("error: " + JSON.stringify(response.data.descricao))
-
-                        }
-                    }
-                }, (error) => {
-                    console.log("error: " + error)
-                })
+            if ((router.query.chave!="")&&(router.query.chave!=undefined)){
+                listar(router.query.chave)
+            }
         }
-        Dado.listar("insumo")
+    }, [router.query.chave])
+    function listar(pChave) {
+        setCarregando(true)
+        Dado.item(pChave, "notafiscal")
             .then(response => {
                 if (response.data != null) {
                     if (response.data.status == true) {
-                        setListaInsumoTodos(response.data.lista)
+                        setListaNotaFiscal(response.data.lista)
+                        setCnpjFornecedor(response.data.fornecedorCnpj)
+                        setNomeFornecedor(response.data.fornecedorNome)
+                        document.getElementById("nomeFornecedor").value = response.data.fornecedorNome
+                        document.getElementById("cnpjFornecedor").value = response.data.fornecedorCnpj
+                        /* document.getElementById("cnpj").value = response.data.item.cnpj;
+                         document.getElementById("codigo").value = response.data.item.codigo;
+                         document.getElementById("insumo").value = response.data.item.insumo;*/
                     } else {
-                        setListaInsumoTodos([])
-                        console.log("error: " + response.data.descricao)
+                        setListaNotaFiscal([])
+                        console.log("error: " + JSON.stringify(response.data.descricao))
 
                     }
                 }
+                Dado.listar("insumo")
+                    .then(response => {
+                        if (response.data != null) {
+                            if (response.data.status == true) {
+                                setListaInsumoTodos(response.data.lista)
+                            } else {
+                                setListaInsumoTodos([])
+                                console.log("error: " + response.data.descricao)
+
+                            }
+                        }
+                    }, (error) => {
+                        console.log("error: " + error)
+                    })
+                    .finally(() => {
+                        setCarregando(false)
+                    });
             }, (error) => {
                 console.log("error: " + error)
             })
@@ -120,7 +130,7 @@ function Insumodeparaimportar() {
                 for (var itemSalvar of listaSalvar) {
                     listaSalvarTemp.push(itemSalvar)
                 }
-                var item = { fornecedorCnpj: cnpjFornecedor,fornecedorNome:nomeFornecedor, codigo: itemDePara.codigo, insumo: itemDePara.insumo }
+                var item = { fornecedorCnpj: cnpjFornecedor, fornecedorNome: nomeFornecedor, codigo: itemDePara.codigo, insumo: itemDePara.insumo }
                 //console.log(item)
                 listaSalvarTemp.push(item)
                 //console.log(listaSalvarTemp)
@@ -226,6 +236,9 @@ function Insumodeparaimportar() {
                 </Table>
                 <Button color="danger" onClick={salvar}>Salvar</Button>
             </Form>
+            {carregando &&
+                <Carregamento />
+            }
         </Container>
     );
 }

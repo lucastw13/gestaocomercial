@@ -1,35 +1,46 @@
-import { useState, React } from 'react';
+import { useState, React, useEffect } from 'react';
 import Menu from '../menu';
 import { Container, Label, Input, Button, Form, FormGroup } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Dado from '../../dado/generico.js'
 import { useRouter } from 'next/router'
 import Host from '../../dado/host';
+import Carregamento from '../carregamento';
 function Cliente() {
     const [item, setItem] = useState("");
     const router = useRouter()
+    const [carregando, setCarregando] = useState("")
 
-
-    if (((item == "") || (item == undefined)) && ((router.query.codigo != "") && (router.query.codigo != undefined))) {
+    useEffect(() => {
         if (router.query.codigo == "incluir") {
             setItem({})
         } else {
-            Dado.item(router.query.codigo, "cliente")
-                .then(response => {
-                    if (response.data != null) {
-                        if (response.data.status == true) {
-                            setItem(response.data.item)
-                            document.getElementById("nome").value = response.data.item.nome;
-                         } else {
-                            setItem({})
-                            console.log("error: " + response.data.descricao)
-
-                        }
-                    }
-                }, (error) => {
-                    console.log("error: " + error)
-                })
+            if ((router.query.codigo!="")&&(router.query.codigo!=undefined)){
+                listar(router.query.codigo)
+            }
         }
+    }, [router.query.codigo])
+    function listar(pCodigo) {
+        setCarregando(true)
+        Dado.item(pCodigo, "cliente")
+            .then(response => {
+                if (response.data != null) {
+                    if (response.data.status == true) {
+                        setItem(response.data.item)
+                        document.getElementById("nome").value = response.data.item.nome;
+                    } else {
+                        setItem({})
+                        console.log("error: " + response.data.descricao)
+
+                    }
+                }
+            }, (error) => {
+                console.log("error: " + error)
+            })
+            .finally(() => {
+                setCarregando(false)
+            });
+
     }
 
     function mudarNome(event) {
@@ -38,7 +49,7 @@ function Cliente() {
         setItem(itemTemp);
 
     }
-   
+
     function salvar() {
         if (possuiErroObrigatorio()) {
             alert("Preencha todos os Campos obrigatórios!")
@@ -60,7 +71,7 @@ function Cliente() {
         if (item.nome == "" || item.nome == undefined) {
             return true;
         }
-        
+
     }
 
 
@@ -74,8 +85,11 @@ function Cliente() {
                     <Input type="text" id="nome" onChange={mudarNome} />
                 </FormGroup>
 
-              <Button color="danger" onClick={salvar}>Salvar</Button>
+                <Button color="danger" onClick={salvar}>Salvar</Button>
             </Form>
+            {carregando &&
+                <Carregamento />
+            }
         </Container>
     );
 }

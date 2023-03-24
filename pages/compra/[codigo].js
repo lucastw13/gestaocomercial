@@ -1,72 +1,82 @@
-import { useState, React } from 'react';
+import { useState, React,useEffect } from 'react';
 import Menu from '../menu';
 import { Container, Label, Input, Button, Form, FormGroup, Table } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Dado from '../../dado/generico.js'
 import { useRouter } from 'next/router'
 import Host from '../../dado/host';
+import Carregamento from '../carregamento';
 function Compra() {
     const [item, setItem] = useState("");
     const [listaInsumo, setListaInsumo] = useState("");
     const [listaInsumoTodos, setListaInsumoTodos] = useState("");
     const [total, setTotal] = useState(0);
     const router = useRouter()
+    const [carregando, setCarregando] = useState("")
 
-
-    if (((item == "") || (item == undefined)) && ((router.query.codigo != "") && (router.query.codigo != undefined))) {
+    useEffect(() => {
         if (router.query.codigo == "incluir") {
             setItem({ insumo: [] })
             setListaInsumo([])
         } else {
-            Dado.item(router.query.codigo, "compra")
-                .then(response => {
-                    if (response.data != null) {
-                        if (response.data.status == true) {
-                            setItem(response.data.item)
-
-                            Dado.itemLista(response.data.item._id, "compra", "insumo")
-                                .then(response => {
-                                    if (response.data.status == true) {
-                                        setListaInsumo(response.data.lista)
-                                        var totalTemp = 0
-                                        for (var itemInsumo of response.data.lista) {
-                                            totalTemp = totalTemp + itemInsumo.valorCompra
-                                        }
-                                        setTotal(totalTemp)
-                                    } else {
-                                        setListaInsumo([])
-                                    }
-
-                                }, (error) => {
-                                    console.log("error: " + error)
-                                })
-
-                        } else {
-                            setItem({})
-                            console.log("error: " + response.data.descricao)
-                        }
-
-
-                    }
-                }, (error) => {
-                    console.log("error: " + error)
-                })
+            if ((router.query.codigo!="")&&(router.query.codigo!=undefined)){
+                listar(router.query.codigo)
+            }
         }
-        Dado.listar("insumo")
+    }, [router.query.codigo])
+    function listar(pCodigo) {
+        setCarregando(true)
+        Dado.item(pCodigo, "compra")
             .then(response => {
                 if (response.data != null) {
                     if (response.data.status == true) {
-                        setListaInsumoTodos(response.data.lista)
-                    } else {
-                        setLista([])
-                        console.log("error: " + response.data.descricao)
+                        setItem(response.data.item)
 
+                        Dado.itemLista(response.data.item._id, "compra", "insumo")
+                            .then(response => {
+                                if (response.data.status == true) {
+                                    setListaInsumo(response.data.lista)
+                                    var totalTemp = 0
+                                    for (var itemInsumo of response.data.lista) {
+                                        totalTemp = totalTemp + itemInsumo.valorCompra
+                                    }
+                                    setTotal(totalTemp)
+                                } else {
+                                    setListaInsumo([])
+                                }
+                                Dado.listar("insumo")
+                                    .then(response => {
+                                        if (response.data != null) {
+                                            if (response.data.status == true) {
+                                                setListaInsumoTodos(response.data.lista)
+                                            } else {
+                                                setLista([])
+                                                console.log("error: " + response.data.descricao)
+
+                                            }
+                                        }
+                                    }, (error) => {
+                                        console.log("error: " + error)
+                                    })
+                                    .finally(() => {
+                                        setCarregando(false)
+                                    });
+                            }, (error) => {
+                                console.log("error: " + error)
+                            })
+
+                    } else {
+                        setItem({})
+                        console.log("error: " + response.data.descricao)
                     }
+
+
                 }
             }, (error) => {
                 console.log("error: " + error)
             })
     }
+
     function adicionarInsumo() {
         if (item._id != "" && item._id != undefined) {
             alert("Compra não pode ser editada")
@@ -170,8 +180,8 @@ function Compra() {
                 var itemTemp = item
                 itemTemp.insumo = itemListaInsumoTemp
                 setItem(itemTemp)
-                setTotal(total-itemParametro.valorCompra)
-                console.log(total-itemParametro.valorCompra)
+                setTotal(total - itemParametro.valorCompra)
+                console.log(total - itemParametro.valorCompra)
             }
         }
 
@@ -256,6 +266,9 @@ function Compra() {
                 </Table>
                 <Button color="danger" onClick={salvar}>Salvar</Button>
             </Form>
+            {carregando &&
+                <Carregamento />
+            }
         </Container>
     );
 }

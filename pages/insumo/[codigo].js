@@ -1,40 +1,52 @@
-import { useState, React } from 'react';
+import { useState, React, useEffect } from 'react';
 import Menu from '../menu';
 import { Container, Label, Input, Button, Form, FormGroup } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Dado from '../../dado/generico.js'
 import { useRouter } from 'next/router'
 import Host from '../../dado/host';
+import Carregamento from '../carregamento';
 function Insumo() {
     const [item, setItem] = useState("");
     const router = useRouter()
-    const [carregando,setCarregando]  = useState("")
+    const [carregando, setCarregando] = useState("")
 
-    if (((item == "") || (item == undefined)) && ((router.query.codigo != "") && (router.query.codigo != undefined))) {
+    useEffect(() => {
+
+        console.log(router.query)
         if (router.query.codigo == "incluir") {
-            setItem({quantidade:0,valor:0,unidadeMedida:"G"})
+            setItem({ quantidade: 0, valor: 0, unidadeMedida: "G" })
         } else {
-            Dado.itemInsumo(router.query.codigo)
-            //setCarregando
-                .then(response => {
-                    if (response.data != null) {
-                        if (response.data.status == true) {
-                            setItem(response.data.item)
-                            document.getElementById("descricao").value = response.data.item.descricao;
-                            document.getElementById("unidadeMedida").value = response.data.item.unidadeMedida;
-                            document.getElementById("quantidade").value = response.data.item.quantidade;
-                            document.getElementById("quantidadeMinima").value = response.data.item.quantidadeMinima;
-                            document.getElementById("ultimoValorUnidade").value = response.data.item.valor;
-                        } else {
-                            setItem({})
-                            console.log("error: " + response.data.descricao)
-
-                        }
-                    }
-                }, (error) => {
-                    console.log("error: " + error)
-                })
+            if ((router.query.codigo!="")&&(router.query.codigo!=undefined)){
+                listar(router.query.codigo)
+            }
         }
+    }, [router.query.codigo])
+    function listar(pCodigo) {
+        setCarregando(true)
+        Dado.itemInsumo(pCodigo)
+            .then(response => {
+                if (response.data != null) {
+                    if (response.data.status == true) {
+                        setItem(response.data.item)
+                        document.getElementById("descricao").value = response.data.item.descricao;
+                        document.getElementById("unidadeMedida").value = response.data.item.unidadeMedida;
+                        document.getElementById("quantidade").value = response.data.item.quantidade;
+                        document.getElementById("quantidadeMinima").value = response.data.item.quantidadeMinima;
+                        document.getElementById("ultimoValorUnidade").value = response.data.item.valor;
+                    } else {
+                        setItem({})
+                        console.log("error: " + response.data.descricao)
+
+                    }
+                }
+            }, (error) => {
+                console.log("error: " + error)
+            })
+            .finally(() => {
+                setCarregando(false)
+            });
+
     }
 
     function mudarDescricao(event) {
@@ -128,6 +140,9 @@ function Insumo() {
 
                 <Button color="danger" onClick={salvar}>Salvar</Button>
             </Form>
+            {carregando &&
+                <Carregamento />
+            }
         </Container>
     );
 }

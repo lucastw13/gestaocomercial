@@ -4,14 +4,17 @@ import { Container, Table } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Dado from '../dado/generico.js';
 import Host from '../dado/host';
+import Carregamento from './carregamento';
 function Cliente() {
     const [lista, setLista] = useState("");
+    const [carregando, setCarregando] = useState("")
 
-    if ((lista == "") || (lista == undefined)) {
+    useEffect(() => {
         listar()
-    }
+    }, [])
 
     function listar() {
+        setCarregando(true)
         Dado.listar("cliente")
             .then(response => {
                 if (response.data != null) {
@@ -26,6 +29,9 @@ function Cliente() {
             }, (error) => {
                 console.log("error: " + error)
             })
+            .finally(() => {
+                setCarregando(false)
+            });
     }
 
     function deletar(item) {
@@ -80,7 +86,10 @@ function Cliente() {
                 </tbody>
             </Table>
 
-        </Container >
+            {carregando &&
+                <Carregamento/>
+            }
+        </Container>
     );
 
 

@@ -6,14 +6,17 @@ import Dado from '../dado/generico.js';
 import Usuario from "../dado/usuario.js";
 import Host from '../dado/host';
 import { useRouter } from 'next/router'
+import Carregamento from './carregamento';
 function Insumo() {
     const [lista, setLista] = useState("");
     const router = useRouter();
-    if ((lista == "") || (lista == undefined)) {
+    const [carregando, setCarregando] = useState("")
+    useEffect(() => {
         listar()
-    }
+    },[])
 
     function listar() {
+        setCarregando(true)
         Dado.listar("insumo")
             .then(response => {
                 if (response.data != null) {
@@ -28,6 +31,9 @@ function Insumo() {
             }, (error) => {
                 console.log("error: " + error)
             })
+            .finally(() => {
+                setCarregando(false)
+            });
     }
 
     function deletar(item) {
@@ -106,7 +112,10 @@ function Insumo() {
                 </tbody>
             </Table>
 
-        </Container >
+            {carregando &&
+                <Carregamento/>
+            }
+        </Container>
     );
 
 
