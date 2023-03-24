@@ -1,2 +1,1 @@
-# gestaocomercial
-https://gestaocomercial.vercel.app/
+# https://gestaocomercial.vercel.app/
