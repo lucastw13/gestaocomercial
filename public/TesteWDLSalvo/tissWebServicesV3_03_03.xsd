@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!-- TISS vers�o 3.03.03 - Mensagens utilizadas nos Web Services -->
 <schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:ans="http://www.ans.gov.br/padroes/tiss/schemas" targetNamespace="http://www.ans.gov.br/padroes/tiss/schemas" elementFormDefault="qualified">
-	<include schemaLocation="https://gestaocomercial.vercel.app/tissComplexTypesV3_03_03.xsd"/>
-	<include schemaLocation="https://gestaocomercial.vercel.app/tissGuiasV3_03_03.xsd"/>
-	<include schemaLocation="https://gestaocomercial.vercel.app/tissSimpleTypesV3_03_03.xsd"/>
-	<include schemaLocation="https://gestaocomercial.vercel.app/tissV3_03_03.xsd"/>
+	<include schemaLocation="https://gestaocomercial.vercel.app/TesteWDLSalvo/tissComplexTypesV3_03_03.xsd"/>
+	<include schemaLocation="https://gestaocomercial.vercel.app/TesteWDLSalvo/tissGuiasV3_03_03.xsd"/>
+	<include schemaLocation="https://gestaocomercial.vercel.app/TesteWDLSalvo/tissSimpleTypesV3_03_03.xsd"/>
+	<include schemaLocation="https://gestaocomercial.vercel.app/TesteWDLSalvo/tissV3_03_03.xsd"/>
 	<element name="cancelaGuiaWS">
 		<annotation>
 			<documentation> Prestador solicita cancelamento de guia</documentation>

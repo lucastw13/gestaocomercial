@@ -3,8 +3,8 @@
 <schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:ans="http://www.ans.gov.br/padroes/tiss/schemas" targetNamespace="http://www.ans.gov.br/padroes/tiss/schemas" elementFormDefault="qualified">
 	<!--VERS�O TISS 3.03.03 - TissComplexTypesV3_03_03-->
 	<!--<include schemaLocation="http://www.ans.gov.br/padroes/tiss/schemas/tissSimpleTypesV3_03_03.xsd"/>-->
-	<include schemaLocation="https://gestaocomercial.vercel.app/tissSimpleTypesV3_03_03.xsd"/>
-	<include schemaLocation="https://gestaocomercial.vercel.app/tissGuiasV3_03_03.xsd"/>
+	<include schemaLocation="https://gestaocomercial.vercel.app/TesteWDLSalvo/tissSimpleTypesV3_03_03.xsd"/>
+	<include schemaLocation="https://gestaocomercial.vercel.app/TesteWDLSalvo/tissGuiasV3_03_03.xsd"/>
 	<complexType name="ct_anexoCabecalho">
 		<sequence>
 			<element name="registroANS" type="ans:st_registroANS"/>

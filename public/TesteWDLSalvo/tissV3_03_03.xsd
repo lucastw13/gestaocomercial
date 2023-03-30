@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:ans="http://www.ans.gov.br/padroes/tiss/schemas" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" targetNamespace="http://www.ans.gov.br/padroes/tiss/schemas" elementFormDefault="qualified">
 	<!--VERS�O TISS 3.03.03 - Mensagens do Padr�o TISS-->
-	<import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="https://gestaocomercial.vercel.app/xmldsig-core-schema.xsd"/>
-	<include schemaLocation="https://gestaocomercial.vercel.app/tissSimpleTypesV3_03_03.xsd"/>
-	<include schemaLocation="https://gestaocomercial.vercel.app/tissComplexTypesV3_03_03.xsd"/>
-	<include schemaLocation="https://gestaocomercial.vercel.app/tissGuiasV3_03_03.xsd"/>
+	<import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="https://gestaocomercial.vercel.app/TesteWDLSalvo/xmldsig-core-schema.xsd"/>
+	<include schemaLocation="https://gestaocomercial.vercel.app/TesteWDLSalvo/tissSimpleTypesV3_03_03.xsd"/>
+	<include schemaLocation="https://gestaocomercial.vercel.app/TesteWDLSalvo/tissComplexTypesV3_03_03.xsd"/>
+	<include schemaLocation="https://gestaocomercial.vercel.app/TesteWDLSalvo/tissGuiasV3_03_03.xsd"/>
 	<!-- Estrutura da mensagem do TISS -->
 	<element name="mensagemTISS">
 		<complexType>

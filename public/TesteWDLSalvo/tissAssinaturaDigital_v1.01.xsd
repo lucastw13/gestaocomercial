@@ -7,7 +7,7 @@
 <!-- Schema for XML Signatures-->
 <!--<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" targetNamespace="http://www.w3.org/2000/09/xmldsig#" elementFormDefault="qualified" attributeFormDefault="unqualified" version="0.1">-->
 <schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:ns1="http://www.ans.gov.br/padroes/tiss/schemas" targetNamespace="http://www.ans.gov.br/padroes/tiss/schemas" elementFormDefault="qualified" version="0.1">
-	<import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="https://gestaocomercial.vercel.app/xmldsig-core-schema.xsd"/>
+	<import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="https://gestaocomercial.vercel.app/TesteWDLSalvo/xmldsig-core-schema.xsd"/>
 	<complexType name="Signature">
 		<complexContent>
 			<extension base="ds:SignatureType" />

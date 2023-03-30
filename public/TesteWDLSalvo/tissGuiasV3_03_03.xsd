@@ -3,9 +3,9 @@
 	<!--VERS�O TISS 3.03.03 - TissGuiasv3_03_03-->
 	<!--<include schemaLocation="http://www.ans.gov.br/padroes/tiss/schemas/tissSimpleTypesV3_03_03.xsd"/>
 	<include schemaLocation="http://www.ans.gov.br/padroes/tiss/schemas/tissComplexTypesV3_03_03.xsd"/>-->
-	<include schemaLocation="https://gestaocomercial.vercel.app/tissAssinaturaDigital_v1.01.xsd"/>
-	<include schemaLocation="https://gestaocomercial.vercel.app/tissSimpleTypesV3_03_03.xsd"/>
-	<include schemaLocation="https://gestaocomercial.vercel.app/tissComplexTypesV3_03_03.xsd"/>
+	<include schemaLocation="https://gestaocomercial.vercel.app/TesteWDLSalvo/tissAssinaturaDigital_v1.01.xsd"/>
+	<include schemaLocation="https://gestaocomercial.vercel.app/TesteWDLSalvo/tissSimpleTypesV3_03_03.xsd"/>
+	<include schemaLocation="https://gestaocomercial.vercel.app/TesteWDLSalvo/tissComplexTypesV3_03_03.xsd"/>
 	<!--<complexType name="ctm_anexoLote">
 		<sequence>
 			<element name="numeroLote" type="ans:st_texto12"/>
