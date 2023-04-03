@@ -1,4 +1,4 @@
-import { useState, React,useEffect } from 'react';
+import { useState, React, useEffect } from 'react';
 import Menu from '../menu';
 import { Container, Label, Input, Button, Form, FormGroup } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -12,12 +12,11 @@ function Insumodepara() {
     const [carregando, setCarregando] = useState("")
 
     useEffect(() => {
-        if (router.query.codigo == "incluir") {
-            setItem({})
-        } else {
-            if ((router.query.codigo!="")&&(router.query.codigo!=undefined)){
-                listar(router.query.codigo)
+        if ((router.query.codigo != "") && (router.query.codigo != undefined)) {
+            if (router.query.codigo == "incluir") {
+                setItem({})
             }
+            listar(router.query.codigo)
         }
     }, [router.query.codigo])
     function listar(pCodigo) {

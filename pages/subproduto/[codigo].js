@@ -19,18 +19,69 @@ function SubProduto() {
 
 
     useEffect(() => {
-        if (router.query.codigo == "incluir") {
-            setItem({ produto: [], insumo: [], unidadeMedida: "G" })
-            setListaProduto([])
-            setListaInsumo([])
-        } else {
-            if ((router.query.codigo != "") && (router.query.codigo != undefined)) {
-                listar(router.query.codigo)
+        if ((router.query.codigo != "") && (router.query.codigo != undefined)) {
+            if (router.query.codigo == "incluir") {
+                setItem({ produto: [], insumo: [], unidadeMedida: "G" })
+                setListaProduto([])
+                setListaInsumo([])
             }
+            listar(router.query.codigo)
         }
     }, [router.query.codigo])
 
     function listar(pCodigo) {
+        setCarregando(true)
+        Dado.listarProduto(false)
+            .then(response => {
+                if (response.data != null) {
+                    if (response.data.status == true) {
+                        setListaProdutoTodos(response.data.lista)
+                    } else {
+                        setLista([])
+                        console.log("error: " + response.data.descricao)
+
+                    }
+                }
+                Dado.listar("insumo")
+                    .then(response => {
+                        if (response.data != null) {
+                            if (response.data.status == true) {
+                                setListaInsumoTodos(response.data.lista)
+                            } else {
+                                setLista([])
+                                console.log("error: " + response.data.descricao)
+
+                            }
+                        }
+                        Dado.listar("receita")
+                            .then(response => {
+                                if (response.data != null) {
+                                    if (response.data.status == true) {
+                                        setListaReceitaTodos(response.data.lista)
+                                    } else {
+                                        setLista([])
+                                        console.log("error: " + response.data.descricao)
+
+                                    }
+                                }
+                                if (pCodigo != "incluir") {
+                                    listarEdicao(pCodigo)
+                                }
+                            }, (error) => {
+                                console.log("error: " + error)
+                            })
+                            .finally(() => {
+                                setCarregando(false)
+                            });
+                    }, (error) => {
+                        console.log("error: " + error)
+                    })
+            }, (error) => {
+                console.log("error: " + error)
+            })
+
+    }
+    function listarEdicao(pCodigo) {
         setCarregando(true)
         Dado.item(pCodigo, "produto")
             .then(response => {
@@ -62,54 +113,13 @@ function SubProduto() {
                                             console.log("error: " + response.data.descricao)
                                         }
 
-                                        Dado.listarProduto(false)
-                                            .then(response => {
-                                                if (response.data != null) {
-                                                    if (response.data.status == true) {
-                                                        setListaProdutoTodos(response.data.lista)
-                                                    } else {
-                                                        setLista([])
-                                                        console.log("error: " + response.data.descricao)
 
-                                                    }
-                                                }
-                                                Dado.listar("insumo")
-                                                    .then(response => {
-                                                        if (response.data != null) {
-                                                            if (response.data.status == true) {
-                                                                setListaInsumoTodos(response.data.lista)
-                                                            } else {
-                                                                setLista([])
-                                                                console.log("error: " + response.data.descricao)
-
-                                                            }
-                                                        }
-                                                        Dado.listar("receita")
-                                                            .then(response => {
-                                                                if (response.data != null) {
-                                                                    if (response.data.status == true) {
-                                                                        setListaReceitaTodos(response.data.lista)
-                                                                    } else {
-                                                                        setLista([])
-                                                                        console.log("error: " + response.data.descricao)
-
-                                                                    }
-                                                                }
-                                                            }, (error) => {
-                                                                console.log("error: " + error)
-                                                            })
-                                                            .finally(() => {
-                                                                setCarregando(false)
-                                                            });
-                                                    }, (error) => {
-                                                        console.log("error: " + error)
-                                                    })
-                                            }, (error) => {
-                                                console.log("error: " + error)
-                                            })
                                     }, (error) => {
                                         console.log("error: " + error)
                                     })
+                                    .finally(() => {
+                                        setCarregando(false)
+                                    });
 
                             }, (error) => {
                                 console.log("error: " + error)

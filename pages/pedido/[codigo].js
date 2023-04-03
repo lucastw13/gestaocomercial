@@ -16,51 +16,19 @@ function Pedido() {
 
 
     useEffect(() => {
-        if (router.query.codigo == "incluir") {
-            setItem({ produto: [], unidadeMedida: "G" })
-            setListaProduto([])
-            listarInserir()
-        } else {
-            if ((router.query.codigo != "") && (router.query.codigo != undefined)) {
-                listar(router.query.codigo)
+        if ((router.query.codigo != "") && (router.query.codigo != undefined)) {
+            if (router.query.codigo == "incluir") {
+                setItem({ produto: [], unidadeMedida: "G" })
+                setListaProduto([])
+                listarInserir()
             }
+
+            listar(router.query.codigo)
+
         }
     }, [router.query.codigo])
+
     function listar(pCodigo) {
-        setCarregando(true)
-        Dado.item(pCodigo, "pedido")
-            .then(response => {
-                if (response.data != null) {
-                    if (response.data.status == true) {
-                        setItem(response.data.item)
-                        console.log(response.data.item.cliente)
-                        document.getElementById("cliente").value = response.data.item.nomeCliente;
-                        Dado.itemLista(response.data.item._id, "pedido", "produto")
-                            .then(response => {
-                                if (response.data.status == true) {
-                                    setListaProduto(response.data.lista)
-                                } else {
-                                    setListaProduto([])
-                                    console.log("error: " + response.data.descricao)
-                                }
-                                listarInserir()
-                            }, (error) => {
-                                console.log("error: " + error)
-                            })
-
-                    } else {
-                        setItem({})
-                        console.log("error: " + response.data.descricao)
-                    }
-
-
-                }
-            }, (error) => {
-                console.log("error: " + error)
-            })
-    }
-
-    function listarInserir() {
         setCarregando(true)
         Dado.listar("produto", false)
             .then(response => {
@@ -84,6 +52,9 @@ function Pedido() {
 
                             }
                         }
+                        if (pCodigo != "incluir") {
+                            listarEdicao(pCodigo)
+                        }
                     }, (error) => {
                         console.log("error: " + error)
                     })
@@ -94,6 +65,43 @@ function Pedido() {
                 console.log("error: " + error)
             })
     }
+    function listarEdicao(pCodigo) {
+        setCarregando(true)
+        Dado.item(pCodigo, "pedido")
+            .then(response => {
+                if (response.data != null) {
+                    if (response.data.status == true) {
+                        setItem(response.data.item)
+                        console.log(response.data.item.cliente)
+                        document.getElementById("cliente").value = response.data.item.nomeCliente;
+                        Dado.itemLista(response.data.item._id, "pedido", "produto")
+                            .then(response => {
+                                if (response.data.status == true) {
+                                    setListaProduto(response.data.lista)
+                                } else {
+                                    setListaProduto([])
+                                    console.log("error: " + response.data.descricao)
+                                }
+                            }, (error) => {
+                                console.log("error: " + error)
+                            })
+                            .finally(() => {
+                                setCarregando(false)
+                            });
+
+                    } else {
+                        setItem({})
+                        console.log("error: " + response.data.descricao)
+                    }
+
+
+                }
+            }, (error) => {
+                console.log("error: " + error)
+            })
+    }
+
+
     function mudarCliente(event) {
         var itemTemp = item
         itemTemp.cliente = event.target.value
@@ -209,7 +217,7 @@ function Pedido() {
                         </Input>
 
                     }
-                   {item._id != "" &&
+                    {item._id != "" &&
                         < Input type="text" id="cliente" disabled="true" />
 
                     }

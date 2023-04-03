@@ -3,6 +3,9 @@ import Host from '../dado/host'
 import Usuario from "../dado/usuario.js";
 export default class Generico {
 
+  static testeConexao(){
+    return axios.get(Host.urlApi())
+  }
   static listar(entidade) {
     var empresa = Usuario.getEmpresa();
     return axios.get(Host.urlApi() + "/" + entidade + "/codigo/entidade2/" + empresa)

@@ -8,6 +8,7 @@ import { useRouter } from 'next/router'
 import { getCookie } from 'cookies-next';
 import { setCookie } from 'cookies-next';
 import Carregamento from './carregamento';
+import DadoGenerico from '../dado/generico.js';
 
 function Menu() {
     const router = useRouter();
@@ -18,46 +19,52 @@ function Menu() {
     const [collapsed, setCollapsed] = useState(true);
 
     const toggleNavbar = () => setCollapsed(!collapsed)
-    const [carregando,setCarregando] = useState(true)
+    const [carregando, setCarregando] = useState(true)
 
-  
-    
+
+
     useEffect(() => {
         setCarregando(true)
-        if (autenticado == "" || autenticado == undefined) {
-            if (Usuario.autenticado()) {
-                setAutenticado(true)
+        DadoGenerico.testeConexao()
+            .then(response => {
+                if (autenticado == "" || autenticado == undefined) {
+                    if (Usuario.autenticado()) {
+                        setAutenticado(true)
 
-            } else {
-                setAutenticado(false)
-                router.push(Host.url() + "/login")
-            }
-        } else {
-            if (nivel == "" || nivel == undefined) {
-                setNivel(Usuario.getNivel())
-                var pagina = window.location.href
-                var pagina = pagina.substring(Host.url().length + 1, pagina.length)
-                if (pagina.indexOf("/") != -1) {
-                    var pagina = pagina.substring(0, pagina.indexOf("/"))
-                }
-                var bPermitido = true
-                for (var item of Dado.listar().filter(item => item.pagina == pagina)) {
-                    if (item.nivel > Usuario.getNivel()) {
-                        bPermitido = false
+                    } else {
+                        setAutenticado(false)
+                        router.push(Host.url() + "/login")
+                    }
+                } else {
+                    if (nivel == "" || nivel == undefined) {
+                        setNivel(Usuario.getNivel())
+                        var pagina = window.location.href
+                        var pagina = pagina.substring(Host.url().length + 1, pagina.length)
+                        if (pagina.indexOf("/") != -1) {
+                            var pagina = pagina.substring(0, pagina.indexOf("/"))
+                        }
+                        var bPermitido = true
+                        for (var item of Dado.listar().filter(item => item.pagina == pagina)) {
+                            if (item.nivel > Usuario.getNivel()) {
+                                bPermitido = false
+                            }
+                        }
+                        if (bPermitido == false) {
+                            router.push(Host.url())
+                        }
+                    }
+                    if ((getCookie('menuAtual') != "") && (getCookie('menuAtual') != undefined)) {
+                        setMenuAtual(getCookie('menuAtual'))
+                    } else {
+                        setMenuAtual("Gestão Comercial")
+
                     }
                 }
-                if (bPermitido == false) {
-                    router.push(Host.url())
-                }
-            }
-            if ((getCookie('menuAtual') != "") && (getCookie('menuAtual') != undefined)) {
-                setMenuAtual(getCookie('menuAtual'))
-            } else {
-                setMenuAtual("Gestão Comercial")
+                setCarregando(false)
+            }, (error) => {
+                console.log("error: " + error)
+            })
 
-            }
-        }
-        setCarregando(false)
     })
 
 
@@ -92,15 +99,15 @@ function Menu() {
                 </Collapse>
             </Navbar>
             {carregando &&
-            
+
                 <div class="telaCarregamento" >
 
                     <img src="/carregamento.svg" alt="" class="imgLoad" />
 
                 </div>
             }
-                    {carregando &&
-                <Carregamento/>
+            {carregando &&
+                <Carregamento />
             }
         </Container>
     );

@@ -1,4 +1,4 @@
-import { useState, React,useEffect } from 'react';
+import { useState, React, useEffect } from 'react';
 import Menu from '../menu';
 import { Container, Label, Input, Button, Form, FormGroup, Table, Modal, ModalHeader, ModalBody } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -18,17 +18,37 @@ function RegistraReceita() {
     const toggleUsadaRegistro = () => setModal(!modal);
 
     useEffect(() => {
-        if (router.query.codigo == "incluir") {
-            setItem({ insumo: [] })
-            setListaInsumo([])
-        } else {
-            if ((router.query.codigo!="")&&(router.query.codigo!=undefined)){
-                listar(router.query.codigo)
+        if ((router.query.codigo != "") && (router.query.codigo != undefined)) {
+            if (router.query.codigo == "incluir") {
+                setItem({ insumo: [] })
+                setListaInsumo([])
             }
+            listar(router.query.codigo)
         }
+
     }, [router.query.codigo])
 
     function listar(pCodigo) {
+        setCarregando(true)
+        Dado.itemLista(response.data.item._id, "receita", "insumo")
+        .then(response => {
+            if (response.data.status == true) {
+                setListaInsumo(response.data.lista)
+            } else {
+                setListaInsumo([])
+            }
+            if (pCodigo != "incluir") {
+                listarEdicao(pCodigo)
+            }
+
+        }, (error) => {
+            console.log("error: " + error)
+        })
+        .finally(() => {
+            setCarregando(false)
+        });
+    }
+    function listarEdicao(pCodigo){
         setCarregando(true)
         Dado.item(pCodigo, "receita")
             .then(response => {
@@ -37,21 +57,7 @@ function RegistraReceita() {
                         setItem(response.data.item)
                         document.getElementById("descricao").value = response.data.item.descricao;
 
-                        Dado.itemLista(response.data.item._id, "receita", "insumo")
-                            .then(response => {
-                                if (response.data.status == true) {
-                                    setListaInsumo(response.data.lista)
-                                } else {
-                                    setListaInsumo([])
-                                }
-
-                            }, (error) => {
-                                console.log("error: " + error)
-                            })
-                            .finally(() => {
-                                setCarregando(false)
-                            });
-
+                       
                     } else {
                         setItem({})
                         console.log("error: " + response.data.descricao)
@@ -62,6 +68,9 @@ function RegistraReceita() {
             }, (error) => {
                 console.log("error: " + error)
             })
+            .finally(() => {
+                setCarregando(false)
+            });
     }
 
     function mudarDescricao(event) {

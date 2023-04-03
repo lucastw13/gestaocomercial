@@ -12,14 +12,11 @@ function Insumo() {
     const [carregando, setCarregando] = useState("")
 
     useEffect(() => {
-
-        console.log(router.query)
-        if (router.query.codigo == "incluir") {
-            setItem({ quantidade: 0, valor: 0, unidadeMedida: "G" })
-        } else {
-            if ((router.query.codigo!="")&&(router.query.codigo!=undefined)){
-                listar(router.query.codigo)
+        if ((router.query.codigo != "") && (router.query.codigo != undefined)) {
+            if (router.query.codigo == "incluir") {
+                setItem({ quantidade: 0, valor: 0, unidadeMedida: "G" })
             }
+            listar(router.query.codigo)
         }
     }, [router.query.codigo])
     function listar(pCodigo) {

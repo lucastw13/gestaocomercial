@@ -1,4 +1,4 @@
-import { useState, React ,useEffect} from 'react';
+import { useState, React, useEffect } from 'react';
 import Menu from '../menu';
 import { Container, Label, Input, Button, Form, FormGroup, Table } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -13,16 +13,14 @@ function Compraimportar() {
 
     useEffect(() => {
         if (router.query.chave == "" || router.query.chave == undefined) {
-            router.push(Host.url() + "/insumodepara")
+            router.push(Host.url() + "/compra")
         } else {
-            if ((router.query.chave!="")&&(router.query.chave!=undefined)){
-                listar(router.query.chave)
-            }
+            listar(router.query.chave)
         }
     }, [router.query.chave])
     function listar(pChave) {
         setCarregando(true)
-        Dado.itemNotaFiscal(pChave,"insumo")
+        Dado.itemNotaFiscal(pChave, "insumo")
             .then(response => {
                 if (response.data != null) {
                     if (response.data.status == true) {

@@ -1,4 +1,4 @@
-import { useState, React ,useEffect} from 'react';
+import { useState, React, useEffect } from 'react';
 import Menu from '../menu';
 import { Container, Label, Input, Button, Form, FormGroup, Table } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -17,15 +17,38 @@ function Insumodeparaimportar() {
     const [carregando, setCarregando] = useState("")
 
     useEffect(() => {
-        if (router.query.chave == "" || router.query.chave == undefined) {
-            router.push(Host.url() + "/insumodepara")
-        } else {
-            if ((router.query.chave!="")&&(router.query.chave!=undefined)){
-                listar(router.query.chave)
+        if ((router.query.chave != "") && (router.query.chave != undefined)) {
+            if (router.query.chave == "" || router.query.chave == undefined) {
+                router.push(Host.url() + "/insumodepara")
             }
+            listar(router.query.chave)
         }
     }, [router.query.chave])
     function listar(pChave) {
+        setCarregando(true)
+        Dado.listar("insumo")
+            .then(response => {
+                if (response.data != null) {
+                    if (response.data.status == true) {
+                        setListaInsumoTodos(response.data.lista)
+                    } else {
+                        setListaInsumoTodos([])
+                        console.log("error: " + response.data.descricao)
+
+                    }
+                }
+                if (pChave != "incluir") {
+                    listarEdicao(pChaveF)
+                }
+            }, (error) => {
+                console.log("error: " + error)
+            })
+            .finally(() => {
+                setCarregando(false)
+            });
+
+    }
+    function listarEdicao(pChave) {
         setCarregando(true)
         Dado.item(pChave, "notafiscal")
             .then(response => {
@@ -45,23 +68,7 @@ function Insumodeparaimportar() {
 
                     }
                 }
-                Dado.listar("insumo")
-                    .then(response => {
-                        if (response.data != null) {
-                            if (response.data.status == true) {
-                                setListaInsumoTodos(response.data.lista)
-                            } else {
-                                setListaInsumoTodos([])
-                                console.log("error: " + response.data.descricao)
 
-                            }
-                        }
-                    }, (error) => {
-                        console.log("error: " + error)
-                    })
-                    .finally(() => {
-                        setCarregando(false)
-                    });
             }, (error) => {
                 console.log("error: " + error)
             })
