@@ -15,8 +15,9 @@ function Insumo() {
         if ((router.query.codigo != "") && (router.query.codigo != undefined)) {
             if (router.query.codigo == "incluir") {
                 setItem({ quantidade: 0, valor: 0, unidadeMedida: "G" })
+            } else {
+                listar(router.query.codigo)
             }
-            listar(router.query.codigo)
         }
     }, [router.query.codigo])
     function listar(pCodigo) {

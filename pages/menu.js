@@ -19,14 +19,15 @@ function Menu() {
     const [collapsed, setCollapsed] = useState(true);
 
     const toggleNavbar = () => setCollapsed(!collapsed)
-    const [carregando, setCarregando] = useState(true)
+    const [carregando, setCarregando] = useState()
 
 
 
     useEffect(() => {
-        setCarregando(true)
+       
         DadoGenerico.testeConexao()
             .then(response => {
+                setCarregando(true)
                 if (autenticado == "" || autenticado == undefined) {
                     if (Usuario.autenticado()) {
                         setAutenticado(true)
@@ -62,10 +63,11 @@ function Menu() {
                 }
                 setCarregando(false)
             }, (error) => {
+                setCarregando(true)
                 console.log("error: " + error)
             })
-
     })
+
 
 
     function sair() {
