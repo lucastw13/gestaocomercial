@@ -33,7 +33,9 @@ export default class Generico {
   }
   static itemNotaFiscal(chave,entidade2) {
     var empresa = Usuario.getEmpresa();
-    return axios.get(Host.urlApi() + "/notafiscal/"+chave+"/"+entidade2+"/"+ empresa+"/notafiscal/")
+    var url = Host.urlApi() + "/notafiscal/"+chave+"/"+entidade2+"/"+ empresa+"/notafiscal/"
+    console.log(url)
+    return axios.get(url)
   }
 
   static itemLista(codigo, entidade, entidade2) {

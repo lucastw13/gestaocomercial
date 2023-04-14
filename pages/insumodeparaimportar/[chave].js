@@ -38,7 +38,7 @@ function Insumodeparaimportar() {
                     }
                 }
                 if (pChave != "incluir") {
-                    listarEdicao(pChaveF)
+                    listarEdicao(pChave)
                 }
             }, (error) => {
                 console.log("error: " + error)
