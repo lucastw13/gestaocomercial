@@ -65,7 +65,7 @@ function Insumodepara() {
         <Container>
             <Menu />
             <Form>
-                <Button color="danger" onClick={importar}>Importar</Button>
+                <Button color="danger" onClick={toggleModal}>Importar</Button>
             </Form>
             <Table>
                 <thead>
