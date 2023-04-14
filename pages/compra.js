@@ -13,7 +13,6 @@ import { QrReader } from 'react-qr-reader';
 function Compra() {
     const router = useRouter()
     const [lista, setLista] = useState("");
-    const [chave, setChave] = useState("");
     const [carregando, setCarregando] = useState("")
     const [modal, setModal] = useState(false);
     const toggleModal = () => setModal(!modal);
@@ -43,11 +42,8 @@ function Compra() {
     }
 
 
+   
     function importar() {
-
-
-    }
-    function importar1() {
         var file = document.getElementById("imagem").files[0];
         var reader = new FileReader();
 
@@ -153,8 +149,7 @@ function Compra() {
                                 var chave = result?.text
                                 chave = chave.substring(chave.toUpperCase().indexOf("=") + 1, chave.toUpperCase().indexOf("|"))
                                 if (chave != "") {
-                                    //router.push(Host.url() + "/compraimportar/" + chave)
-                                    setChave(chave)
+                                    router.push(Host.url() + "/compraimportar/" + chave)
                                 }
                             }
 
@@ -166,8 +161,6 @@ function Compra() {
                     />
                 </ModalBody>
             </Modal>
-
-            {chave}
         </Container>
     );
 
