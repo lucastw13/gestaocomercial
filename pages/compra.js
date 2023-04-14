@@ -111,7 +111,7 @@ function Compra() {
                                 console.info(error);
                             }
                         }}
-                        style={{ width: '150%' }}
+                        style={{ width: '100%' }}
                     />
                 </ModalBody>
             </Modal>
