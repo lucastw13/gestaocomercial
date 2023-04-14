@@ -1,11 +1,12 @@
 
-import { React, useEffect } from 'react';
+import { React, useEffect,useState } from 'react';
 import axios from 'axios';
 import { Container, Label, Input, Button, Form, FormGroup } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { QrReader } from 'react-qr-reader';
 
 function Scan() {
-
+  const [data, setData] = useState('No result');
 
   function ler() {
     console.log(document.getElementById("imagem").value)
@@ -73,6 +74,20 @@ function Scan() {
           <img id="preview" src="" height="200" alt="Prévia da imagem..."></img>
         </FormGroup>
         <Button color="danger" onClick={ler}>Ler</Button>
+
+        <QrReader
+        onResult={(result, error) => {
+          if (!!result) {
+            setData(result?.text);
+          }
+
+          if (!!error) {
+            console.info(error);
+          }
+        }}
+        style={{ width: '100%' }}
+      />
+      <p>{data}</p>
       </Form>
     </Container >
   );
