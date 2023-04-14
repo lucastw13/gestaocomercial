@@ -1,6 +1,6 @@
-import { useState, React,useEffect} from 'react';
+import { useState, React, useEffect } from 'react';
 import Menu from './menu.js';
-import { Container, Table, Form, FormGroup, Label, Input, Button } from 'reactstrap';
+import { Container, Table, Form, FormGroup, Label, Input, Button, Modal, ModalHeader, ModalBody } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Dado from '../dado/generico.js';
 import Host from '../dado/host';
@@ -8,12 +8,14 @@ import UtilDataURIToBlob from '../util/DataURIToBlob';
 import axios from 'axios';
 import Carregamento from './carregamento';
 import { useRouter } from 'next/router.js';
+import { QrReader } from 'react-qr-reader';
 
 function Compra() {
     const router = useRouter()
     const [lista, setLista] = useState("");
     const [carregando, setCarregando] = useState("")
-
+    const [modal, setModal] = useState(false);
+    const toggleModal = () => setModal(!modal);
     useEffect(() => {
         listar()
     }, [])
@@ -41,6 +43,10 @@ function Compra() {
 
 
     function importar() {
+
+
+    }
+    function importar1() {
         var file = document.getElementById("imagem").files[0];
         var reader = new FileReader();
 
@@ -85,7 +91,7 @@ function Compra() {
                 </FormGroup>
 
                 <FormGroup check inline>
-                    <Button color="danger" onClick={importar}>Importar</Button>
+                    <Button color="danger" onClick={toggleModal}>Importar</Button>
                 </FormGroup>
             </Form>
             <Table>
@@ -131,8 +137,34 @@ function Compra() {
             </Table>
 
             {carregando &&
-                <Carregamento/>
+                <Carregamento />
             }
+
+            <Modal isOpen={modal} toggle={toggleModal}>
+                <ModalHeader toggle={toggleModal}>Leitor QR</ModalHeader>
+                <ModalBody>
+                    <QrReader
+                        constraints={{
+                            facingMode: 'environment'
+                        }}
+                        onResult={(result, error) => {
+                            if (!!result) {
+                                var chave = itemSymbol.data.substring(itemSymbol.data.toUpperCase().indexOf("=") + 1, itemSymbol.data.toUpperCase().indexOf("|"))
+                                if (chave != "") {
+                                    router.push(Host.url() + "/compraimportar/" + chave)
+                                }
+                            }
+
+                            if (!!error) {
+                                console.info(error);
+                            }
+                        }}
+                        style={{ width: '100%' }}
+                    />
+                </ModalBody>
+            </Modal>
+
+
         </Container>
     );
 
