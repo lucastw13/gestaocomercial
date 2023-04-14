@@ -150,13 +150,12 @@ function Compra() {
                         }}
                         onResult={(result, error) => {
                             if (!!result) {
-                                setChave(result?.text)
-                               /* var chave = result?.text
-                                var chave = chave.substring(chave.toUpperCase().indexOf("=") + 1, chave.toUpperCase().indexOf("|"))
+                                var chave = result?.text
+                                chave = chave.substring(chave.toUpperCase().indexOf("=") + 1, chave.toUpperCase().indexOf("|"))
                                 if (chave != "") {
                                     //router.push(Host.url() + "/compraimportar/" + chave)
                                     setChave(chave)
-                                }*/
+                                }
                             }
 
                             if (!!error) {
