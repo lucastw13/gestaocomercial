@@ -125,7 +125,7 @@ function Insumodepara() {
                                 console.info(error);
                             }
                         }}
-                        style={{ width: '100%' }}
+                        style={{ width: '150%' }}
                     />
                 </ModalBody>
             </Modal>
