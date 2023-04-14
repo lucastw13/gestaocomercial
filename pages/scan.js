@@ -76,6 +76,9 @@ function Scan() {
         <Button color="danger" onClick={ler}>Ler</Button>
 
         <QrReader
+        constraints={{
+          facingMode: 'environment'
+        }}
         onResult={(result, error) => {
           if (!!result) {
             setData(result?.text);
