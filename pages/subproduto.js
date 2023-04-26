@@ -55,7 +55,7 @@ function Produto() {
     }
     return (
         <Container>
-            <Menu />
+            <Menu descricao="Sub Produtos"/>
             <Table>
                 <thead>
                     <tr>

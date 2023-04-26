@@ -104,7 +104,7 @@ function Insumo() {
 
     return (
         <Container>
-            <Menu />
+            <Menu descricao="Insumos"/>
             <Form>
                 <FormGroup>
                     <Label for="descricao">Descrição</Label>

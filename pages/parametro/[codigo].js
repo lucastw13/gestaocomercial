@@ -88,7 +88,7 @@ function Parametro() {
 
     return (
         <Container>
-            <Menu />
+            <Menu descricao="Parametros"/>
             <Form>
                 <FormGroup>
                     <Label for="chave">Chave</Label>

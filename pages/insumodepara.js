@@ -63,7 +63,7 @@ function Insumodepara() {
 
     return (
         <Container>
-            <Menu />
+            <Menu descricao="Insumos De/Para"/>
             <Form>
                 <Button color="danger" onClick={toggleModal}>Importar</Button>
             </Form>

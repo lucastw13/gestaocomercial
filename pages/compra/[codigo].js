@@ -198,7 +198,7 @@ function Compra() {
 
     return (
         <Container>
-            <Menu />
+            <Menu descricao="Compras"/>
             <Form>
 
                 <h4>{item.data}-{item.hora}</h4>

@@ -41,7 +41,7 @@ function Compra() {
 
     return (
         <Container>
-            <Menu />
+            <Menu descricao="Compras" />
             <Form>
                 <Button color="danger" onClick={toggleModal}>Importar</Button>
             </Form>

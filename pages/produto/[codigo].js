@@ -336,7 +336,7 @@ function Produto() {
 
     return (
         <Container>
-            <Menu />
+            <Menu descricao="Produtos"/>
             <Form >
                 <FormGroup>
                     <Label for="descricao">Descrição</Label>

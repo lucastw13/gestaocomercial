@@ -42,7 +42,7 @@ function RegistraReceita() {
     }
     return (
         <Container>
-            <Menu />
+            <Menu descricao="Registrar Receitas"/>
             <Table>
                 <thead>
                     <tr>

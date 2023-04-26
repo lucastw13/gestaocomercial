@@ -98,7 +98,7 @@ function Insumodepara() {
 
     return (
         <Container>
-            <Menu />
+            <Menu descricao="Insumos"/>
             <Form>
                 <FormGroup>
                     <Label for="nomeFornecedor">Fornecedor</Label>

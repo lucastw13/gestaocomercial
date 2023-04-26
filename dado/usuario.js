@@ -19,7 +19,6 @@ export default class Usuario {
     deleteCookie('usuario');
     deleteCookie('empresa');
     deleteCookie('nivel');
-    deleteCookie('menuAtual');
   }
 
   static getUsuario() {

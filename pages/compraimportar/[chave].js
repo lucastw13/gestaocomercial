@@ -66,7 +66,7 @@ function Compraimportar() {
     }
     return (
         <Container>
-            <Menu />
+            <Menu descricao="Compras"/>
             <Form>
 
                 <Table>

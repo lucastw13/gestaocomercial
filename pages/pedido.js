@@ -40,7 +40,7 @@ function Pedido() {
    
     return (
         <Container>
-            <Menu />
+            <Menu descricao="Pedidos"/>
             <Table>
                 <thead>
                     <tr>

@@ -10,11 +10,10 @@ import { setCookie } from 'cookies-next';
 import Carregamento from './carregamento';
 import DadoGenerico from '../dado/generico.js';
 
-function Menu() {
+function Menu({descricao}) {
     const router = useRouter();
     const [autenticado, setAutenticado] = useState("");
     const [nivel, setNivel] = useState("");
-    const [menuAtual, setMenuAtual] = useState("");
 
     const [collapsed, setCollapsed] = useState(true);
 
@@ -54,12 +53,6 @@ function Menu() {
                             router.push(Host.url())
                         }
                     }
-                    if ((getCookie('menuAtual') != "") && (getCookie('menuAtual') != undefined)) {
-                        setMenuAtual(getCookie('menuAtual'))
-                    } else {
-                        setMenuAtual("Gestão Comercial")
-
-                    }
                 }
                 setCarregando(false)
             }, (error) => {
@@ -76,23 +69,19 @@ function Menu() {
 
     }
 
-    function href(item) {
-        setCookie('menuAtual', item.descricao);
-        router.push(Host.url() + "/" + item.pagina)
-    }
     return (
         <Container>
             Autenticado <img src='/sair.png' width="20px" onClick={sair} />
             <Navbar color="faded" light>
                 <NavbarBrand className="me-auto">
-                    {menuAtual}
+                    {descricao}
                 </NavbarBrand>
                 <NavbarToggler onClick={toggleNavbar} className="me-2" />
                 <Collapse isOpen={!collapsed} navbar>
                     <Nav navbar>
                         {nivel != "" && nivel != undefined && Dado.listar().filter(item => item.nivel <= nivel).map((item) => (
                             <NavItem>
-                                <NavLink onClick={() => href(item)}>
+                                <NavLink onClick={() => router.push(Host.url() + "/" + item.pagina)}>
                                     {item.descricao}
                                 </NavLink>
                             </NavItem>
@@ -114,8 +103,4 @@ function Menu() {
         </Container>
     );
 }
-
-function Pagina() {
-    return <Menu />
-}
-export default Pagina;
+export default Menu;

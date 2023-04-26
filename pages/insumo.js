@@ -56,7 +56,7 @@ function Insumo() {
     }
     return (
         <Container>
-            <Menu />
+            <Menu descricao="Insumos" />
             <Table>
                 <thead>
                     <tr>

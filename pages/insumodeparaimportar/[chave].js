@@ -173,7 +173,7 @@ function Insumodeparaimportar() {
     }
     return (
         <Container>
-            <Menu />
+            <Menu descricao="Insumos"/>
             <Form>
                 <FormGroup check >
                     <Label for="nomeFornecedor">Fornecedor</Label>

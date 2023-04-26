@@ -217,7 +217,7 @@ function Receita() {
 
     return (
         <Container>
-            <Menu />
+            <Menu descricao="Receitas"/>
             <Form >
                 <FormGroup>
                     <Label for="descricao">Descrição</Label>

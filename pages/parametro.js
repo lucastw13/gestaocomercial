@@ -55,7 +55,7 @@ function Parametro() {
     }
     return (
         <Container>
-            <Menu />
+            <Menu descricao="Parametros"/>
             <Table>
                 <thead>
                     <tr>

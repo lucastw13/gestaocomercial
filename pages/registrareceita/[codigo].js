@@ -141,7 +141,7 @@ function RegistraReceita() {
     }
     return (
         <Container>
-            <Menu />
+            <Menu descricao="Receitas"/>
             <Form inline>
                 <FormGroup >
                     <Label for="descricao" >Descrição</Label>

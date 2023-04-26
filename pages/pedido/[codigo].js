@@ -20,9 +20,7 @@ function Pedido() {
             if (router.query.codigo == "incluir") {
                 setItem({ produto: [], unidadeMedida: "G" })
                 setListaProduto([])
-                listarInserir()
             }
-
             listar(router.query.codigo)
 
         }
@@ -204,11 +202,11 @@ function Pedido() {
     }
     return (
         <Container>
-            <Menu />
+            <Menu descricao="Pedidos"/>
             <Form >
                 <FormGroup>
                     <Label for="cliente">Cliente</Label>
-                    {item._id == "" &&
+                    {router.query.codigo == "incluir" &&
                         < Input type="select" onChange={mudarCliente}>
                             <option value="">Selecione</option>
                             {listaClienteTodos && listaClienteTodos.map((item) => (
@@ -217,7 +215,7 @@ function Pedido() {
                         </Input>
 
                     }
-                    {item._id != "" &&
+                    {router.query.codigo != "incluir" &&
                         < Input type="text" id="cliente" disabled="true" />
 
                     }

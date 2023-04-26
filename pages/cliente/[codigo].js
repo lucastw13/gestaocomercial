@@ -77,7 +77,7 @@ function Cliente() {
 
     return (
         <Container>
-            <Menu />
+            <Menu descricao="Clientes"/>
             <Form>
                 <FormGroup>
                     <Label for="nome">Nome</Label>

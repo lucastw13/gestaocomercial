@@ -97,7 +97,7 @@ function Receita() {
     }
     return (
         <Container>
-            <Menu />
+            <Menu descricao="Receitas"/>
             <Table>
                 <thead>
                     <tr>
