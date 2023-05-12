@@ -52,6 +52,7 @@ export default class Generico {
       item.usuario = Usuario.getUsuario();
       return axios.post(Host.urlApi() + "/" + entidade, item);
     } else {
+      item.empresa = Usuario.getEmpresa();
       item.dataAlteracao = dateTime.toLocaleDateString();
       item.horaAlteracao = dateTime.toLocaleTimeString();
       item.usuarioAlteracao = Usuario.getUsuario();

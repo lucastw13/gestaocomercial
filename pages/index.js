@@ -39,7 +39,7 @@ function Insumo() {
                 <thead>
                     <tr>
                         <th>
-                            Clinete
+                            Cliente
                         </th>
                         <th>
                             Valor no Mês
