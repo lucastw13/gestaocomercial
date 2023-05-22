@@ -1,5 +1,5 @@
 import { React, useEffect, useState } from 'react';
-import { Container, Nav, NavItem, NavLink, Collapse, Navbar, NavbarToggler, NavbarBrand} from 'reactstrap';
+import { Container, Nav, NavItem, NavLink, Collapse, Navbar, NavbarToggler, NavbarBrand } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Dado from '../dado/menu.js'
 import Host from '../dado/host'
@@ -10,7 +10,7 @@ import { setCookie } from 'cookies-next';
 import Carregamento from './carregamento';
 import DadoGenerico from '../dado/generico.js';
 
-function Menu({descricao}) {
+function Menu({ descricao }) {
     const router = useRouter();
     const [autenticado, setAutenticado] = useState("");
     const [nivel, setNivel] = useState("");
@@ -23,7 +23,7 @@ function Menu({descricao}) {
 
 
     useEffect(() => {
-       
+
         DadoGenerico.testeConexao()
             .then(response => {
                 setCarregando(true)
@@ -72,14 +72,19 @@ function Menu({descricao}) {
     return (
         <Container>
             Autenticado <img src='/sair.png' width="20px" onClick={sair} />
+
+
             <Navbar color="faded" light>
                 <NavbarBrand className="me-auto">
                     {descricao}
+                    {nivel != "" && nivel != undefined && Dado.listar().filter(item => (item.nivel <= nivel) && item.importante).map((item) => (
+                        <a class="link" href={Host.url() + "/" + item.pagina}>- {item.descricao}</a>
+                    ))}
                 </NavbarBrand>
                 <NavbarToggler onClick={toggleNavbar} className="me-2" />
                 <Collapse isOpen={!collapsed} navbar>
                     <Nav navbar>
-                        {nivel != "" && nivel != undefined && Dado.listar().filter(item => item.nivel <= nivel).map((item) => (
+                        {nivel != "" && nivel != undefined && Dado.listar().filter(item => (item.nivel <= nivel) && !item.importante).map((item) => (
                             <NavItem>
                                 <NavLink>
                                     <a class="link" href={Host.url() + "/" + item.pagina}>{item.descricao}</a>
