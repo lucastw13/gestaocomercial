@@ -5,7 +5,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Dado from '../dado/generico.js';
 import Host from '../dado/host';
 import Carregamento from './carregamento';
+import { useRouter } from 'next/router'
 function Produto() {
+    const router = useRouter();
     const [lista, setLista] = useState("");
     const [carregando, setCarregando] = useState("")
 
@@ -55,7 +57,7 @@ function Produto() {
     }
     return (
         <Container>
-            <Menu descricao="Sub Produtos"/>
+            <Menu descricao="Sub Produtos" />
             <Table>
                 <thead>
                     <tr>
@@ -71,12 +73,9 @@ function Produto() {
                 </thead>
                 <tbody>
                     {lista && lista.map((item) => (
-                        <tr>
+                        <tr onClick={() => router.push(Host.url() + "/subproduto/" + item._id)}>
                             <td>
-                                <a href={Host.url() + "/subproduto/" + item._id}>
-                                    {item.descricao}
-                                </a>
-
+                                {item.descricao}
                             </td>
                             <td>
                                 <img src='/x.png' width="20px" onClick={() => deletar(item)} />

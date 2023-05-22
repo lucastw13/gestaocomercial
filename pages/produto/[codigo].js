@@ -418,7 +418,7 @@ function Produto() {
                         </thead>
                         <tbody>
                             {listaProduto && listaProduto.map((item) => (
-                                <tr>
+                                <tr >
                                     <td>
                                         <a href={Host.url() + "/produto/" + item._id}>
                                             {item.descricao}

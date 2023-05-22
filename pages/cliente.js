@@ -5,7 +5,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Dado from '../dado/generico.js';
 import Host from '../dado/host';
 import Carregamento from './carregamento';
+import { useRouter } from 'next/router'
 function Cliente() {
+    const router = useRouter();
     const [lista, setLista] = useState("");
     const [carregando, setCarregando] = useState("")
 
@@ -54,7 +56,7 @@ function Cliente() {
     }
     return (
         <Container>
-            <Menu descricao="Clientes"/>
+            <Menu descricao="Clientes" />
             <Table>
                 <thead>
                     <tr>
@@ -70,12 +72,9 @@ function Cliente() {
                 </thead>
                 <tbody>
                     {lista && lista.map((item) => (
-                        <tr>
+                        <tr onClick={() => router.push(Host.url() + "/cliente/" + item._id)}>
                             <td>
-                                <a href={Host.url() + "/cliente/" + item._id}>
-                                    {item.nome}
-                                </a>
-
+                                {item.nome}
                             </td>
                             <td>
                                 <img src='/x.png' width="20px" onClick={() => deletar(item)} />
@@ -87,7 +86,7 @@ function Cliente() {
             </Table>
 
             {carregando &&
-                <Carregamento/>
+                <Carregamento />
             }
         </Container>
     );

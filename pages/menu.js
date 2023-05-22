@@ -1,5 +1,5 @@
 import { React, useEffect, useState } from 'react';
-import { Container, Nav, NavItem, NavLink, Collapse, Navbar, NavbarToggler, NavbarBrand, } from 'reactstrap';
+import { Container, Nav, NavItem, NavLink, Collapse, Navbar, NavbarToggler, NavbarBrand} from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Dado from '../dado/menu.js'
 import Host from '../dado/host'
@@ -81,8 +81,8 @@ function Menu({descricao}) {
                     <Nav navbar>
                         {nivel != "" && nivel != undefined && Dado.listar().filter(item => item.nivel <= nivel).map((item) => (
                             <NavItem>
-                                <NavLink onClick={() => router.push(Host.url() + "/" + item.pagina)}>
-                                    {item.descricao}
+                                <NavLink>
+                                    <a class="link" href={Host.url() + "/" + item.pagina}>{item.descricao}</a>
                                 </NavLink>
                             </NavItem>
                         ))}
