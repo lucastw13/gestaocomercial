@@ -76,7 +76,7 @@ function Menu({ descricao }) {
 
             <Navbar color="faded" light>
                 <NavbarBrand className="me-auto">
-                    {descricao}
+                    <b>{descricao}</b>
                     {nivel != "" && nivel != undefined && Dado.listar().filter(item => (item.nivel <= nivel) && item.importante).map((item) => (
                         <a class="link" href={Host.url() + "/" + item.pagina}>- {item.descricao}</a>
                     ))}
