@@ -48,6 +48,33 @@ function Cliente() {
         setItem(itemTemp);
 
     }
+    function mudarCep(event) {
+        var cep = event.target.value.replace(/[^0-9]/g,'');
+        if (cep.length == 8) {
+            var itemTemp = item
+            itemTemp.cep = cep
+            setCarregando(true)
+            Dado.consultaCep(itemTemp.cep)
+            .then(response => {
+                if (response.data != null) {
+                    itemTemp.logradouro                         = response.data.logradouro
+                    itemTemp.bairro                             = response.data.bairro
+                    itemTemp.cidade                             = response.data.localidade
+                    document.getElementById("logradouro").value = response.data.logradouro
+                    document.getElementById("bairro").value     = response.data.bairro
+                    document.getElementById("cidade").value     = response.data.localidade
+                    setItem(itemTemp);
+                }
+            }, (error) => {
+                console.log("error: " + error)
+            })
+            .finally(() => {
+                setCarregando(false)
+            });
+            
+        }
+
+    }
 
     function salvar() {
         if (possuiErroObrigatorio()) {
@@ -77,11 +104,23 @@ function Cliente() {
 
     return (
         <Container>
-            <Menu descricao="Clientes"/>
+            <Menu descricao="Clientes" />
             <Form>
                 <FormGroup>
                     <Label for="nome">Nome</Label>
                     <Input type="text" id="nome" onChange={mudarNome} />
+
+                    <Label for="cep">CEP</Label>
+                    <Input type="number" id="cep" onChange={mudarCep} maxlength={8}/>
+
+                    <Label for="logradouro">Logradouro</Label>
+                    <Input type="text" disabled id="logradouro" />
+
+                    <Label for="bairro">Bairro</Label>
+                    <Input type="text" disabled id="bairro" />
+
+                    <Label for="cidade">Cidade</Label>
+                    <Input type="text" disabled id="cidade" />
                 </FormGroup>
 
                 <Button color="danger" onClick={salvar}>Salvar</Button>

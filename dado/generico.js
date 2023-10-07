@@ -101,5 +101,8 @@ export default class Generico {
     }
 
   }
+  static consultaCep(pCep) {
+    return axios.get("https://viacep.com.br/ws/"+pCep+"/json/")
+  }
 
 }
