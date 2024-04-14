@@ -53,9 +53,9 @@ function Compra() {
                 if (response.data != null) {
                     if (response.data.status == true) {
                         setItem(response.data.item)
-
                         Dado.itemLista(response.data.item._id, "compra", "insumo")
                             .then(response => {
+                                
                                 if (response.data.status == true) {
                                     setListaInsumo(response.data.lista)
                                     var totalTemp = 0
@@ -65,6 +65,7 @@ function Compra() {
                                     setTotal(totalTemp)
                                 } else {
                                     setListaInsumo([])
+                                    console.log("error: " + response.data.descricao)
                                 }
                                
                             }, (error) => {
@@ -76,6 +77,7 @@ function Compra() {
 
                     } else {
                         setItem({})
+                        console.log("123: " + response.data.descricao)
                         console.log("error: " + response.data.descricao)
                     }
 

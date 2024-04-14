@@ -13,7 +13,7 @@ function Compraimportar() {
 
     useEffect(() => {
         if (router.query.chave == "" || router.query.chave == undefined) {
-            router.push(Host.url() + "/compra")
+            //router.push(Host.url() + "/compra")
         } else {
             listar(router.query.chave)
         }
@@ -48,7 +48,8 @@ function Compraimportar() {
         for (var itemTemp of lista) {
             item.insumo.push({
                 _id: itemTemp.insumo,
-                quantidade: itemTemp.quantidade,
+                //quantidade: itemTemp.quantidade,
+                quantidade:document.getElementById(itemTemp.codigo).value,
                 valor: itemTemp.valor
             })
         }
@@ -96,8 +97,7 @@ function Compraimportar() {
                                     </a>
                                 </td>
                                 <td>
-                                    {item.quantidade}
-
+                                    <Input type="text" id={item.codigo} />
                                 </td>
                                 <td>
                                     {item.insumoUnidadeMedida}
