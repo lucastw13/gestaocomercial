@@ -13,6 +13,7 @@ function Compra() {
     const [lista, setLista] = useState("");
     const [carregando, setCarregando] = useState("")
     const [modal, setModal] = useState(false);
+    const [informacao, setInformacao] = useState(false);
     const toggleModal = () => setModal(!modal);
     useEffect(() => {
         listar()
@@ -107,7 +108,10 @@ function Compra() {
                                     if (httpRequest.readyState == 4) {
                                         if (httpRequest.status == 200) {
                                             var xml = httpRequest.responseXML;
-                                            console.log(getElementById("tabResult").getElementsByTagName("tbody")[0].getElementsByTagName("tr")[0].getElementsByTagName("td")[0].getElementsByTagName("span")[1].innerHTML.replace("\n","").replace("\t",""));
+                                            //console.log(getElementById("tabResult").getElementsByTagName("tbody")[0].getElementsByTagName("tr")[0].getElementsByTagName("td")[0].getElementsByTagName("span")[1].innerHTML.replace("\n","").replace("\t",""));
+                                            var inf = getElementById("tabResult").getElementsByTagName("tbody")[0].getElementsByTagName("tr")[0].getElementsByTagName("td")[0].getElementsByTagName("span")[1].innerHTML.replace("\n","").replace("\t","")
+                                            setInformacao(inf)   
+                                            toggleModal 
                                         }
                                     }
                                 }
@@ -126,6 +130,7 @@ function Compra() {
                     />
                 </ModalBody>
             </Modal>
+            {informacao}
         </Container>
     );
 
