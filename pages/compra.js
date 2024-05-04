@@ -16,6 +16,7 @@ function Compra() {
     const [informacao, setInformacao] = useState(false);
     const toggleModal = () => setModal(!modal);
     useEffect(() => {
+        setInformacao("teste")
         listar()
     }, [])
 
