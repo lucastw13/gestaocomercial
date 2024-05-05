@@ -17,7 +17,7 @@ function Compra() {
     const toggleModal = () => setModal(!modal);
     useEffect(() => {
         setInformacao("teste")
-        var url = "http://www4.fazenda.rj.gov.br/consultaNFCe/QRCode?p=33240431698759000970651220000303281967213329|2|1|1|1E8122A29B5E6A25BC7C4B637428BC7F5C6FC360"
+        var url = "https://www4.fazenda.rj.gov.br/consultaNFCe/QRCode?p=33240431698759000970651220000303281967213329|2|1|1|1E8122A29B5E6A25BC7C4B637428BC7F5C6FC360"
 
         fetch(url)
             .then(function (response) {
