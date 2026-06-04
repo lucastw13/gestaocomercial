@@ -97,7 +97,7 @@ function Compra() {
     }
     function handleFileChange(e){
 
-         converterParaBase64(e.target.files[0])
+         cconverterParaBase64(e.target.files[0])
         .then(base64 => {
 
             console.log(base64);
@@ -108,7 +108,7 @@ function Compra() {
         .catch(console.error);
         
     }
-    function converterParaBase64(arquivo) {
+    function cconverterParaBase64(arquivo) {
     return new Promise((resolve, reject) => {
         const leitor = new FileReader();
         leitor.readAsDataURL(arquivo); // Lê o arquivo e converte para Base64
