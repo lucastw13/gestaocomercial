@@ -97,11 +97,11 @@ function Compra() {
             });
     }
     function handleFileChange(e){
-        var arquivo = await cconverterParaBase64(e.target.files[0])
+        var arquivo = await converterParaBase64(e.target.files[0])
         console.log(arquivo)
         setSelectedFile(arquivo);
     }
-    function cconverterParaBase64(arquivo) {
+    function converterParaBase64(arquivo) {
     return new Promise((resolve, reject) => {
         const leitor = new FileReader();
         leitor.readAsDataURL(arquivo); // Lê o arquivo e converte para Base64
