@@ -96,9 +96,17 @@ function Compra() {
             });
     }
     function handleFileChange(e){
-        var arquivo = await converterParaBase64(e.target.files[0])
-        console.log(arquivo)
-        setSelectedFile(arquivo);
+
+         converterParaBase64(e.target.files[0])
+        .then(base64 => {
+
+            console.log(base64);
+
+            setSelectedFile(base64);
+
+        })
+        .catch(console.error);
+        
     }
     function converterParaBase64(arquivo) {
     return new Promise((resolve, reject) => {
