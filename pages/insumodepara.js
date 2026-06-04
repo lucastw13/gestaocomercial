@@ -5,7 +5,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Dado from '../dado/generico.js';
 import Host from '../dado/host';
 import { useRouter } from 'next/router'
-import { QrReader } from 'react-qr-reader';
 import Carregamento from './carregamento';
 function Insumodepara() {
     const [lista, setLista] = useState("");
@@ -108,25 +107,7 @@ function Insumodepara() {
             <Modal isOpen={modal} toggle={toggleModal}>
                 <ModalHeader toggle={toggleModal}>Leitor QR</ModalHeader>
                 <ModalBody>
-                    <QrReader
-                        constraints={{
-                            facingMode: 'environment'
-                        }}
-                        onResult={(result, error) => {
-                            if (!!result) {
-                                var chave = result?.text
-                                chave = chave.substring(chave.toUpperCase().indexOf("=") + 1, chave.toUpperCase().indexOf("|"))
-                                if (chave != "") {
-                                    router.push(Host.url() + "/insumodeparaimportar/" + chave)
-                                }
-                            }
-
-                            if (!!error) {
-                                console.info(error);
-                            }
-                        }}
-                        style={{ width: '100%' }}
-                    />
+                    
                 </ModalBody>
             </Modal>
         </Container>

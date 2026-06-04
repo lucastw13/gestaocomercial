@@ -6,7 +6,6 @@ import Dado from '../dado/generico.js';
 import Host from '../dado/host';
 import Carregamento from './carregamento';
 import { useRouter } from 'next/router.js';
-import { QrReader } from 'react-qr-reader';
 
 function Compra() {
     const router = useRouter()
@@ -171,39 +170,7 @@ function Compra() {
             <Modal isOpen={modal} toggle={toggleModal}>
                 <ModalHeader toggle={toggleModal}>Leitor QR</ModalHeader>
                 <ModalBody>
-                    <QrReader
-                        constraints={{
-                            facingMode: 'environment'
-                        }}
-                        onResult={(result, error) => {
-                            if (!!result) {
-                                var httpRequest = new XMLHttpRequest();
 
-                                httpRequest.open("GET", result?.text, true);
-                                httpRequest.onreadystatechange = function () {
-                                    if (httpRequest.readyState == 4) {
-                                        if (httpRequest.status == 200) {
-                                            var xml = httpRequest.responseXML;
-                                            //console.log(getElementById("tabResult").getElementsByTagName("tbody")[0].getElementsByTagName("tr")[0].getElementsByTagName("td")[0].getElementsByTagName("span")[1].innerHTML.replace("\n","").replace("\t",""));
-                                            var inf = getElementById("tabResult").getElementsByTagName("tbody")[0].getElementsByTagName("tr")[0].getElementsByTagName("td")[0].getElementsByTagName("span")[1].innerHTML.replace("\n", "").replace("\t", "")
-                                            setInformacao(inf)
-                                            toggleModal
-                                        }
-                                    }
-                                }
-                                /*var chave = result?.text
-                                chave = chave.substring(chave.toUpperCase().indexOf("=") + 1, chave.toUpperCase().indexOf("|"))
-                                if (chave != "") {
-                                    router.push(Host.url() + "/compraimportar/" + chave)
-                                }*/
-                            }
-
-                            if (!!error) {
-                                console.info(error);
-                            }
-                        }}
-                        style={{ width: '100%' }}
-                    />
                 </ModalBody>
             </Modal>
             {informacao}

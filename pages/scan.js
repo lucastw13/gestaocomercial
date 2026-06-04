@@ -1,4 +1,4 @@
-
+/*
 import { React, useEffect,useState } from 'react';
 import axios from 'axios';
 import { Container, Label, Input, Button, Form, FormGroup } from 'reactstrap';
@@ -97,3 +97,4 @@ function Scan() {
 }
 
 export default Scan;
+*/
