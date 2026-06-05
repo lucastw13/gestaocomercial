@@ -1,6 +1,6 @@
 import { useState, React, useEffect } from 'react';
 import Menu from './menu.js';
-import { Container, Table, Form, Button, Modal, ModalHeader, ModalBody } from 'reactstrap';
+import { Container, Table, Form, Button, Modal, ModalHeader, ModalBody,Input } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Dado from '../dado/generico.js';
 import Host from '../dado/host';
