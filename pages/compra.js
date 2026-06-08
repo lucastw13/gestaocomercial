@@ -15,8 +15,6 @@ function Compra() {
     const [informacao, setInformacao] = useState(false);
     const toggleModal = () => setModal(!modal);
 
-    const [selectedFile, setSelectedFile] = useState(null);
-
     useEffect(() => {
         setInformacao("teste")
         var url = "https://www4.fazenda.rj.gov.br/consultaNFCe/QRCode?p=33240431698759000970651220000303281967213329|2|1|1|1E8122A29B5E6A25BC7C4B637428BC7F5C6FC360"
@@ -95,39 +93,13 @@ function Compra() {
                 setCarregando(false)
             });
     }
-    function handleFileChange(e){
 
-         converterParaBase64(e.target.files[0])
-        .then(base64 => {
 
-            console.log(base64);
-
-            setSelectedFile(base64);
-
-        })
-        .catch(console.error);
-        
-    }
-    function converterParaBase64(arquivo) {
-    return new Promise((resolve, reject) => {
-        const leitor = new FileReader();
-        leitor.readAsDataURL(arquivo); // Lê o arquivo e converte para Base64
-        
-        leitor.onload = () => resolve(leitor.result); // Retorna a string Base64
-        leitor.onerror = (erro) => reject(erro);
-        });
-    }
     return (
         <Container>
             <Menu descricao="Compras" />
             <Form>
                 <Button color="danger" onClick={toggleModal}>Importar</Button>
-                <Input
-                id="exampleFile"
-                name="file"
-                type="file"
-                onChange={handleFileChange}
-                />
             </Form>
             <Table>
                 <thead>

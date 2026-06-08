@@ -88,13 +88,15 @@ function Compra() {
             })
     }
 
-    function adicionarInsumo() {
+    function adicionarInsumo(_id,quantidade,valor) {
         if (item._id != "" && item._id != undefined) {
             alert("Compra não pode ser editada")
         } else {
-            var _id = document.getElementById("insumo").value
-            var quantidade = document.getElementById("insumoQuantidade").value
-            var valor = document.getElementById("insumoValor").value
+            if((_id=="")||(_id==undefined)){
+                var _id = document.getElementById("insumo").value
+                var quantidade = document.getElementById("insumoQuantidade").value
+                var valor = document.getElementById("insumoValor").value
+            }
             if (_id != "" && _id != undefined && quantidade != "" && quantidade != undefined && valor != "" && valor != undefined) {
                 var possuiInsumo = false
                 for (var itemInsumo of item.insumo) {
@@ -197,11 +199,50 @@ function Compra() {
         }
 
     }
+    function mudandoArquivo(pEvendo){
+       
+         converterParaBase64(pEvendo.target.files[0])
+        .then(base64 => {
+             setCarregando(true)
+            Dado.salvar({base64:base64.replace("data:application/pdf;base64,", "")}, "documentocompra").then(response => {
+                    if (response.data != null) {
+                        if (response.data.status == true) {
+                            for(var insumo of response.data.item.insumo){
+                                adicionarInsumo(insumo._id,insumo.quantidade,insumo.valor)
+                            }
+                        } else {
+                            console.log("error: " + response.data.descricao)
+                        }
+                    }
+                }, (error) => {
+                    console.log("error: " + error)
+                })
+                .finally(() => {
+                setCarregando(false)
+        });
+        })
+        .catch(console.error);
 
+        
+    }
+    function converterParaBase64(pArquivo) {
+    return new Promise((resolve, reject) => {
+        const leitor = new FileReader();
+        leitor.readAsDataURL(pArquivo); // Lê o arquivo e converte para Base64
+        
+        leitor.onload = () => resolve(leitor.result); // Retorna a string Base64
+        leitor.onerror = (erro) => reject(erro);
+        });
+    }
     return (
         <Container>
             <Menu descricao="Compras"/>
             <Form>
+                                <Input
+                                id="arquivo"
+                                type="file"
+                                onChange={mudandoArquivo}
+                                />
 
                 <h4>{item.data}-{item.hora}</h4>
 
@@ -228,7 +269,7 @@ function Compra() {
                 </FormGroup>
 
                 <FormGroup check inline>
-                    <img src='/+.png' width="20px" onClick={adicionarInsumo} />
+                    <img src='/+.png' width="20px" onClick={()=>adicionarInsumo()} />
                 </FormGroup>
 
                 <Table>
