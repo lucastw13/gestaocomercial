@@ -88,15 +88,14 @@ function Compra() {
             })
     }
 
-    function adicionarInsumo(_id,quantidade,valor) {
+    function adicionarInsumo() {
         if (item._id != "" && item._id != undefined) {
             alert("Compra não pode ser editada")
         } else {
-            if((_id=="")||(_id==undefined)){
-                var _id = document.getElementById("insumo").value
-                var quantidade = document.getElementById("insumoQuantidade").value
-                var valor = document.getElementById("insumoValor").value
-            }
+            var _id = document.getElementById("insumo").value
+            var quantidade = document.getElementById("insumoQuantidade").value
+            var valor = document.getElementById("insumoValor").value
+            
             if (_id != "" && _id != undefined && quantidade != "" && quantidade != undefined && valor != "" && valor != undefined) {
                 var possuiInsumo = false
                 for (var itemInsumo of item.insumo) {
@@ -141,7 +140,6 @@ function Compra() {
             }
         }
     }
-
 
     function salvar() {
         if (item._id != "" && item._id != undefined) {
@@ -207,9 +205,22 @@ function Compra() {
             Dado.salvar({base64:base64.replace("data:application/pdf;base64,", "")}, "documentocompra").then(response => {
                     if (response.data != null) {
                         if (response.data.status == true) {
-                            for(var insumo of response.data.item.insumo){
-                                adicionarInsumo(insumo._id,insumo.quantidade,insumo.valor)
+                            var itemTemp = item
+                            itemTemp.insumo=response.data.item.insumo
+                            setItem(itemTemp)
+                            
+                            var listaTemp = []
+                            for (var itemInsumo of response.data.item.insumo){
+                                for (var itemInsumoTodos of listaInsumoTodos) {
+                                    if (itemInsumoTodos._id == itemInsumo._id) {
+                                        break;
+                                    }
+                                }
+                                itemInsumoTodos.quantidadeCompra = itemInsumo.quantidade
+                                itemInsumoTodos.valorCompra      = itemInsumo.valor
+                                listaTemp.push(itemInsumoTodos)
                             }
+                            setListaInsumo(listaTemp)
                         } else {
                             console.log("error: " + response.data.descricao)
                         }
@@ -233,6 +244,12 @@ function Compra() {
         leitor.onload = () => resolve(leitor.result); // Retorna a string Base64
         leitor.onerror = (erro) => reject(erro);
         });
+    }
+
+    function preencherCamposEdicao(pItem) {
+        document.getElementById("insumo").value = pItem._id;
+        document.getElementById("insumoQuantidade").value = pItem.quantidadeCompra;
+        document.getElementById("insumoValor").value = pItem.valorCompra;
     }
     return (
         <Container>
@@ -292,7 +309,7 @@ function Compra() {
                     </thead>
                     <tbody>
                         {listaInsumo && listaInsumo.map((item) => (
-                            <tr>
+                            <tr onClick={() => preencherCamposEdicao(item)}>
                                 <td>
                                     <a href={Host.url() + "/insumo/" + item._id}>
                                         {item.descricao}
